@@ -84,6 +84,7 @@ public class AnalyseRunner {
 //
 //		this.marbuilder.buildGroupModel(c.getCommunityList(), subOutFloder2);
 		System.out.println("success11111111112222");
+		
 
 	}
 
