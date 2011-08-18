@@ -1,0 +1,45 @@
+global
+{
+	fontFamily: "Arial";
+	fontSize: 12;
+	themeColor: #FFB75D;
+}
+
+Application
+{
+	backgroundGradientColors:  #79B1F1, #79B1F1;
+	backgroundGradientAlphas: 1.0, 1.0;
+}
+
+Button
+{
+	fontWeight: normal;
+}
+
+IBSStatusBar
+{
+	borderSkin: ClassReference("SNADisplay.status.com.ccac.ibs.skins.common.IBSStatusBarSkin");
+	horizontalGap: 0;
+	paddingLeft: 1;
+	paddingRight: 1;
+	paddingTop: 1;
+	paddingBottom: 4;
+	verticalAlign: middle;
+}
+
+IBSStatusPanel
+{
+	color: #092061;
+	disabledColor: #092061;
+	disabledSkin: ClassReference(null);
+	paddingLeft: 3;
+	paddingRight: 5;
+	paddingTop: 1;
+	paddingBottom: 1;
+	skin: ClassReference(null);
+	separatorSkin: ClassReference("SNADisplay.status.com.ccac.ibs.skins.common.IBSStatusBarSeparatorSkin");
+}
+
+.mainStatusBar
+{
+}

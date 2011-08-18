@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Graph> 
+  <Community id="-1" level="0" size="34"> 
+    <Member> 
+      <Node id="1"/>  
+      <Node id="10"/>  
+      <Node id="11"/>  
+      <Node id="12"/>  
+      <Node id="13"/>  
+      <Node id="14"/>  
+      <Node id="15"/>  
+      <Node id="16"/>  
+      <Node id="17"/>  
+      <Node id="18"/>  
+      <Node id="19"/>  
+      <Node id="2"/>  
+      <Node id="20"/>  
+      <Node id="21"/>  
+      <Node id="22"/>  
+      <Node id="23"/>  
+      <Node id="24"/>  
+      <Node id="25"/>  
+      <Node id="26"/>  
+      <Node id="27"/>  
+      <Node id="28"/>  
+      <Node id="29"/>  
+      <Node id="3"/>  
+      <Node id="30"/>  
+      <Node id="31"/>  
+      <Node id="32"/>  
+      <Node id="33"/>  
+      <Node id="34"/>  
+      <Node id="4"/>  
+      <Node id="5"/>  
+      <Node id="6"/>  
+      <Node id="7"/>  
+      <Node id="8"/>  
+      <Node id="9"/>  
+    </Member>  
+    <Link> 
+      <Edge fromID="2" toID="1"/>  
+      <Edge fromID="3" toID="1"/>  
+      <Edge fromID="3" toID="2"/>  
+      <Edge fromID="4" toID="1"/>  
+      <Edge fromID="4" toID="2"/>  
+      <Edge fromID="4" toID="3"/>  
+      <Edge fromID="5" toID="1"/>  
+      <Edge fromID="6" toID="1"/>  
+      <Edge fromID="7" toID="1"/>  
+      <Edge fromID="7" toID="5"/>  
+      <Edge fromID="7" toID="6"/>  
+      <Edge fromID="8" toID="1"/>  
+      <Edge fromID="8" toID="2"/>  
+      <Edge fromID="8" toID="3"/>  
+      <Edge fromID="8" toID="4"/>  
+      <Edge fromID="9" toID="1"/>  
+      <Edge fromID="9" toID="3"/>  
+      <Edge fromID="10" toID="3"/>  
+      <Edge fromID="11" toID="1"/>  
+      <Edge fromID="11" toID="5"/>  
+      <Edge fromID="11" toID="6"/>  
+      <Edge fromID="12" toID="1"/>  
+      <Edge fromID="13" toID="1"/>  
+      <Edge fromID="13" toID="4"/>  
+      <Edge fromID="14" toID="1"/>  
+      <Edge fromID="14" toID="2"/>  
+      <Edge fromID="14" toID="3"/>  
+      <Edge fromID="14" toID="4"/>  
+      <Edge fromID="17" toID="6"/>  
+      <Edge fromID="17" toID="7"/>  
+      <Edge fromID="18" toID="1"/>  
+      <Edge fromID="18" toID="2"/>  
+      <Edge fromID="20" toID="1"/>  
+      <Edge fromID="20" toID="2"/>  
+      <Edge fromID="22" toID="1"/>  
+      <Edge fromID="22" toID="2"/>  
+      <Edge fromID="26" toID="24"/>  
+      <Edge fromID="26" toID="25"/>  
+      <Edge fromID="28" toID="3"/>  
+      <Edge fromID="28" toID="24"/>  
+      <Edge fromID="28" toID="25"/>  
+      <Edge fromID="29" toID="3"/>  
+      <Edge fromID="30" toID="24"/>  
+      <Edge fromID="30" toID="27"/>  
+      <Edge fromID="31" toID="2"/>  
+      <Edge fromID="31" toID="9"/>  
+      <Edge fromID="32" toID="1"/>  
+      <Edge fromID="32" toID="25"/>  
+      <Edge fromID="32" toID="26"/>  
+      <Edge fromID="32" toID="29"/>  
+      <Edge fromID="33" toID="3"/>  
+      <Edge fromID="33" toID="9"/>  
+      <Edge fromID="33" toID="15"/>  
+      <Edge fromID="33" toID="16"/>  
+      <Edge fromID="33" toID="19"/>  
+      <Edge fromID="33" toID="21"/>  
+      <Edge fromID="33" toID="23"/>  
+      <Edge fromID="33" toID="24"/>  
+      <Edge fromID="33" toID="30"/>  
+      <Edge fromID="33" toID="31"/>  
+      <Edge fromID="33" toID="32"/>  
+      <Edge fromID="34" toID="9"/>  
+      <Edge fromID="34" toID="10"/>  
+      <Edge fromID="34" toID="14"/>  
+      <Edge fromID="34" toID="15"/>  
+      <Edge fromID="34" toID="16"/>  
+      <Edge fromID="34" toID="19"/>  
+      <Edge fromID="34" toID="20"/>  
+      <Edge fromID="34" toID="21"/>  
+      <Edge fromID="34" toID="23"/>  
+      <Edge fromID="34" toID="24"/>  
+      <Edge fromID="34" toID="27"/>  
+      <Edge fromID="34" toID="28"/>  
+      <Edge fromID="34" toID="29"/>  
+      <Edge fromID="34" toID="30"/>  
+      <Edge fromID="34" toID="31"/>  
+      <Edge fromID="34" toID="32"/>  
+      <Edge fromID="34" toID="33"/> 
+    </Link> 
+  </Community> 
+</Graph>

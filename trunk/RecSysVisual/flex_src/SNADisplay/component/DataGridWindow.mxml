@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="800" height="500" 
+	showCloseButton="true" close="closeHandle()" creationPolicy="all">
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.dataGridClasses.DataGridColumn;
+			import mx.collections.ArrayCollection;
+			import mx.managers.PopUpManager;
+			import mx.controls.Alert;
+			[Bindable]
+			private var dgData:ArrayCollection = new ArrayCollection;
+			
+			private function closeHandle():void {
+	   			PopUpManager.removePopUp(this);
+	   		}
+	   		public function init( xmlData:XML = null ):void {
+	   			var columnsArr:Array = new Array;
+	   			var column:DataGridColumn;
+	   			 var attribut:XML;
+	   			var itemXML:XML;
+	   			
+	   			dgData = new ArrayCollection;
+	   			
+	   			var itemsXMLList:XMLList = xmlData.children();
+	   			itemXML = itemsXMLList[0];
+				
+				this.title = xmlData.name();
+				//Alert.show(itemsXMLList.toString());
+				var s:String = "";
+				for each ( attribut in itemXML.attributes() ){
+			     	column = new DataGridColumn;
+		   			column.headerText = attribut.name();
+		   			column.dataField = attribut.name();
+		   			if ( attribut.name() == xmlData.name() ){
+		   				var tempArr:Array = new Array;
+		   				tempArr.push(column);
+		   				//columnsArr = temArr + columnsArr
+		   			}
+		   			else {
+		   				
+		   			}
+		   			columnsArr.push(column);
+		   			//columnsArr.
+		   			column.sortCompareFunction = sortFunc(attribut.name());
+		   			
+			    }
+			    
+			    dataGrid.columns = columnsArr;
+			    for each ( itemXML in itemsXMLList ){
+			    	var o:Object = new Object;
+			    	for each ( attribut in itemXML.attributes() ){
+			   			o[attribut.name().toString()] = itemXML.attribute(attribut.name()).toString();
+				    }
+				    dgData.addItem(o);
+			    }
+	   		}
+	   		
+	   		private static function sortFunc(field:String):Function {                          
+
+                          return function(obj1:Object, obj2:Object):int {
+                                return sortcompare(obj1[field], obj2[field]);
+                         }
+            }
+
+	   		
+	   		public static function sortcompare(obj1:Object,obj2:Object):int {
+                    var num1:Number=Number(obj1.@send.toString());
+                    var num2:Number=Number(obj2.@send.toString());
+                    if(num1>num2){
+                            return 1;
+                    }else if(num1<num2){
+                            return -1;
+                    }else{
+                            return 0;
+                    }
+            }
+		]]>
+	</mx:Script>
+	<mx:DataGrid id="dataGrid" width="100%" height="100%" textAlign="center" 
+					dataProvider="{dgData}" sortableColumns="true" draggableColumns="false">
+	</mx:DataGrid>
+</mx:TitleWindow>

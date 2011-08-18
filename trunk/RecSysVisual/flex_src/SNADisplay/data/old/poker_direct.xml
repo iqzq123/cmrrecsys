@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph>
+	<Node id="nothing" x="20" y="20" name="Loser" nodeType="SixDegrees" description="Nothing else, you lose."   />
+	<Node id="pair" x="40" y="20" name="A Pair" nodeType="PrimitiveStar" description="Single Pair."   />
+	<Node id="2pairs" x="20" y="40" name="Two Pairs" nodeType="PrimitiveCircle" description="Two pairs are better than one."   />
+	<Node id="triple" x="40" y="80" name="3 of a kind" nodeType="PrimitiveReverseBurst" description="Three are even better." />
+	<Node id="fullhouse" x="60" y="100" name="Full House" nodeType="PrimitiveReverseBurst" description="A pair and a triple." />
+	<Node id="straight" x="80" y="120" name="A straight" nodeType="PrimitiveReverseBurst" description="Consecutive cards." />
+	<Node id="flush" x="100" y="120" name="A Flush" nodeType="PrimitiveReverseBurst" description="5 of the same colour." />
+	<Node id="quartet" x="100" y="160" name="Four of a kind" nodeType="PrimitiveReverseBurst" description="Four of a kind." />
+	<Node id="sflush" x="120" y="180" name="A Straight Flush" nodeType="PrimitiveReverseBurst" description="Consecutive Cards in one colour." />
+	<Node id="royalflush" x="200" y="200" name="Royal Flush" nodeType="PrimitiveReverseBurst" description="10 to Ace in one color (or spades?)" />
+	
+	<Edge fromID="nothing" toID="pair" color="0xff6666" flow="10" />
+	<Edge fromID="nothing" toID="2pairs" color="0x666666" flow="20" />
+	<Edge fromID="nothing" toID="triple" color="0x666666" flow="50" />
+	<Edge fromID="nothing" toID="fullhouse" color="0x666666" flow="100" />
+	<Edge fromID="nothing" toID="straight" color="0x666666" flow="200" />
+	<Edge fromID="nothing" toID="flush" color="0x666666" flow="250" />
+	<Edge fromID="nothing" toID="quartet" color="0x666666" flow="400" />
+	<Edge fromID="nothing" toID="sflush" color="0x666666" flow="500" />
+	<Edge fromID="nothing" toID="royalflush" color="0x66ff66" flow="1000" />
+
+
+	<Edge fromID="pair" toID="2pairs" color="0xff6666" flow="10" />
+	<Edge fromID="pair" toID="triple" color="0x666666" flow="20" />
+	<Edge fromID="pair" toID="fullhouse" color="0x666666" flow="50" />
+	<Edge fromID="pair" toID="straight" color="0x666666" flow="100" />
+	<Edge fromID="pair" toID="flush" color="0x666666" flow="200" />
+	<Edge fromID="pair" toID="quartet" color="0x666666" flow="250" />
+	<Edge fromID="pair" toID="sflush" color="0x666666" flow="400" />
+	<Edge fromID="pair" toID="royalflush" color="0x66ff66" flow="500" />
+
+	<Edge fromID="2pairs" toID="triple" color="0xff6666" flow="10" />
+	<Edge fromID="2pairs" toID="fullhouse" color="0x666666" flow="20" />
+	<Edge fromID="2pairs" toID="straight" color="0x666666" flow="50" />
+	<Edge fromID="2pairs" toID="flush" color="0x666666" flow="100" />
+	<Edge fromID="2pairs" toID="quartet" color="0x666666" flow="200" />
+	<Edge fromID="2pairs" toID="sflush" color="0x666666" flow="250" />
+	<Edge fromID="2pairs" toID="royalflush" color="0x66ff66" flow="400" />
+
+	<Edge fromID="triple" toID="fullhouse" color="0xff6666" flow="10" />
+	<Edge fromID="triple" toID="straight" color="0x666666" flow="20" />
+	<Edge fromID="triple" toID="flush" color="0x666666" flow="50" />
+	<Edge fromID="triple" toID="quartet" color="0x666666" flow="100" />
+	<Edge fromID="triple" toID="sflush" color="0x666666" flow="200" />
+	<Edge fromID="triple" toID="royalflush" color="0x666666" flow="250" />
+
+	<Edge fromID="fullhouse" toID="straight" color="0xff6666" flow="10" />
+	<Edge fromID="fullhouse" toID="flush" color="0x666666" flow="20" />
+	<Edge fromID="fullhouse" toID="quartet" color="0x666666" flow="50" />
+	<Edge fromID="fullhouse" toID="sflush" color="0x666666" flow="100" />
+	<Edge fromID="fullhouse" toID="royalflush" color="0x666666" flow="200" />
+
+	<Edge fromID="straight" toID="flush" color="0xff6666" flow="10" />
+	<Edge fromID="straight" toID="quartet" color="0x666666" flow="20" />
+	<Edge fromID="straight" toID="sflush" color="0x666666" flow="50" />
+	<Edge fromID="straight" toID="royalflush" color="0x666666" flow="100" />
+
+	<Edge fromID="flush" toID="quartet" color="0xff6666" flow="10" />
+	<Edge fromID="flush" toID="sflush" color="0x666666" flow="20" />
+	<Edge fromID="flush" toID="royalflush" color="0x666666" flow="50" />
+
+	<Edge fromID="quartet" toID="sflush" color="0xff6666" flow="10" />
+	<Edge fromID="quartet" toID="royalflush" color="0x666666" flow="20" />
+
+	<Edge fromID="sflush" toID="royalflush" color="0xff6666" flow="10" />
+
+
+</Graph>

@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Graph>
+  <Node id="10" name="++1othernode" description="othernode"/>
+  <Node id="11" name="++IGraph" description="this is igraph" /> 
+  <Node id="12" name="++IGTree" description="this is igtree" /> 
+  <Node id="13" name="++Edge" description="this is edge" /> 
+  <Node id="14" name="++Graph" description="this is graph" /> 
+  <Node id="15" name="++GTree" description="this is gtree" /> 
+  
+  <Edge fromID="10" toID="11" />
+  <Edge fromID="15" toID="11" /> 
+  <Edge fromID="15" toID="12" /> 
+  <Edge fromID="15" toID="14" /> 
+  <Edge fromID="13" toID="11" />
+  <Edge fromID="13" toID="12" /> 
+  <Edge fromID="13" toID="14" />
+  
+  <Node id="0" name="1othernode" description="othernode" /> 
+  <Node id="1" name="IGraph" description="this is igraph" /> 
+  <Node id="2" name="IGTree" description="this is igtree" /> 
+  <Node id="3" name="Edge" description="this is edge" /> 
+  <Node id="4" name="Graph" description="this is graph" /> 
+  <Node id="5" name="GTree" description="this is gtree" /> 
+  <Edge fromID="0" toID="1" /> 
+  <Edge fromID="5" toID="1" /> 
+  <Edge fromID="5" toID="2" /> 
+  <Edge fromID="5" toID="4" /> 
+  <Edge fromID="3" toID="1" /> 
+  <Edge fromID="3" toID="2" /> 
+  <Edge fromID="3" toID="4" /> 
+  
+</Graph>

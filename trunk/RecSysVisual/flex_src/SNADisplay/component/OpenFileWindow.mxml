@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" 
+	width="316" height="150" title="输入文件名" 
+	creationComplete="init()"
+	showCloseButton="true" close="closeHandle(event)">
+	<mx:Script>
+		<![CDATA[
+			import mx.managers.PopUpManager;
+			import SNADisplay.org.utils.Events.ConfirmEvent;
+
+			private var file:FileReferenceList=new FileReferenceList();
+	        private var xmlFilter:FileFilter = new FileFilter("XML (*.xml)", "*.xml"); 
+	        private function init():void
+    		{
+
+    		}
+			private function showBrose(evt:Event):void{
+	            file.browse([xmlFilter]);
+	            file.addEventListener(Event.SELECT, onFileSelect);
+			}
+			private function onFileSelect(event : Event) : void {
+				/*
+                for(var i:int=0;i<file.fileList.length;i++){
+                   var f:FileReference = FileReference(file.fileList[i]);   
+                   pathInput.text = f.name;                       
+                }               */
+                pathInput.text = FileReference(file.fileList[0]).name;
+            } 
+            private function closeHandle(evt:Event):void {
+            	PopUpManager.removePopUp(this);
+            }
+            private function localRequest(evt:Event):void {
+            	dispatchEvent(new ConfirmEvent(ConfirmEvent.CONFIRMTYPE,pathInput.text,false));
+            	PopUpManager.removePopUp(this);
+            }
+            private function remoteRequest(evt:Event):void {
+            	dispatchEvent(new ConfirmEvent(ConfirmEvent.CONFIRMTYPE,pathInput.text,true));
+            	PopUpManager.removePopUp(this);
+            }
+		]]>
+	</mx:Script>
+	<mx:TextInput x="10" y="25" width="260" borderStyle="solid" borderThickness="2" id="pathInput"
+		mouseDown="event.stopImmediatePropagation()"/>
+	<mx:Button x="10" y="64" label="目录" id="browse" click="showBrose(event)"/>
+	<mx:Button x="199" y="64" label="远端文件" click="remoteRequest(event)"/>
+	<mx:Button x="119" y="64" label="本地文件" click="localRequest(event)"/>
+</mx:TitleWindow>

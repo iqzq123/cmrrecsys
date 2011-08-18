@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="238" height="326"
+	 showCloseButton="true" borderAlpha="0.9" title="属性展示选择" close="closeHandler()" fontSize="13">
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.CheckBox;
+			import mx.managers.PopUpManager;
+			import mx.controls.Alert;
+			private var _checkDic:Dictionary = new Dictionary;
+			private var _propertyArr:Array;
+			private var _selectedPropertyArr:Array;
+			private var _selectedWeight:String;
+			[Bindable]
+			private var propertyData:ArrayCollection = new ArrayCollection;
+			
+			private function closeHandler():void {
+	   			PopUpManager.removePopUp(this);
+	   		}
+	   		
+	   		public function init(propertyArr:Array):void {
+	   			var pStr:String;
+	   			var o:Object = new Object;
+	   			_propertyArr = propertyArr;
+	   			o.label = "";
+	   			propertyData.addItem(o);
+	   			for each ( pStr in propertyArr ){
+	   				var checkBox:CheckBox = new CheckBox;
+	   				checkBox.label = pStr;
+	   				checkBox.addEventListener(Event.CHANGE, checkHandler);
+	   				vBox.addChild(checkBox);
+	   				_checkDic[pStr] = false;
+	   				if ( pStr != "id" ){
+	   					o = new Object;
+	   					o.label = pStr;
+	   					propertyData.addItem(o);
+	   				}
+	   				else {
+	   					checkBox.selected = true;
+	   					_checkDic[pStr] = true;
+	   				}
+	   			}
+	   		}
+	   		
+	   		private function checkHandler(evt:Event):void {
+	   			var checkBox:CheckBox = evt.target as CheckBox;
+	   			if ( checkBox.selected == true ){
+	   				_checkDic[checkBox.label] = true;
+	   			}
+	   			else {
+	   				_checkDic[checkBox.label] = false;
+	   			}
+	   		}
+	   		
+	   		private function comfirm():void {
+	   			var pStr:String;
+	   			_selectedPropertyArr = new Array;
+	   			for each ( pStr in _propertyArr ){
+	   				if ( _checkDic[pStr] == true )
+	   					_selectedPropertyArr.push(pStr);
+	   			}
+	   			_selectedWeight = comboBox.selectedLabel;
+	   			dispatchEvent(new Event(Event.SELECT,true));
+	   			closeHandler();
+	   		}
+	   		
+	   		public function getPropertyArr():Array {
+	   			return _selectedPropertyArr;
+	   		}
+	   		
+	   		public function getWeightProperty():String {
+	   			return _selectedWeight;
+	   		}
+		]]>
+	</mx:Script>
+	<mx:VBox id="vBox" width="100%" height="205" paddingLeft="20" horizontalAlign="left" borderStyle="solid">
+		<mx:Label text="请勾选要展示的属性:"/>
+	</mx:VBox>
+	<mx:Label x="10" y="216" text="权值属性："/>
+	<mx:ComboBox id="comboBox" x="86" y="213" width="122" height="25" dataProvider="{propertyData}"></mx:ComboBox>
+	<mx:Button x="40.5" y="246" label="确 定" click="comfirm()"/>
+	<mx:Button x="115.5" y="246" label="取 消" click="closeHandler()"/>
+</mx:TitleWindow>

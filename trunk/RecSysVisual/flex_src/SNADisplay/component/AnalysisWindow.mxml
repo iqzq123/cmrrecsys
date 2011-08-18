@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" title="分析面板"
+	width="616" height="540" fontSize="12" showCloseButton="true" close="closeHandle()">
+	<mx:Script>
+		<![CDATA[
+			import mx.rpc.http.mxml.HTTPService;
+			import mx.rpc.events.ResultEvent;
+			import mx.collections.ArrayCollection;
+			import mx.managers.PopUpManager;
+			import mx.controls.Alert;
+			
+			private const PATH_FINDER_NAME:String = "PathFinderClass";
+			private const MIN_PATH_LENGTH:int = 1;
+			private const TUNDISH_NAME:String = "TundishClass";
+			private const FULL_NAME:String = "0";
+			private const SHORT_NAME:String = "1";
+			private const CATEGORY:String = "2"
+			private const SEPARATOR_FUNC:String = "\n";  //区分功能类
+			private const SEPARATOR_CLASS:String = "\t"; //区分类名和参数
+		    private const SEPARATOR1:String = "@@@"; //同时区分一级参数
+		    private const SEPARATOR2:String = "&&&"; //区分二级参数
+		    private const SEPARATOR3:String = "###"; //区分pageName
+		    private var _cmd:String = "";
+		    
+			[Bindable]
+			private var dgDataPathFinder:ArrayCollection = new ArrayCollection;
+			[Bindable]
+			private var dgDataTundishPath:ArrayCollection = new ArrayCollection;
+			[Bindable]
+			private var dgDataTundish:ArrayCollection = new ArrayCollection;
+			
+			private function closeHandle():void {
+	   			PopUpManager.removePopUp(this);
+	   		}
+	   		private var fileWindow:FileWindow; 
+	   		private function showFileWindow():void {
+	   			fileWindow = new FileWindow;
+	   			fileWindow.addEventListener(Event.SELECT,updateFilePathText);
+	   			PopUpManager.addPopUp(fileWindow,this,true);
+				PopUpManager.centerPopUp(fileWindow);
+	   		}
+	   		
+	   		private function updateFilePathText(evt:Event):void {
+	   			filePath.text = fileWindow.getFilePath();
+	   		}
+	   		
+	   		private function showResultWindow():void {
+	   			fileWindow = new FileWindow;
+	   			fileWindow.addEventListener(Event.SELECT,updateResultPathText);
+	   			PopUpManager.addPopUp(fileWindow,this,true);
+				PopUpManager.centerPopUp(fileWindow);
+	   		}
+	   		
+	   		private function updateResultPathText(evt:Event):void {
+	   			resultPath.text = fileWindow.getFilePath();
+	   		}
+	   		
+	   		private function addPathFinderItem():void {
+	   			if ( fromPage.text != "" && toPage.text != "" ){
+	   				dgDataPathFinder.addItem({fromPage:fromPage.text,toPage:toPage.text});
+	   				fromPage.text = "";
+	   				toPage.text = "";
+	   			}
+	   			else {
+	   				Alert.show("输入错误，请重新输入。");
+	   			}
+	   		}
+	   		
+	   		private function deletePathFinderItem():void {
+	   			var n:int = dgPathFinder.selectedIndex;
+	   			dgDataPathFinder.removeItemAt(n);
+	   			dgDataPathFinder.refresh();
+	   			
+	   		}
+	   		
+	   		private function rowNumPathFinder(oItem:Object,iCol:int):String {   
+		      var iIndex:int = dgDataPathFinder.getItemIndex(oItem) + 1;   
+		      return String(iIndex);   
+		    }
+		    
+		    private function rowNumTundishPath(oItem:Object,iCol:int):String {   
+		      var iIndex:int = dgDataTundishPath.getItemIndex(oItem) + 1;   
+		      return String(iIndex);   
+		    }
+		    
+		    private function rowNumTundish(oItem:Object,iCol:int):String {   
+		      var iIndex:int = dgDataTundish.getItemIndex(oItem) + 1;   
+		      return String(iIndex);   
+		    }
+		    
+		    private function addTundishPageItem():void {
+		    	if ( tundishPage.text != "" ){
+	   				dgDataTundishPath.addItem({page:tundishPage.text.concat()});
+	   				tundishPage.text = "";
+	   			}
+	   			else {
+	   				Alert.show("输入错误，请重新输入。");
+	   			}
+		    	
+		    }
+		    
+		    private function deleteTundishPageItem():void {
+		    	var n:int = dgTundishPath.selectedIndex;
+		    	dgDataTundishPath.removeItemAt(n);
+		    	dgDataTundishPath.refresh();
+		    }
+		    
+		    private function saveTundish():void {
+		    	var tundishPath:String = "";
+		    	var label:String = "";
+		    	var i:int;
+		    	var o:Object;
+		    	if ( dgDataTundishPath.length >= 2 ){
+		    		for ( i = 0 ; i < dgDataTundishPath.length - 1 ; i++ ){
+		    			o = dgDataTundishPath.getItemAt(i);
+		    			tundishPath += (o.page as String) + SEPARATOR3; 
+		    			label += (o.page as String) + ";"; 
+		    		}
+		    		o = dgDataTundishPath.getItemAt(i);
+		    		tundishPath += (o.page as String); 
+		    		label += (o.page as String);
+		    		dgDataTundish.addItem({label:label,tundish:tundishPath});
+		    		dgDataTundishPath.removeAll();
+		    	}
+		    	else {
+		    		Alert.show("请添加路径。");
+		    	}
+		    }
+		    
+		    private function deleteTundish():void {
+		    	var n:int = dgTundish.selectedIndex;
+		    	dgDataTundish.removeItemAt(n);
+		    	dgDataTundish.refresh();
+		    }
+		    
+		    private function showTundish(evt:MouseEvent):void {
+		    	var str:String = dgTundish.selectedItem.tundish;
+		    	var strArr:Array = str.split(SEPARATOR3);
+		    	var newStr:String = strArr.join("\n");
+		    	Alert.show("漏斗路径:\n"+newStr);
+		    }
+		    
+		    private function start():void {
+		    	if ( !checkParameters() ){
+		    		return ;
+		    	}
+		    	_cmd = cmdGen();
+		    	if ( _cmd == "" ){
+		    		Alert.show("没有添加任何任务");
+		    		closeHandle();
+		    	}
+		    	var sendCMD : HTTPService = new HTTPService();
+ 		    	var params:URLVariables = new URLVariables();
+				sendCMD.url = "anlayseStarterServlet";
+                params.inputPath = encodeURIComponent(filePath.text);
+                params.outputPath = encodeURIComponent(resultPath.text);
+                params.cmd = encodeURIComponent(_cmd);
+                		
+				sendCMD.send(params); 
+				dispatchEvent(new Event(Event.SELECT,true));
+				closeHandle();
+		    }
+
+		    private function cmdGen():String {
+		    	var cmd:String = "";
+		    	var tempStr:String = "";
+		    	tempStr = pathFinderCMDGen();
+		    	if ( tempStr != "" )
+		    		cmd = pathFinderCMDGen() + SEPARATOR_FUNC;
+		    	tempStr = tundishCMDGen();
+		    	if ( tempStr != "" )
+		    		cmd += tempStr + SEPARATOR_FUNC;
+		    	return cmd;
+		    }
+		    
+		    //类名 S_C 长度下限 S1 长度上限 S1 起点 S3 终点 S2 起点 S3 终点
+		    private function pathFinderCMDGen():String {
+		    	var cmd:String = "";
+		    	var param:String = "";
+		    	var o:Object;
+		    	var i:int;
+		    	if ( dgDataPathFinder.length == 0 )
+		    		return cmd;
+		    	param += pathMinLength.text + SEPARATOR1;
+		    	param += pathMaxLength.text + SEPARATOR1;
+		    	param += pathMinUser.text + SEPARATOR1;
+		    	param += pathMaxUser.text + SEPARATOR1;
+		    	for ( i = 0 ; i < dgDataPathFinder.length - 1 ; i++ ){
+		    		o = dgDataPathFinder[i];
+		    		param += o.fromPage + SEPARATOR3 + o.toPage + SEPARATOR2;
+		    	}
+		    	o = dgDataPathFinder[i];
+		    	param += o.fromPage + SEPARATOR3 + o.toPage;
+		    	cmd = genTypeCmd(PATH_FINDER_NAME , param);	
+		    	return cmd;
+		    }
+		    
+		    //类名 S_C 路径不连续 S1 路径连续 S1 入口 S3 步骤1 S3 步骤2 S3 步骤3 S3 出口 S2 入口 S3 步骤1 S3 步骤2 S3 出口
+		    private function tundishCMDGen():String {
+		    	var cmd:String = "";
+		    	var param:String = "";
+		    	var o:Object;
+		    	var i:int;
+		    	if ( dgDataTundish.length == 0 )
+		    		return cmd;
+		    	//cmd += TUNDISH_NAME + SEPARATOR_CLASS;
+		    	if ( tundishIsDiscrete.selected ){
+		    		param += "1" + SEPARATOR1;
+		    	}
+		    	else {
+		    		param += "0" + SEPARATOR1;
+		    	}
+		    	if ( tundishIsContiuous.selected ){
+		    		param += "1" + SEPARATOR1;
+		    	}
+		    	else {
+		    		param += "0" + SEPARATOR1;
+		    	}
+
+		    	for ( i = 0 ; i < dgDataTundish.length - 1 ; i++ ){
+		    		o = dgDataTundish[i];
+		    		param += o.tundish + SEPARATOR2;
+		    	}
+		    	o = dgDataTundish[i];
+		    	param += o.tundish;
+		    	cmd = genTypeCmd(TUNDISH_NAME , param);
+		    	return cmd;
+		    }
+		    
+		    private function genTypeCmd(className:String , param:String):String {
+		    	var cmd:String = "";
+		    	if ( shortPageNameCheckBox.selected )
+		    		cmd += className + SEPARATOR_CLASS + SHORT_NAME + SEPARATOR1 + param;
+		    	if ( fullPageNameCheckBox.selected ) {
+		    		if ( cmd == "" )
+		    			cmd += className + SEPARATOR_CLASS +FULL_NAME + SEPARATOR1 + param;
+		    		else 
+		    			cmd += SEPARATOR_FUNC + className + SEPARATOR_CLASS + FULL_NAME + SEPARATOR1 + param;
+		    	}
+		    	if ( cateNameCheckBox.selected ) {
+		    		if ( cmd == "" )
+		    			cmd += className + SEPARATOR_CLASS + CATEGORY + SEPARATOR1 + param;
+		    		else 
+		    			cmd += SEPARATOR_FUNC + className + SEPARATOR_CLASS + CATEGORY + SEPARATOR1 + param;
+		    	}
+		    	return cmd;
+		    }
+		    
+		    private function checkParameters():Boolean {
+		    	if ( !checkMainPanelParam() )
+		    		return false;
+		    	if ( !checkPathFinderParam() )
+		    		return false;
+		    	if ( !checkTundishParam() )
+		    		return false;
+		    	return true;
+		    }
+		    
+		    private function checkMainPanelParam():Boolean {
+		    	if ( filePath.text == "" ){
+		    		Alert.show("输入路径为空，\n请重新输入。");
+		    		return false;
+		    	}
+		    	if ( resultPath.text == "" ){
+		    		Alert.show("输出路径为空，\n请重新输入。");
+		    		return false;
+		    	}
+		    	if ( shortPageNameCheckBox.selected == false && fullPageNameCheckBox.selected == false && cateNameCheckBox.selected == false ){
+		    		Alert.show("请选择要处理的对象模式：\n1.仅网页名，2.完整网页，3.仅类别。");
+		    		return false;
+		    	}
+		    	return true;
+		    }
+		    private function checkPathFinderParam():Boolean {
+		    	if ( dgDataPathFinder.length > 0 ){
+		    		var minLength:int = Number(pathMinLength.text);
+		    		var maxLength:int = Number(pathMaxLength.text);
+		    		if ( minLength < MIN_PATH_LENGTH || ( minLength > maxLength && maxLength != 0 ) ){
+		    			Alert.show("路径发现中的路径长度上下限设置有错，\n请重新输入。");
+		    			return false;
+		    		} 
+		    		
+		    		var minUser:int = Number(pathMinUser.text);
+		    		var maxUser:int = Number(pathMaxUser.text);
+		    		if ( minUser < MIN_PATH_LENGTH || ( minUser > maxUser && maxUser != 0 ) ){
+		    			Alert.show("路径发现中的用户数量上下限设置有错，\n请重新输入。");
+		    			return false;
+		    		}
+		    	}
+		    	return true;
+		    }
+		    
+		    private function checkTundishParam():Boolean {
+		    	if ( dgDataTundish.length > 0 ){
+		    		if ( tundishIsDiscrete.selected == 0 && tundishIsContiuous.selected == 0 ){
+		    			Alert.show("漏斗中请选择至少一种模式，\n请重新输入。");
+		    			return false;
+		    		}
+		    	}	
+		    	return true;
+		    }
+		    
+		    public function getCMD():String {
+		    	return _cmd;
+		    }
+		]]>
+	</mx:Script>
+	<mx:Box width="100%" height="464" paddingTop="20" paddingLeft="10" paddingRight="10" >
+		<mx:HBox verticalAlign="middle">
+			<mx:VBox >
+				<mx:HBox width="458" paddingLeft="20">
+					<mx:Label text="目标文件"/>
+					<mx:TextInput id="filePath" text="E:\data\pagevisit\test.txt" width="305"/>
+					<mx:Button label="选择" click="showFileWindow()"/>
+				</mx:HBox>
+				<mx:HBox width="458" paddingLeft="20">
+					<mx:Label text="结果路径"/>
+					<mx:TextInput id="resultPath" text="E:\data\pagevisit\testout.txt" width="305"/>
+					<mx:Button label="选择" click="showResultWindow()"/>
+				</mx:HBox>
+			</mx:VBox>
+			<mx:VBox fontSize="10" paddingLeft="20">
+				<mx:CheckBox id="shortPageNameCheckBox" label="仅网页名" selected="true"/>
+				<mx:CheckBox id="fullPageNameCheckBox" label="完整网页"/>
+				<mx:CheckBox id="cateNameCheckBox" label="仅类别"/>
+			</mx:VBox>
+		</mx:HBox>
+		
+
+		
+		<mx:TabNavigator x="0" y="0" width="100%" height="360">
+			<mx:Canvas label="路径发现 " width="100%" height="100%">
+				<mx:DataGrid id="dgPathFinder" x="71.5" y="10" textAlign="center" height="244" width="415"
+					 dataProvider="{dgDataPathFinder}" sortableColumns="false" draggableColumns="false">
+					<mx:columns>
+						<mx:DataGridColumn headerText="序号" dataField="orderId" width="50" labelFunction="rowNumPathFinder"/>
+						<mx:DataGridColumn headerText="起点" dataField="fromPage"/>
+						<mx:DataGridColumn headerText="终点" dataField="toPage"/>
+					</mx:columns>
+				</mx:DataGrid>
+				<mx:Label x="71.5" y="266" text="起点"/>
+				<mx:TextInput id="fromPage" x="108.5" y="264" width="107"/>
+				<mx:TextInput id="toPage" x="108.5" y="296" width="107"/>
+				<mx:Label x="71.5" y="298" text="终点"/>
+				<mx:Button x="228" y="262" label="添加" click="addPathFinderItem()"/>
+				<mx:Button x="228" y="294" label="删除" click="deletePathFinderItem()"/>
+				<mx:Label x="298" y="264" text="长度上限"/>
+				<mx:Label x="298" y="293" text="长度下限"/>
+				<mx:TextInput id="pathMaxLength" text="0" maxChars="4" x="359" y="262" width="64.5" restrict="0-9"/>
+				<mx:TextInput id="pathMinLength" text="1" maxChars="4" x="359" y="291" width="64.5" restrict="0-9"/>
+				<mx:Label x="431.5" y="264" text="用户上限"/>
+				<mx:Label x="431.5" y="293" text="用户下限"/>
+				<mx:TextInput id="pathMaxUser" text="0" x="492" y="262" width="54" restrict="0-9"/>
+				<mx:TextInput id="pathMinUser" text="1" x="492" y="291" width="54" restrict="0-9"/>
+			</mx:Canvas>
+			<mx:Canvas label="漏斗分析" width="100%" height="100%">
+				<mx:DataGrid id="dgTundishPath" x="57" y="10" height="239" textAlign="center" 
+					dataProvider="{dgDataTundishPath}" sortableColumns="false" draggableColumns="false">
+					<mx:columns>
+						<mx:DataGridColumn headerText="序号" dataField="orderId" width="50" labelFunction="rowNumTundishPath"/>
+						<mx:DataGridColumn headerText="网页" dataField="page"/>
+					</mx:columns>
+				</mx:DataGrid>
+				<mx:Label x="57" y="259" text="网页"/>
+				<mx:TextInput id="tundishPage" x="94" y="257" width="115"/>
+				<mx:Button x="77" y="287" label="添加" click="addTundishPageItem()"/>
+				<mx:Button x="145" y="287" label="删除" click="deleteTundishPageItem()"/>
+				<mx:Button x="237" y="86" label="保存漏斗" click="saveTundish()"/>
+				<mx:Button x="237" y="130" label="删除漏斗" click="deleteTundish()"/>
+				<mx:DataGrid id="dgTundish" x="343" y="10" width="156" textAlign="center" doubleClickEnabled="true" doubleClick="showTundish(event)" 
+					dataProvider="{dgDataTundish}" sortableColumns="false" draggableColumns="false" height="239">
+					<mx:columns>
+						<mx:DataGridColumn headerText="序号" dataField="orderId" width="50" labelFunction="rowNumTundish"/>
+						<mx:DataGridColumn headerText="漏斗" dataField="label"/>
+					</mx:columns>
+				</mx:DataGrid>
+				
+				<mx:CheckBox id="tundishIsDiscrete" x="343" y="287" label="路径不连续" selected="true"/>
+				<mx:CheckBox id="tundishIsContiuous" x="445" y="287" label="路径连续" selected="true"/>
+				<mx:Label x="345" y="259" text="提示：双击可查看漏斗完整路径"/>
+			</mx:Canvas>
+		</mx:TabNavigator>	
+	</mx:Box>	
+	
+	<mx:Button label="启动" x="415" y="464" click="start()"/>
+	<mx:Button label="取消" x="488" y="464" click="closeHandle()"/>
+</mx:TitleWindow>

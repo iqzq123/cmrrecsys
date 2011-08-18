@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Graph> 
+  <Community id="-1" level="0" size="50"> 
+    <Member> 
+      <Node id="1"/>  
+      <Node id="10"/>  
+      <Node id="11"/>  
+      <Node id="12"/>  
+      <Node id="13"/>  
+      <Node id="14"/>  
+      <Node id="15"/>  
+      <Node id="16"/>  
+      <Node id="17"/>  
+      <Node id="18"/>  
+      <Node id="19"/>  
+      <Node id="2"/>  
+      <Node id="20"/>  
+      <Node id="21"/>  
+      <Node id="22"/>  
+      <Node id="23"/>  
+      <Node id="24"/>  
+      <Node id="25"/>  
+      <Node id="26"/>  
+      <Node id="27"/>  
+      <Node id="28"/>  
+      <Node id="29"/>  
+      <Node id="3"/>  
+      <Node id="30"/>  
+      <Node id="31"/>  
+      <Node id="32"/>  
+      <Node id="33"/>  
+      <Node id="34"/>  
+      <Node id="35"/>  
+      <Node id="36"/>  
+      <Node id="37"/>  
+      <Node id="38"/>  
+      <Node id="39"/>  
+      <Node id="4"/>  
+      <Node id="40"/>  
+      <Node id="41"/>  
+      <Node id="42"/>  
+      <Node id="43"/>  
+      <Node id="44"/>  
+      <Node id="45"/>  
+      <Node id="46"/>  
+      <Node id="47"/>  
+      <Node id="48"/>  
+      <Node id="49"/>  
+      <Node id="5"/>  
+      <Node id="50"/>  
+      <Node id="6"/>  
+      <Node id="7"/>  
+      <Node id="8"/>  
+      <Node id="9"/>  
+      <Node id="1"/>  
+      <Node id="10"/>  
+      <Node id="11"/>  
+      <Node id="12"/>  
+      <Node id="13"/>  
+      <Node id="14"/>  
+      <Node id="15"/>  
+      <Node id="16"/>  
+      <Node id="17"/>  
+      <Node id="18"/>  
+      <Node id="19"/>  
+      <Node id="2"/>  
+      <Node id="20"/>  
+      <Node id="21"/>  
+      <Node id="22"/>  
+      <Node id="23"/>  
+      <Node id="24"/>  
+      <Node id="25"/>  
+      <Node id="26"/>  
+      <Node id="27"/>  
+      <Node id="28"/>  
+      <Node id="29"/>  
+      <Node id="3"/>  
+      <Node id="30"/>  
+      <Node id="31"/>  
+      <Node id="32"/>  
+      <Node id="33"/>  
+      <Node id="34"/>  
+      <Node id="35"/>  
+      <Node id="36"/>  
+      <Node id="37"/>  
+      <Node id="38"/>  
+      <Node id="39"/>  
+      <Node id="4"/>  
+      <Node id="40"/>  
+      <Node id="41"/>  
+      <Node id="42"/>  
+      <Node id="43"/>  
+      <Node id="44"/>  
+      <Node id="45"/>  
+      <Node id="46"/>  
+      <Node id="47"/>  
+      <Node id="48"/>  
+      <Node id="49"/>  
+      <Node id="5"/>  
+      <Node id="50"/>  
+      <Node id="6"/>  
+      <Node id="7"/>  
+      <Node id="8"/>  
+      <Node id="9"/>
+    </Member>  
+    <Link> 
+      <Edge fromID="1" toID="2"/>  
+      <Edge fromID="3" toID="4"/>  
+      <Edge fromID="5" toID="6"/>  
+      <Edge fromID="7" toID="8"/>  
+      <Edge fromID="9" toID="10"/>  
+      <Edge fromID="11" toID="12"/>  
+      <Edge fromID="13" toID="14"/>  
+      <Edge fromID="15" toID="16"/>  
+      <Edge fromID="17" toID="18"/>  
+      <Edge fromID="19" toID="20"/>  
+      <Edge fromID="21" toID="22"/>  
+      <Edge fromID="23" toID="24"/>  
+      <Edge fromID="25" toID="26"/>  
+      <Edge fromID="27" toID="28"/>  
+      <Edge fromID="29" toID="30"/>  
+      <Edge fromID="31" toID="32"/>  
+      <Edge fromID="33" toID="34"/>  
+      <Edge fromID="35" toID="36"/>  
+      <Edge fromID="37" toID="38"/>  
+      <Edge fromID="39" toID="40"/>  
+      <Edge fromID="41" toID="42"/>  
+      <Edge fromID="43" toID="44"/>  
+      <Edge fromID="45" toID="46"/>  
+      <Edge fromID="47" toID="48"/>  
+      <Edge fromID="49" toID="50"/> 
+    </Link> 
+  </Community> 
+</Graph>

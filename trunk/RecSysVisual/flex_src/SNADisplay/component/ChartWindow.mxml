@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="800" height="500" 
+	showCloseButton="true" close="closeHandle()"  >
+	<mx:Script>
+		<![CDATA[
+		import mx.collections.ArrayCollection;
+		import mx.managers.PopUpManager;
+		import SNADisplay.org.utils.Colour;
+        [Bindable]
+        private var dataAC:ArrayCollection = new ArrayCollection();
+        
+        [Bindable]
+        private var nameTitle:String;
+        [Bindable]
+        private var valueTitle:String;
+        import mx.controls.Alert;
+        public function init(xmlData:XML = null):void {
+        	var data:XML;
+        	data = xmlData.elements("hisName")[0];
+        	this.title = data.attribute("name");
+        	data = xmlData.elements("xName")[0];
+        	nameTitle = data.attribute("name");
+        	data = xmlData.elements("yName")[0];
+        	valueTitle = data.attribute("name");
+        	
+        	for each ( data in xmlData.descendants("column") ){
+        		var obj:Object = new Object();
+                obj.Name = data.attribute("name");
+                obj.Value = data.attribute("value");
+				dataAC.addItem(obj);
+        	}
+        }
+   		private function closeHandle():void {
+   			PopUpManager.removePopUp(this);
+   		}
+   		
+		]]>
+	</mx:Script>
+	<!-- Define custom colors for use as fills. -->
+    <mx:SolidColor id="sc" color="{Colour.LIGHT_BLUE}" alpha=".6"/>
+    <!-- Define custom Strokes for the columns. -->
+    <mx:Stroke id="s" color="{Colour.GRAY}" weight="2"/>
+  
+    <mx:HBox width="100%" height="100%">
+	   <!-- <mx:Legend dataProvider="{column}"/>-->
+		<mx:ColumnChart id="column" 
+            height="100%" 
+            width="100%" 
+            paddingLeft="5" paddingBottom="10"
+            paddingRight="5" 
+            showDataTips="true" 
+            dataProvider="{dataAC}"
+            columnWidthRatio="0.65"
+        >                
+	        <mx:horizontalAxis>
+	            <mx:CategoryAxis categoryField="Name"
+	                title="{nameTitle}" ticksBetweenLabels="true"/>
+	        </mx:horizontalAxis>
+	        <mx:verticalAxis>
+	        	<mx:LinearAxis title="{valueTitle}" />
+	        </mx:verticalAxis>
+ 
+	        <mx:series>
+	            <mx:ColumnSeries 
+	                xField="Name" 
+	                yField="Value"
+	                fill="{sc}"
+	                stroke="{s}"
+	            />
+	        </mx:series>
+	    </mx:ColumnChart>
+ 	</mx:HBox>
+</mx:TitleWindow>

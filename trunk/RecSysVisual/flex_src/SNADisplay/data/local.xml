@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph>
+<Edge fromID="358" toID="103" />
+<Edge fromID="184" toID="49" />
+<Edge fromID="103" toID="274" />
+<Edge fromID="247" toID="103" />
+<Edge fromID="114" toID="87" />
+<Edge fromID="75" toID="30" />
+<Edge fromID="82" toID="49" />
+<Edge fromID="75" toID="35" />
+<Edge fromID="49" toID="192" />
+<Edge fromID="274" toID="172" />
+<Edge fromID="392" toID="27" />
+<Edge fromID="87" toID="35" />
+<Edge fromID="370" toID="49" />
+<Edge fromID="247" toID="261" />
+<Edge fromID="103" toID="82" />
+<Edge fromID="210" toID="49" />
+<Edge fromID="386" toID="247" />
+<Edge fromID="199" toID="35" />
+<Edge fromID="76" toID="52" />
+<Edge fromID="76" toID="71" />
+<Edge fromID="87" toID="103" />
+<Edge fromID="123" toID="30" />
+<Edge fromID="123" toID="212" />
+<Edge fromID="209" toID="71" />
+<Edge fromID="49" toID="27" />
+<Edge fromID="52" toID="35" />
+<Edge fromID="41" toID="30" />
+<Edge fromID="209" toID="238" />
+<Edge fromID="317" toID="30" />
+<Edge fromID="252" toID="49" />
+<Edge fromID="103" toID="137" />
+<Edge fromID="17" toID="35" />
+<Edge fromID="123" toID="317" />
+<Edge fromID="379" toID="317" />
+<Edge fromID="30" toID="3" />
+<Edge fromID="212" toID="103" />
+<Edge fromID="358" toID="392" />
+<Edge fromID="274" toID="370" />
+<Edge fromID="294" toID="87" />
+<Edge fromID="358" toID="30" />
+<Edge fromID="225" toID="319" />
+<Edge fromID="82" toID="71" />
+<Edge fromID="27" toID="3" />
+<Edge fromID="366" toID="30" />
+<Edge fromID="225" toID="41" />
+<Edge fromID="266" toID="30" />
+<Edge fromID="224" toID="71" />
+<Edge fromID="379" toID="364" />
+<Edge fromID="239" toID="247" />
+<Edge fromID="87" toID="255" />
+<Edge fromID="103" toID="105" />
+<Edge fromID="35" toID="225" />
+<Edge fromID="294" toID="30" />
+<Edge fromID="113" toID="364" />
+<Node id="212"/> 
+<Node id="114"/> 
+<Node id="261"/> 
+<Node id="210"/> 
+<Node id="113"/> 
+<Node id="319"/> 
+<Node id="137"/> 
+<Node id="317"/> 
+<Node id="17"/> 
+<Node id="35"/> 
+<Node id="192"/> 
+<Node id="366"/> 
+<Node id="364"/> 
+<Node id="199"/> 
+<Node id="41"/> 
+<Node id="172"/> 
+<Node id="386"/> 
+<Node id="82"/> 
+<Node id="105"/> 
+<Node id="103"/> 
+<Node id="266"/> 
+<Node id="87"/> 
+<Node id="247"/> 
+<Node id="49"/> 
+<Node id="252"/> 
+<Node id="224"/> 
+<Node id="225"/> 
+<Node id="392"/> 
+<Node id="123"/> 
+<Node id="294"/> 
+<Node id="370"/> 
+<Node id="27"/> 
+<Node id="274"/> 
+<Node id="209"/> 
+<Node id="3"/> 
+<Node id="379"/> 
+<Node id="239"/> 
+<Node id="30"/> 
+<Node id="184"/> 
+<Node id="358"/> 
+<Node id="52"/> 
+<Node id="71"/> 
+<Node id="238"/> 
+<Node id="75"/> 
+<Node id="255"/> 
+<Node id="76"/> 
+</Graph>
