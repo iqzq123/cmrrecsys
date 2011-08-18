@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<logs> 
+  <log> 
+    <Date>2011-1-16 15:20:27</Date>  
+    <File>File_0116</File>  
+    <Operate>degree stastic</Operate> 
+  </log>  
+  <log> 
+    <Date>2011-1-16 15:52:23</Date>  
+    <File>File_0116</File>  
+    <Operate>degree stastic</Operate> 
+  </log>  
+  <log> 
+    <Date>2011-1-16 17:55:20</Date>  
+    <File>File_0116</File>  
+    <Operate>degree stastic</Operate> 
+  </log>  
+  <log> 
+    <Date>2011-1-16 19:55:13</Date>  
+    <File>wangpeng/outIOD</File>  
+    <Operate>degree stastic</Operate> 
+  </log>  
+  <log> 
+    <Date>2011-1-18 21:17:10</Date>  
+    <File>wangpeng/outIOD</File>  
+    <Operate>degree stastic</Operate> 
+  </log>  
+  <log> 
+    <Date>2011-1-18 21:18:28</Date>  
+    <File>wangpeng/outIOD</File>  
+    <Operate>degree stastic</Operate> 
+  </log>  
+  <log> 
+    <Date>2011-1-19 9:09:03</Date>  
+    <File>wangpeng/out 1BC</File>  
+    <Operate>BetweenNess</Operate> 
+  </log>  
+  <log> 
+    <Date>2011-1-19 9:10:56</Date>  
+    <File>wangpeng/outIOD</File>  
+    <Operate>degree stastic</Operate> 
+  </log>  
+  <log> 
+    <Date>2011-1-19 11:26:47</Date>  
+    <File>wangpeng/outpr</File>  
+    <Operate>PageRank</Operate> 
+  </log>  
+  <log>
+    <Date>2011-1-19 11:30:42</Date>
+    <File>wangpeng/outssp</File>
+    <Operate>ssp</Operate>
+  </log>
+</logs>

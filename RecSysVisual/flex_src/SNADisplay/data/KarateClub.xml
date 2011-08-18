@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph>
+<Edge fromID="1" toID="2" />
+<Edge fromID="1" toID="3" />
+<Edge fromID="1" toID="4" />
+<Edge fromID="1" toID="5" />
+<Edge fromID="1" toID="6" />
+<Edge fromID="1" toID="7" />
+<Edge fromID="1" toID="8" />
+<Edge fromID="1" toID="9" />
+<Edge fromID="1" toID="11" />
+<Edge fromID="1" toID="12" />
+<Edge fromID="1" toID="13" />
+<Edge fromID="1" toID="14" />
+<Edge fromID="1" toID="18" />
+<Edge fromID="1" toID="20" />
+<Edge fromID="1" toID="22" />
+<Edge fromID="1" toID="32" />
+<Edge fromID="2" toID="3" />
+<Edge fromID="2" toID="4" />
+<Edge fromID="2" toID="8" />
+<Edge fromID="2" toID="14" />
+<Edge fromID="2" toID="18" />
+<Edge fromID="2" toID="20" />
+<Edge fromID="2" toID="22" />
+<Edge fromID="2" toID="31" />
+<Edge fromID="3" toID="4" />
+<Edge fromID="3" toID="8" />
+<Edge fromID="3" toID="9" />
+<Edge fromID="3" toID="10" />
+<Edge fromID="3" toID="14" />
+<Edge fromID="3" toID="28" />
+<Edge fromID="3" toID="29" />
+<Edge fromID="3" toID="33" />
+<Edge fromID="4" toID="8" />
+<Edge fromID="4" toID="13" />
+<Edge fromID="4" toID="14" />
+<Edge fromID="5" toID="7" />
+<Edge fromID="5" toID="11" />
+<Edge fromID="6" toID="7" />
+<Edge fromID="6" toID="11" />
+<Edge fromID="6" toID="17" />
+<Edge fromID="7" toID="17" />
+<Edge fromID="9" toID="31" />
+<Edge fromID="9" toID="33" />
+<Edge fromID="9" toID="34" />
+<Edge fromID="10" toID="34" />
+<Edge fromID="14" toID="34" />
+<Edge fromID="15" toID="33" />
+<Edge fromID="15" toID="34" />
+<Edge fromID="16" toID="33" />
+<Edge fromID="16" toID="34" />
+<Edge fromID="19" toID="33" />
+<Edge fromID="19" toID="34" />
+<Edge fromID="20" toID="34" />
+<Edge fromID="21" toID="33" />
+<Edge fromID="21" toID="34" />
+<Edge fromID="23" toID="33" />
+<Edge fromID="23" toID="34" />
+<Edge fromID="24" toID="26" />
+<Edge fromID="24" toID="28" />
+<Edge fromID="24" toID="30" />
+<Edge fromID="24" toID="33" />
+<Edge fromID="24" toID="34" />
+<Edge fromID="25" toID="26" />
+<Edge fromID="25" toID="28" />
+<Edge fromID="25" toID="32" />
+<Edge fromID="26" toID="32" />
+<Edge fromID="27" toID="30" />
+<Edge fromID="27" toID="34" />
+<Edge fromID="28" toID="34" />
+<Edge fromID="29" toID="32" />
+<Edge fromID="29" toID="34" />
+<Edge fromID="30" toID="33" />
+<Edge fromID="30" toID="34" />
+<Edge fromID="31" toID="33" />
+<Edge fromID="31" toID="34" />
+<Edge fromID="32" toID="33" />
+<Edge fromID="32" toID="34" />
+<Edge fromID="33" toID="34" />
+<Node id="19"/> 
+<Node id="17"/> 
+<Node id="18"/> 
+<Node id="33"/> 
+<Node id="15"/> 
+<Node id="16"/> 
+<Node id="34"/> 
+<Node id="13"/> 
+<Node id="14"/> 
+<Node id="11"/> 
+<Node id="12"/> 
+<Node id="21"/> 
+<Node id="20"/> 
+<Node id="22"/> 
+<Node id="23"/> 
+<Node id="24"/> 
+<Node id="25"/> 
+<Node id="26"/> 
+<Node id="27"/> 
+<Node id="28"/> 
+<Node id="29"/> 
+<Node id="3"/> 
+<Node id="2"/> 
+<Node id="1"/> 
+<Node id="10"/> 
+<Node id="30"/> 
+<Node id="7"/> 
+<Node id="6"/> 
+<Node id="5"/> 
+<Node id="32"/> 
+<Node id="4"/> 
+<Node id="31"/> 
+<Node id="9"/> 
+<Node id="8"/> 
+</Graph>

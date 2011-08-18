@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph><Community id="-1" level="0" size="80">
+<Member>
+<Node id="-0" />
+<Node id="-1" />
+<Node id="-2" />
+<Node id="-3" />
+<Node id="-4" />
+<Node id="-5" />
+<Node id="-6" />
+<Node id="-7" />
+<Node id="-8" />
+<Node id="-9" />
+<Node id="-10" />
+<Node id="-11" />
+<Node id="-12" />
+<Node id="-13" />
+<Node id="-14" />
+<Node id="-15" />
+<Node id="-16" />
+<Node id="-17" />
+<Node id="-18" />
+<Node id="-19" />
+<Node id="-20" />
+<Node id="-21" />
+<Node id="-22" />
+<Node id="-23" />
+<Node id="-24" />
+<Node id="-25" />
+<Node id="-26" />
+<Node id="-27" />
+<Node id="-28" />
+<Node id="-29" />
+<Node id="-30" />
+<Node id="-31" />
+<Node id="-32" />
+<Node id="-33" />
+<Node id="-34" />
+<Node id="-35" />
+<Node id="-36" />
+<Node id="-37" />
+<Node id="-38" />
+<Node id="-39" />
+<Node id="-40" />
+<Node id="-41" />
+<Node id="-42" />
+<Node id="-43" />
+<Node id="-44" />
+<Node id="-45" />
+<Node id="-46" />
+<Node id="-47" />
+<Node id="-48" />
+<Node id="-49" />
+<Node id="-50" />
+<Node id="-51" />
+<Node id="-52" />
+<Node id="-53" />
+<Node id="-54" />
+<Node id="-55" />
+<Node id="-56" />
+<Node id="-57" />
+<Node id="-58" />
+<Node id="-59" />
+<Node id="-60" />
+<Node id="-61" />
+<Node id="-62" />
+<Node id="-63" />
+<Node id="-64" />
+<Node id="-65" />
+<Node id="-66" />
+<Node id="-67" />
+<Node id="-68" />
+<Node id="-69" />
+<Node id="-70" />
+<Node id="-71" />
+<Node id="-72" />
+<Node id="-73" />
+<Node id="-74" />
+<Node id="-75" />
+<Node id="-76" />
+<Node id="-77" />
+<Node id="-78" />
+<Node id="-79" />
+</Member>
+<Link>
+<Edge fromID="-0" toID="-41" />
+<Edge fromID="-0" toID="-67" />
+<Edge fromID="-0" toID="-14" />
+<Edge fromID="-1" toID="-20" />
+<Edge fromID="-1" toID="-49" />
+<Edge fromID="-1" toID="-44" />
+<Edge fromID="-2" toID="-38" />
+<Edge fromID="-2" toID="-78" />
+<Edge fromID="-2" toID="-64" />
+<Edge fromID="-3" toID="-25" />
+<Edge fromID="-3" toID="-65" />
+<Edge fromID="-3" toID="-1" />
+<Edge fromID="-4" toID="-27" />
+<Edge fromID="-4" toID="-41" />
+<Edge fromID="-4" toID="-11" />
+<Edge fromID="-5" toID="-35" />
+<Edge fromID="-5" toID="-22" />
+<Edge fromID="-5" toID="-27" />
+<Edge fromID="-6" toID="-76" />
+<Edge fromID="-6" toID="-71" />
+<Edge fromID="-6" toID="-44" />
+<Edge fromID="-7" toID="-62" />
+<Edge fromID="-7" toID="-73" />
+<Edge fromID="-7" toID="-52" />
+<Edge fromID="-8" toID="-62" />
+<Edge fromID="-8" toID="-61" />
+<Edge fromID="-8" toID="-76" />
+<Edge fromID="-9" toID="-38" />
+<Edge fromID="-9" toID="-55" />
+<Edge fromID="-9" toID="-7" />
+<Edge fromID="-10" toID="-46" />
+<Edge fromID="-10" toID="-51" />
+<Edge fromID="-10" toID="-18" />
+<Edge fromID="-11" toID="-29" />
+<Edge fromID="-11" toID="-72" />
+<Edge fromID="-11" toID="-67" />
+<Edge fromID="-12" toID="-59" />
+<Edge fromID="-12" toID="-75" />
+<Edge fromID="-12" toID="-54" />
+<Edge fromID="-13" toID="-63" />
+<Edge fromID="-13" toID="-51" />
+<Edge fromID="-13" toID="-42" />
+<Edge fromID="-14" toID="-13" />
+<Edge fromID="-14" toID="-73" />
+<Edge fromID="-14" toID="-24" />
+<Edge fromID="-15" toID="-21" />
+<Edge fromID="-15" toID="-31" />
+<Edge fromID="-15" toID="-13" />
+<Edge fromID="-16" toID="-68" />
+<Edge fromID="-16" toID="-27" />
+<Edge fromID="-16" toID="-44" />
+<Edge fromID="-17" toID="-22" />
+<Edge fromID="-17" toID="-37" />
+<Edge fromID="-17" toID="-59" />
+<Edge fromID="-18" toID="-3" />
+<Edge fromID="-18" toID="-61" />
+<Edge fromID="-18" toID="-9" />
+<Edge fromID="-19" toID="-58" />
+<Edge fromID="-19" toID="-76" />
+<Edge fromID="-19" toID="-75" />
+<Edge fromID="-20" toID="-30" />
+<Edge fromID="-20" toID="-2" />
+<Edge fromID="-20" toID="-48" />
+<Edge fromID="-21" toID="-26" />
+<Edge fromID="-21" toID="-0" />
+<Edge fromID="-21" toID="-62" />
+<Edge fromID="-22" toID="-64" />
+<Edge fromID="-22" toID="-8" />
+<Edge fromID="-22" toID="-6" />
+<Edge fromID="-23" toID="-45" />
+<Edge fromID="-23" toID="-50" />
+<Edge fromID="-23" toID="-9" />
+<Edge fromID="-24" toID="-50" />
+<Edge fromID="-24" toID="-70" />
+<Edge fromID="-24" toID="-46" />
+<Edge fromID="-25" toID="-61" />
+<Edge fromID="-25" toID="-73" />
+<Edge fromID="-25" toID="-28" />
+<Edge fromID="-26" toID="-29" />
+<Edge fromID="-26" toID="-63" />
+<Edge fromID="-26" toID="-4" />
+<Edge fromID="-27" toID="-34" />
+<Edge fromID="-27" toID="-36" />
+<Edge fromID="-27" toID="-0" />
+<Edge fromID="-28" toID="-6" />
+<Edge fromID="-28" toID="-16" />
+<Edge fromID="-28" toID="-11" />
+<Edge fromID="-29" toID="-68" />
+<Edge fromID="-29" toID="-64" />
+<Edge fromID="-29" toID="-39" />
+<Edge fromID="-30" toID="-66" />
+<Edge fromID="-30" toID="-43" />
+<Edge fromID="-30" toID="-17" />
+<Edge fromID="-31" toID="-18" />
+<Edge fromID="-31" toID="-38" />
+<Edge fromID="-31" toID="-2" />
+<Edge fromID="-32" toID="-49" />
+<Edge fromID="-32" toID="-61" />
+<Edge fromID="-32" toID="-33" />
+<Edge fromID="-33" toID="-75" />
+<Edge fromID="-33" toID="-79" />
+<Edge fromID="-33" toID="-58" />
+<Edge fromID="-34" toID="-64" />
+<Edge fromID="-34" toID="-10" />
+<Edge fromID="-34" toID="-57" />
+<Edge fromID="-35" toID="-66" />
+<Edge fromID="-35" toID="-73" />
+<Edge fromID="-35" toID="-61" />
+<Edge fromID="-36" toID="-25" />
+<Edge fromID="-36" toID="-44" />
+<Edge fromID="-36" toID="-32" />
+<Edge fromID="-37" toID="-30" />
+<Edge fromID="-37" toID="-69" />
+<Edge fromID="-37" toID="-57" />
+<Edge fromID="-38" toID="-53" />
+<Edge fromID="-38" toID="-57" />
+<Edge fromID="-38" toID="-32" />
+<Edge fromID="-39" toID="-66" />
+<Edge fromID="-39" toID="-10" />
+<Edge fromID="-39" toID="-41" />
+<Edge fromID="-40" toID="-76" />
+<Edge fromID="-40" toID="-35" />
+<Edge fromID="-40" toID="-47" />
+<Edge fromID="-41" toID="-55" />
+<Edge fromID="-41" toID="-54" />
+<Edge fromID="-41" toID="-31" />
+<Edge fromID="-42" toID="-52" />
+<Edge fromID="-42" toID="-70" />
+<Edge fromID="-42" toID="-30" />
+<Edge fromID="-43" toID="-61" />
+<Edge fromID="-43" toID="-44" />
+<Edge fromID="-43" toID="-46" />
+<Edge fromID="-44" toID="-70" />
+<Edge fromID="-44" toID="-67" />
+<Edge fromID="-44" toID="-31" />
+<Edge fromID="-45" toID="-7" />
+<Edge fromID="-45" toID="-57" />
+<Edge fromID="-45" toID="-17" />
+<Edge fromID="-46" toID="-47" />
+<Edge fromID="-46" toID="-73" />
+<Edge fromID="-46" toID="-63" />
+<Edge fromID="-47" toID="-65" />
+<Edge fromID="-47" toID="-29" />
+<Edge fromID="-47" toID="-49" />
+<Edge fromID="-48" toID="-78" />
+<Edge fromID="-48" toID="-61" />
+<Edge fromID="-48" toID="-28" />
+<Edge fromID="-49" toID="-22" />
+<Edge fromID="-49" toID="-66" />
+<Edge fromID="-49" toID="-70" />
+<Edge fromID="-50" toID="-13" />
+<Edge fromID="-50" toID="-48" />
+<Edge fromID="-50" toID="-20" />
+<Edge fromID="-51" toID="-31" />
+<Edge fromID="-51" toID="-42" />
+<Edge fromID="-51" toID="-55" />
+<Edge fromID="-52" toID="-50" />
+<Edge fromID="-52" toID="-39" />
+<Edge fromID="-52" toID="-24" />
+<Edge fromID="-53" toID="-57" />
+<Edge fromID="-53" toID="-28" />
+<Edge fromID="-53" toID="-3" />
+<Edge fromID="-54" toID="-75" />
+<Edge fromID="-54" toID="-2" />
+<Edge fromID="-54" toID="-30" />
+<Edge fromID="-55" toID="-36" />
+<Edge fromID="-55" toID="-14" />
+<Edge fromID="-55" toID="-60" />
+<Edge fromID="-56" toID="-36" />
+<Edge fromID="-56" toID="-21" />
+<Edge fromID="-56" toID="-68" />
+<Edge fromID="-57" toID="-79" />
+<Edge fromID="-57" toID="-68" />
+<Edge fromID="-57" toID="-4" />
+<Edge fromID="-58" toID="-41" />
+<Edge fromID="-58" toID="-14" />
+<Edge fromID="-58" toID="-53" />
+<Edge fromID="-59" toID="-79" />
+<Edge fromID="-59" toID="-18" />
+<Edge fromID="-59" toID="-20" />
+<Edge fromID="-60" toID="-28" />
+<Edge fromID="-60" toID="-47" />
+<Edge fromID="-60" toID="-67" />
+<Edge fromID="-61" toID="-13" />
+<Edge fromID="-61" toID="-3" />
+<Edge fromID="-61" toID="-47" />
+<Edge fromID="-62" toID="-70" />
+<Edge fromID="-62" toID="-57" />
+<Edge fromID="-62" toID="-13" />
+<Edge fromID="-63" toID="-74" />
+<Edge fromID="-63" toID="-69" />
+<Edge fromID="-63" toID="-16" />
+<Edge fromID="-64" toID="-55" />
+<Edge fromID="-64" toID="-11" />
+<Edge fromID="-64" toID="-40" />
+<Edge fromID="-65" toID="-49" />
+<Edge fromID="-65" toID="-39" />
+<Edge fromID="-65" toID="-36" />
+<Edge fromID="-66" toID="-78" />
+<Edge fromID="-66" toID="-63" />
+<Edge fromID="-66" toID="-64" />
+<Edge fromID="-67" toID="-48" />
+<Edge fromID="-67" toID="-4" />
+<Edge fromID="-67" toID="-49" />
+<Edge fromID="-68" toID="-62" />
+<Edge fromID="-68" toID="-75" />
+<Edge fromID="-68" toID="-5" />
+<Edge fromID="-69" toID="-53" />
+<Edge fromID="-69" toID="-23" />
+<Edge fromID="-69" toID="-43" />
+<Edge fromID="-70" toID="-67" />
+<Edge fromID="-70" toID="-34" />
+<Edge fromID="-70" toID="-63" />
+<Edge fromID="-71" toID="-8" />
+<Edge fromID="-71" toID="-0" />
+<Edge fromID="-71" toID="-18" />
+<Edge fromID="-72" toID="-58" />
+<Edge fromID="-72" toID="-20" />
+<Edge fromID="-72" toID="-36" />
+<Edge fromID="-73" toID="-78" />
+<Edge fromID="-73" toID="-1" />
+<Edge fromID="-73" toID="-69" />
+<Edge fromID="-74" toID="-78" />
+<Edge fromID="-74" toID="-9" />
+<Edge fromID="-74" toID="-37" />
+<Edge fromID="-75" toID="-72" />
+<Edge fromID="-75" toID="-22" />
+<Edge fromID="-75" toID="-58" />
+<Edge fromID="-76" toID="-52" />
+<Edge fromID="-76" toID="-38" />
+<Edge fromID="-76" toID="-30" />
+<Edge fromID="-77" toID="-57" />
+<Edge fromID="-77" toID="-38" />
+<Edge fromID="-77" toID="-31" />
+<Edge fromID="-78" toID="-55" />
+<Edge fromID="-78" toID="-8" />
+<Edge fromID="-78" toID="-36" />
+<Edge fromID="-79" toID="-71" />
+<Edge fromID="-79" toID="-42" />
+<Edge fromID="-79" toID="-74" />
+</Link>
+</Community>
+</Graph>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Box xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:main="SNADisplay.status.com.ccac.ibs.ui.main.*" borderStyle="none" >
+	
+	<mx:Script>
+		<![CDATA[
+			[Bindable]
+			public var runJob:String="";
+			public function click():void
+			{
+				//statusBar.panels(2).visible=false;
+				//statusBar.panels(2).includeInLayout=false;
+				statusBar.visible=true;
+				statusBar.includeInLayout=true;
+				showWaiting();
+				showProgressBar();
+				statusBar.showCurrentUser(runJob);
+				statusBar.showLoginTime(new Date());
+			}
+			public function cancel():void{
+				clearWaiting();
+				clearProgressBar();
+				statusBar.visible=false;
+				statusBar.includeInLayout=false;
+				
+			}
+						
+			
+			private function showWaiting():void
+			{
+				var text:String = "执行中...     ";
+				var id:String = statusBar.showWaiting(text);							
+			}
+			
+			private function clearWaiting():void
+			{
+				var id:String = null;			
+				statusBar.clearWaiting(id);
+			}
+			
+			private function showProgressBar():void
+			{
+				statusBar.showProgressBar(true);
+				setProgressValue();
+			}
+			
+			private function clearProgressBar():void
+			{
+				statusBar.clearProgressBar();
+			}
+			
+			private function setProgressValue():void
+			{
+				statusBar.setProgressValue(10);
+			}
+		]]>
+	</mx:Script>
+	
+	<main:IBSMainStatusBar id="statusBar" />
+	
+	
+</mx:Box>

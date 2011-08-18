@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="800" height="500" 
+	showCloseButton="true" close="closeHandle()"  >
+	<mx:Script>
+		<![CDATA[
+		import mx.collections.ArrayCollection;
+		import mx.managers.PopUpManager;
+		
+        [Bindable]
+        private var dataAC:ArrayCollection = new ArrayCollection();
+        
+        [Bindable]
+        private var nameTitle:String;
+        [Bindable]
+        private var valueTitle:String;
+        public function init(xmlData:XML = null):void {
+        	var data:XML;
+        	data = xmlData.elements("hisName")[0];
+        	this.title = data.attribute("name");
+        	data = xmlData.elements("xName")[0];
+        	nameTitle = data.attribute("name");
+        	data = xmlData.elements("yName")[0];
+        	valueTitle = data.attribute("name");
+        	for each ( data in xmlData.descendants("column") ){
+        		var obj:Object = new Object();
+                obj.Name = data.attribute("name");
+                obj.Value = data.attribute("value");
+				dataAC.addItem(obj);
+        	}
+        }
+   		private function closeHandle():void {
+   			PopUpManager.removePopUp(this);
+   		}
+   		
+		]]>
+	</mx:Script>
+    <mx:Stroke id = "s" color="red" weight="2"/>
+    <mx:HBox width="100%" height="100%">
+ 
+		<mx:LineChart id="linechart" height="100%" width="100%"
+            paddingLeft="5" paddingRight="5" paddingBottom="10"
+            showDataTips="true" dataProvider="{dataAC}">
+                
+			<mx:horizontalAxis>
+	            <mx:CategoryAxis categoryField="Name"
+	                title="{nameTitle}" ticksBetweenLabels="true"/>
+	        </mx:horizontalAxis>
+	        
+	        <mx:verticalAxis>
+	        	<mx:LinearAxis title="{valueTitle}" />
+	        </mx:verticalAxis>
+	        
+            <mx:series>
+                <mx:LineSeries yField="Value" form="segment" displayName="{valueTitle}" lineStroke="{s}"/>
+            </mx:series>
+        </mx:LineChart>
+ 	</mx:HBox>
+</mx:TitleWindow>

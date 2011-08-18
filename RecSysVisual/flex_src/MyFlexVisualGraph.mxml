@@ -1,0 +1,905 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="init()" resize="resizeCanvas()">
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.DataGrid;
+			import mx.events.ResizeEvent;
+			import SNADisplay.org.utils.Events.ConfirmEvent;
+			import SNADisplay.org.Graph.Model.Graph;
+			import SNADisplay.org.Graph.Model.Path;
+			import SNADisplay.org.Graph.Model.IGraph;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.controls.Alert;
+			import SNADisplay.org.Source.EmbeddedIcons;
+			import SNADisplay.org.utils.Events.*;
+			import SNADisplay.component.*;
+			import mx.managers.PopUpManager;
+			
+			private var _graphCanvas:Canvas;
+			private var _graphCanvas2:Canvas;
+			private var _curGraph:IGraph;
+			private var _graph:IGraph;
+			private var _graph2:IGraph;
+			private var _fileOpen:FileReferenceList;
+			private var _isPathMode:Boolean = false;
+			
+			private function init():void {
+				_curGraph =  _graph;
+			}
+			private function initCanvasListeners(graphCanvas:Canvas):void{
+				if ( graphCanvas != null ){
+					graphCanvas.addEventListener(NodeClickEvent.SINGLE_CLICK, nodeSingleClick);
+					graphCanvas.addEventListener(NodeClickEvent.DOUBLE_CLICK, nodeDoubleClick);
+					graphCanvas.addEventListener(ZoomEvent.ZOOM_EVENT,zoomAjust);
+				}
+			}
+			private function nodeSingleClick(evt:NodeClickEvent):void {
+			//	Alert.show("singleClick "+evt.nodeId);
+				searchNodeText.text = evt.nodeId;
+				trace("singleClick "+evt.nodeId);
+			}
+			private function nodeDoubleClick(evt:NodeClickEvent):void {
+				//Alert.show("doubleClick "+evt.nodeId);
+				searchNodeText.text = evt.nodeId;
+				trace("doubleClick "+evt.nodeId)
+			}
+			private function zoomAjust(evt:ZoomEvent):void {
+				//Alert.show(evt.scale.toString());
+			}
+			private function resizeCanvas():void{
+				if ( _graphCanvas != null ){
+					if ( _graph2 == null ){
+						_graphCanvas.width = this.width - controlPad.width +20;
+
+					}
+					else {
+						_graphCanvas.width = (this.width - (controlPad.width+20))/2 - 5;
+						
+						_graphCanvas2.x = 210 + (this.width - (controlPad.width+20))/2 + 5;
+						_graphCanvas2.width = (this.width - (controlPad.width+20))/2 - 5;
+						_graphCanvas2.height = this.height - 20;
+						if ( _graph2 != null ){
+							setGraph(_graph2);
+							_graph2.draw();
+						}	
+					}
+					_graphCanvas.height = this.height - 20;
+					if ( _graph != null ){
+						setGraph(_graph);
+						_graph.draw();
+					}		
+				}
+			}
+			private function openFile():void {
+/* 				_fileOpen = new FileReferenceList();
+				var xmlFilter:FileFilter = new FileFilter("XML (*.XML)","*.XML");
+				_fileOpen.browse([xmlFilter]);
+				_fileOpen.addEventListener(Event.SELECT,requestFile); */
+				fileWindow = new FileWindow;
+				PopUpManager.addPopUp(fileWindow,this,true);
+				PopUpManager.centerPopUp(fileWindow);
+				fileWindow.addEventListener(Event.SELECT, requestFile);
+				
+			}
+			
+			private function openFile2():void {
+				switch ( this.openFileBtn2.label ){
+					case "另打开文件":
+						//关闭当前路径显示
+						if ( pathBtn.label == "关闭路径" ){
+							showPath();
+						}
+						_graphCanvas.width = (this.width - (controlPad.width+20))/2 - 5;
+						setGraph(_graph);
+						_graph.draw();
+/* 						_fileOpen = new FileReferenceList();
+						var xmlFilter:FileFilter = new FileFilter("XML (*.XML)","*.XML");
+						_fileOpen.browse([xmlFilter]);
+						_fileOpen.addEventListener(Event.SELECT,requestFile2); */
+						fileWindow = new FileWindow;
+						PopUpManager.addPopUp(fileWindow,this,true);
+						PopUpManager.centerPopUp(fileWindow);
+						fileWindow.addEventListener(Event.SELECT, requestFile2);
+				
+						this.openFileBtn2.label = "关闭文件";
+						break;
+					case "关闭文件":
+						var canvas:DisplayObject = this.getChildByName("graphCanvas2");
+						if ( canvas != null )
+							this.removeChild(canvas);
+						_graph2 = null;
+						_graphCanvas.width = this.width - (controlPad.width+20);
+						setGraph(_graph);
+						_graph.draw();
+						this.openFileBtn2.label = "另打开文件";
+						_curGraph =  _graph;
+						graphChoose.visible = false;
+						graphChoose.includeInLayout = false;
+						break;
+				}
+				
+			}
+			
+			private function requestFile(evt:Event):void {
+				var filePath:String = fileWindow.getFilePath();
+				if ( filePath == "" ){
+					Alert.show("选择文件为空","出错");
+				}
+				else {
+/* 					var url:String = "SNADisplay/data/"+fileName;
+					getLocalFile.url = url;
+					getLocalFile.send(); */
+					var getXML : HTTPService = new HTTPService();
+					getXML.resultFormat = "e4x";
+					getXML.url = "getXMLServlet";
+					var params:URLVariables = new URLVariables();
+	                params.filePath = encodeURIComponent(filePath);
+	                params.random = Math.random();	//如果参数一样，默认是从缓存中读取数据，无法更新，所以用随机数作为参数
+					getXML.addEventListener(ResultEvent.RESULT,  loadFile);
+					getXML.addEventListener(FaultEvent.FAULT, fHandler);
+					getXML.send(params); 
+				}			
+			}
+			
+			private function requestFile2(evt:Event):void {
+				
+				var filePath:String = fileWindow.getFilePath();
+				if ( filePath == "" ){
+					Alert.show("选择文件为空","出错");
+				}
+				else {
+/* 					var url:String = "SNADisplay/data/"+fileName;
+					getLocalFile2.url = url;
+					getLocalFile2.send(); */
+					var getXML : HTTPService = new HTTPService();
+					getXML.resultFormat = "e4x";
+					getXML.url = "getXMLServlet";
+					var params:URLVariables = new URLVariables();
+	                params.filePath = encodeURIComponent(filePath);
+	                params.random = Math.random();
+					getXML.addEventListener(ResultEvent.RESULT,  loadFile);
+					getXML.addEventListener(FaultEvent.FAULT, fHandler);
+					//Alert.show(filePath);
+					getXML.send(params); 
+				}
+			}
+			
+			private function loadFile(evt:ResultEvent):void {
+				var xmlData:XML = XML(evt.message.body);
+				if ( xmlData == null ){
+					Alert.show("文件为空","出错");
+				}
+				else {
+					var graphCanvas:DisplayObject = this.getChildByName("graphCanvas");
+					if ( graphCanvas != null )
+						this.removeChild(graphCanvas);
+					_graphCanvas = new Canvas;
+					_graphCanvas.name = "graphCanvas";
+					_graphCanvas.x = (controlPad.width+10);
+					_graphCanvas.y = 10;
+					if ( _graph2 == null )
+						_graphCanvas.width = this.width - (controlPad.width+20);
+					else
+						_graphCanvas.width = (this.width - (controlPad.width+20))/2 - 5;
+					_graphCanvas.height = this.height - 20;
+					_graphCanvas.setStyle("backgroundColor","#F8F8FF");
+					this.addChild(_graphCanvas);
+					initCanvasListeners(_graphCanvas);
+					if ( _graph != null )
+						_graph.destroy();
+					_isPathMode = false;
+					_graph = new Graph("MyGraph",false,true);
+					_graph.initGraphData(xmlData,_graphCanvas);
+					communitiesCheckBox.selected = false;
+					nodePropertyLabel.text = "标签：id 权重：无";
+					setGraph(_graph);
+					_graph.draw();
+					if ( _graph2 == null )
+						_curGraph = _graph;
+					switch ( graphRadiogroup.selection.label ){
+						case "左图":
+							_curGraph = _graph;
+							break;
+						case "右图":
+							_curGraph = _graph2;
+							break;
+					}
+					saveProperty(xmlData);
+				}
+			}
+			
+			private function loadPathFile(evt:ResultEvent):void {
+				var xmlData:XML = XML(evt.message.body);
+				if ( xmlData == null ){
+					Alert.show("文件为空","出错");
+				}
+				else {
+					var graphCanvas:DisplayObject = this.getChildByName("graphCanvas");
+					if ( graphCanvas != null )
+						this.removeChild(graphCanvas);
+					_graphCanvas = new Canvas;
+					_graphCanvas.name = "graphCanvas";
+					_graphCanvas.x = (controlPad.width+10);
+					_graphCanvas.y = 10;
+					if ( _graph2 == null )
+						_graphCanvas.width = this.width - (controlPad.width+20);
+					else
+						_graphCanvas.width = (this.width - (controlPad.width+20))/2 - 5;
+					_graphCanvas.height = this.height - 20;
+					_graphCanvas.setStyle("backgroundColor","#F8F8FF");
+					this.addChild(_graphCanvas);
+					initCanvasListeners(_graphCanvas);
+					if ( _graph != null )
+						_graph.destroy();
+					_isPathMode = true;
+					_graph = new Path("MyGraph",false,true);
+					_graph.initGraphData(xmlData,_graphCanvas);
+					
+					communitiesCheckBox.selected = false;
+ 					setGraph(_graph);
+					_graph.draw(); 
+					if ( _graph2 == null )
+						_curGraph = _graph;
+					switch ( graphRadiogroup.selection.label ){
+						case "左图":
+							_curGraph = _graph;
+							break;
+						case "右图":
+							_curGraph = _graph2;
+							break;
+					}
+				}
+			}
+			private function loadFile2(evt:ResultEvent):void {
+				var xmlData:XML = XML(evt.message.body);
+				if ( xmlData == null ){
+					Alert.show("文件为空","出错");
+				}
+				else {
+					var canvas:DisplayObject = this.getChildByName("graphCanvas2");
+					if ( canvas != null )
+						this.removeChild(canvas);
+					_graphCanvas2 = new Canvas;
+					_graphCanvas2.name = "graphCanvas2";
+					_graphCanvas2.x = (controlPad.width+10) + (this.width - (controlPad.width+20))/2 + 5;
+					_graphCanvas2.y = 10;
+					_graphCanvas2.width = (this.width - (controlPad.width+20))/2 - 5;
+					_graphCanvas2.height = this.height - 20;
+					
+					_graphCanvas2.setStyle("backgroundColor","#F8F8FF");
+					this.addChild(_graphCanvas2);
+					initCanvasListeners(_graphCanvas2);
+					if ( _graph2 != null )
+						_graph2.destroy();
+					_isPathMode = false;
+					_graph2 = new Graph("MyGraph",false,true);
+					_graph2.initGraphData(xmlData,_graphCanvas2);
+					communitiesCheckBox.selected = false;
+					setGraph(_graph2);
+					_graph2.draw();
+					graphChoose.visible = true;
+					graphChoose.includeInLayout = true;
+				}
+			}
+			
+			private function resizeGraph(evt:ResizeEvent):void {
+				if ( _graph != null )
+					_graph.refresh();
+			}
+			private function fHandler(evt:FaultEvent):void {
+				Alert.show("获取文件出错","出错");
+			}
+			//选择布局算法的响应函数
+			private function layoutChange(evt:Event):void {
+				if ( _curGraph != null ) {
+					switch ( layoutComboBox.selectedItem.label ){
+						case "Radom":
+							_curGraph.setBaseLayout();
+							break;
+						case "Tree":
+							_curGraph.setTreeLayout();
+							break;
+						case "TreeH":
+							_curGraph.setTreeHorizonLayout();
+							break;
+						case "RTree":
+							_curGraph.setRadialTreeLayout();
+							break;
+						case "Circle":
+							_curGraph.setCircleLayout();
+							break;
+						case "CRTre":
+							_curGraph.setConcentricRadialLayout();
+							break;
+						case "FDirec":
+							_curGraph.setForceDirectedLayout();
+							break;
+					}
+					setGraph(_curGraph);
+					_curGraph.draw();
+				}
+			}
+			
+			//停止布局算法（力导引）
+			private function stopLayout():void {
+				if ( _curGraph != null )
+					_curGraph.stopLayout();
+			}
+			//启动布局算法（力导引）
+			private function startLayout():void {
+				if ( _curGraph != null )
+					_curGraph.startLayout();
+			}
+			//是否显示边的有向箭头的勾选响应函数
+			private function showArrowChange():void {
+				if ( _curGraph != null ) {
+					_curGraph.showEdgeDirection = arrowCheckBox.selected;
+					_curGraph.refresh();
+				}
+			}
+			//是否显示边的标签的勾选响应函数
+			private function showEdgeLabelChange():void {
+				if ( _curGraph != null ) {
+					_curGraph.showEdgeLabel = edgeLabelCheckBox.selected;
+					_curGraph.refresh();
+				}
+			}
+			//选择社团发现算法的响应函数
+			private function showCommunitiesChange():void {
+				if ( _curGraph != null ) {
+					if ( communitiesCheckBox.selected ){
+						_curGraph.showCommunities = true;
+						communitesFindChange();
+					}
+					else {
+						_curGraph.showCommunities = false;
+						_curGraph.refresh();
+					}
+				}
+			}
+
+			
+			private function communitesFindChange():void {
+				if ( _curGraph != null ) {
+					if ( communitiesCheckBox.selected ){
+						_curGraph.showCommunities = true;
+						switch ( communitiesComboBox.selectedLabel ) {
+							case "Default":
+								_curGraph.setDefaultCommunities();
+								break;
+							case "Clique Percolation":
+								_curGraph.setCliquePercolation();
+								break;
+							case "GN":
+								_curGraph.setGN();
+								break;
+							case "FastGN":
+								_curGraph.setFastGN();
+								break;
+						}	
+					}
+					else {
+						_curGraph.showCommunities = false;
+						_curGraph.refresh();
+					}
+				}
+			}
+
+			private function pathStyleChange():void {
+				if ( _curGraph != null ) {
+					switch ( pathRadiogroup.selection.label ){
+						case "直接显示":
+							_curGraph.pathStyle = false;
+							break;
+						case "动态显示":
+							_curGraph.pathStyle = true;
+							break;
+					}
+				}
+				if ( pathBtn.label == "关闭路径" ){
+        			_curGraph.showPath = false;
+        			pathBtn.label = "显示路径";
+        		}
+			}
+
+            private function searchNode():void {
+            	var data:XML;
+            	if ( _curGraph == null ){
+					Alert.show("请先载入图像。","提示");
+					return ;
+				}
+				if ( searchNodeText.text == "" ){
+					Alert.show("请输入节点ID,再点击查询按钮。","提示");
+				}
+				else {
+					data = _curGraph.getNodeById(searchNodeText.text) as XML;
+					if ( data != null ){
+						var n:Number = new Number(data.attribute("clickNum"));
+						var t:Number = new Number(data.attribute("time"));
+						Alert.show("id:"+data.attribute("id")+"\n点击次数:"+n+"次\n停留时间:"+t+"秒");
+					}else
+						Alert.show("无法找到目标节点");		
+				}
+					
+			}
+			
+			private function viewSingleNode():void {
+				if ( _curGraph == null ){
+					Alert.show("请先载入图像。","提示");
+					return ;
+				}
+				if ( depth.text == "" ){
+					Alert.show("请输入查看节点的网络深度。","提示");
+					return ;
+				}
+				if ( _curGraph.getNodeById(searchNodeText.text) == null ){
+					Alert.show("无法找到目标节点");
+					return ;
+				}
+				var d:int = new int(depth.text);
+				if ( d < 0 )
+					d = 0;
+				//_curGraph.filter(-1, -1, -1, -1);
+				_curGraph.singleNodefilter(searchNodeText.text,d,SingleNodeDirCheckBox.selected);
+				setGraph(_curGraph);
+				_curGraph.draw();
+			}
+            private function localMagnify():void{
+            	if ( _curGraph != null ){
+            		if ( fishEyeBtn.label == "局部放大" ){
+            			_curGraph.isLocalMagnify = true;
+            			fishEyeBtn.label = "取消局部放大";
+            		}
+            		else {
+            			_curGraph.isLocalMagnify = false;
+            			fishEyeBtn.label = "局部放大";
+            			_curGraph.refresh();
+            		}
+            	}
+                		
+            }
+            private function graphChange():void {
+            	switch ( graphRadiogroup.selection.label ){
+					case "左图":
+						_curGraph = _graph;
+						break;
+					case "右图":
+						_curGraph = _graph2;
+						break;
+				}
+				pathBtn.label = "显示路径";
+				communitiesCheckBox.selected = false;
+				this.setGraph(_curGraph);
+				_curGraph.draw();
+            }
+            private function showPath():void{
+            	if ( _curGraph != null ){
+            		switch ( pathRadiogroup.selection.label ){
+						case "直接显示":
+							_curGraph.pathStyle = false;
+							break;
+						case "动态显示":
+							_curGraph.pathStyle = true;
+							break;
+					}
+            		if ( pathBtn.label == "显示路径" ){
+            			_curGraph.showPath = true;
+            			pathBtn.label = "关闭路径";
+            		}
+            		else {
+            			_curGraph.showPath = false;
+            			pathBtn.label = "显示路径";
+            			_curGraph.refresh();
+            		}
+            	}
+                		
+            }
+            
+            //配置当前网络展示的各种参数，界面设置状态向逻辑设置的映射
+			private function setGraph(graph:IGraph):void {
+				graph.showCommunities = communitiesCheckBox.selected;
+				graph.showEdgeDirection = arrowCheckBox.selected;
+				graph.showEdgeLabel = edgeLabelCheckBox.selected;
+				graph.communitiesStyle = true;
+				graph.isLocalMagnify = false;
+				fishEyeBtn.label = "局部放大";
+				switch ( layoutComboBox.selectedLabel ){
+					case "Radom":
+						graph.setBaseLayout();
+						break;
+					case "Tree":
+						graph.setTreeLayout();
+						break;
+					case "TreeH":
+						graph.setTreeHorizonLayout();
+						break;
+					case "RTree":
+						graph.setRadialTreeLayout();
+						break;
+					case "Circle":
+						graph.setCircleLayout();
+						break;
+					case "CRTre":
+						graph.setConcentricRadialLayout();
+						break;
+					case "FDirec":
+						graph.setForceDirectedLayout();
+						break;
+				}
+				if ( pathBtn.label == "关闭路径" ){
+					pathBtn.label = "显示路径";
+            		graph.showPath = false;
+        		}
+			}
+			
+			private function filter():void {
+				var nodeMin:int = new int(nodeMinW.text);
+				var nodeMax:int = new int(nodeMaxW.text);
+				var edgeMin:int = new int(edgeMinW.text);
+				var edgeMax:int = new int(edgeMaxW.text);
+				if ( !(nodeMin == -1 && nodeMax == -1)&&!( nodeMin>=0&&(nodeMax == -1 || nodeMin <= nodeMax) ) ){
+					Alert.show("提示：\n1.最小值最大值都取-1时不进行过滤\n2.最小值必须大于等于0\n3.最大值须大于最小值\n4.最大值取-1时为极大值\n5.非法输入默认为0");
+					return ;
+				}
+				if ( !(edgeMin == -1 && edgeMax == -1)&&!( edgeMin>=0&&(edgeMax == -1 || edgeMin <= edgeMax) ) ){
+					Alert.show("提示：\n1.最小值最大值都取-1时不进行过滤\n2.最小值必须大于等于0\n3.最大值须大于最小值\n4.最大值取-1时为极大值\n5.非法输入默认为0");
+					return ;
+				}
+				_curGraph.filter(nodeMin, nodeMax, edgeMin, edgeMax);
+				setGraph(_curGraph);
+				_curGraph.draw();
+			}
+			
+			private function pathFilter():void {
+				if ( this._isPathMode = false )
+					return ;
+				var userMin:int = new int(pathUserMin.text);
+				var userMax:int = new int(pathUserMax.text);
+				var lengthMin:int = new int(pathLengthMin.text);
+				var lengthMax:int = new int(pathLengthMax.text);
+				if ( userMax != 0 && ( userMax < userMin ) ) {
+					Alert.show("提示：用户数上限值必须大于下限值，或者为0表示无上限。");
+					return ;
+				}
+				if ( userMax == 0 )
+					userMax = int.MAX_VALUE;
+					
+				if ( lengthMax != 0 && ( lengthMax < lengthMin ) ) {
+					Alert.show("提示：路径长度上限值必须大于下限值，或者为0表示无上限。");
+					return ;
+				}
+				if ( lengthMax == 0 )
+					lengthMax = int.MAX_VALUE;
+				(_curGraph as Path).filter(userMin, userMax, lengthMin, lengthMax);
+
+				setGraph(_curGraph);
+				_curGraph.draw();
+			}
+			private function refresh():void {
+				_curGraph.filter(-1, -1, -1, -1);
+				setGraph(_curGraph);
+				_curGraph.draw();
+			}
+			
+			private var analysisWindow:AnalysisWindow;
+			private function start():void {
+				analysisWindow = new AnalysisWindow;
+				//analysisWindow.addEventListener(Event.SELECT, sendCMD);
+				PopUpManager.addPopUp(analysisWindow,this,true);
+				PopUpManager.centerPopUp(analysisWindow);
+			}
+			
+			private function showChart():void {
+				fileWindow = new FileWindow;
+				PopUpManager.addPopUp(fileWindow,this,true);
+				PopUpManager.centerPopUp(fileWindow);
+				fileWindow.addEventListener(Event.SELECT, getChartXML);		
+			}
+			
+			private function getChartXML(evt:Event):void {
+				var getXML : HTTPService = new HTTPService();
+				getXML.resultFormat = "e4x";
+				getXML.url = "getXMLServlet";
+				var params:URLVariables = new URLVariables();
+                params.filePath = encodeURIComponent(fileWindow.getFilePath());
+                params.random = Math.random();
+				getXML.addEventListener(ResultEvent.RESULT,  showChartHandler);
+				getXML.addEventListener(FaultEvent.FAULT, fHandler);
+				//Alert.show(filePath);
+				getXML.send(params); 
+			}
+			
+			
+			private var chartWindow:ChartWindow;	
+			private function showChartHandler(evt:ResultEvent):void {
+				var xmlData:XML = XML(evt.message.body);
+				chartWindow = new ChartWindow();
+				chartWindow.init(xmlData);
+				PopUpManager.addPopUp(chartWindow,this,false);
+				PopUpManager.centerPopUp(chartWindow);
+			}
+			
+			private function showLineChart():void {
+				var getXML : HTTPService = new HTTPService();
+				getXML.resultFormat = "e4x";
+				getXML.url = "SNADisplay/data/pathHis.xml";
+				getXML.addEventListener(ResultEvent.RESULT,  showLineChartHandler);
+				getXML.addEventListener(FaultEvent.FAULT, fHandler);
+				getXML.send();
+			}
+			
+			private var lineChartWindow:LineChartWindow;
+			private function showLineChartHandler(evt:ResultEvent):void {
+				var xmlData:XML = XML(evt.message.body);
+				lineChartWindow = new LineChartWindow;
+				lineChartWindow.init(xmlData);
+				PopUpManager.addPopUp(lineChartWindow,this,false);
+				PopUpManager.centerPopUp(lineChartWindow);
+			}
+			
+			private function showTundish():void {
+				fileWindow = new FileWindow;
+				PopUpManager.addPopUp(fileWindow,this,true);
+				PopUpManager.centerPopUp(fileWindow);
+				fileWindow.addEventListener(Event.SELECT, getTundishXML);
+			}
+			
+			private function getTundishXML(evt:Event):void {
+				var getXML : HTTPService = new HTTPService();
+				getXML.resultFormat = "e4x";
+				getXML.url = "getXMLServlet";
+				var params:URLVariables = new URLVariables();
+                params.filePath = encodeURIComponent(fileWindow.getFilePath());
+                params.random = Math.random();
+				getXML.addEventListener(ResultEvent.RESULT,  showTundishHandler);
+				getXML.addEventListener(FaultEvent.FAULT, fHandler);
+				//Alert.show(filePath);
+				getXML.send(params); 
+			}
+			
+			private var tundishWindow:TundishWindow;
+			private function showTundishHandler(evt:ResultEvent):void {
+				var xmlData:XML = XML(evt.message.body);
+				tundishWindow = new TundishWindow;
+				PopUpManager.addPopUp(tundishWindow,this,false);
+				PopUpManager.centerPopUp(tundishWindow);
+				tundishWindow.init(xmlData);
+				tundishWindow.draw();
+			}
+
+			private function findPath():void {
+				fileWindow = new FileWindow;
+				PopUpManager.addPopUp(fileWindow,this,true);
+				PopUpManager.centerPopUp(fileWindow);
+				fileWindow.addEventListener(Event.SELECT, getPathFinderXML);
+			}
+			
+			private function getPathFinderXML(evt:Event):void {
+				var getXML : HTTPService = new HTTPService();
+				getXML.resultFormat = "e4x";
+				getXML.url = "getXMLServlet";
+				var params:URLVariables = new URLVariables();
+                params.filePath = encodeURIComponent(fileWindow.getFilePath());
+                params.random = Math.random();
+                layoutComboBox.selectedIndex = 2;
+                edgeLabelCheckBox.selected = true;
+				getXML.addEventListener(ResultEvent.RESULT,  loadPathFile);
+				getXML.addEventListener(FaultEvent.FAULT, fHandler);
+				getXML.send(params); 
+			}
+			
+			private var fileWindow:FileWindow;;
+			private function fileDir():void {
+				fileWindow = new FileWindow;
+				PopUpManager.addPopUp(fileWindow,this,true);
+				PopUpManager.centerPopUp(fileWindow);
+			}
+			
+			private var _nodePropertyArr:Array;
+			private function saveProperty(xmlData:XML):void {
+				var nodeXML:XML = xmlData.descendants("Node")[0];
+				var s:String = "";
+				_nodePropertyArr = new Array;
+				for each ( var attribut:XML in nodeXML.attributes() ){
+			      _nodePropertyArr.push(attribut.name());
+			      s += attribut.name()+'\n';
+			    }
+			    //Alert.show(s);
+			}
+			private var propertyWindow:PropertyWindow;
+			private function propertyDisplay():void {
+				propertyWindow = new PropertyWindow;
+				propertyWindow.addEventListener(Event.SELECT, setProperty);
+				PopUpManager.addPopUp(propertyWindow,this,true);
+				PopUpManager.centerPopUp(propertyWindow);
+				propertyWindow.init(_nodePropertyArr);
+			}
+			
+			private function setProperty(evt:Event):void {
+				var propertyArr:Array = propertyWindow.getPropertyArr();
+				var weightProperty:String = propertyWindow.getWeightProperty();
+				var text1:String = "";
+				var text2:String = "";
+				for each ( var property:String in propertyArr ){
+					if ( property == "id" ){
+						text1 = property;
+					}
+					else {
+						text2 += property+",";
+					}
+				}
+				if ( text2 != "" ){
+					text2 = "(" + text2.substr(0,text2.length-1) + ")";
+				}
+				nodePropertyLabel.text = "标签：" + text1 + text2 + " 权重：" + weightProperty;
+				if ( _curGraph != null ){
+					_curGraph.setLabelContent(propertyArr);
+					_curGraph.setNodeWeightProperty(weightProperty);
+				}
+			}
+			
+			private var graphDataGridWindow:DataGridWindow;
+			private function showGraphData():void {
+				fileWindow = new FileWindow;
+				PopUpManager.addPopUp(fileWindow,this,true);
+				PopUpManager.centerPopUp(fileWindow);
+				fileWindow.addEventListener(Event.SELECT, getGraphDataXML);
+			}
+			
+			private function getGraphDataXML(evt:Event):void {
+				var getXML : HTTPService = new HTTPService();
+				getXML.resultFormat = "e4x";
+				getXML.url = "getXMLServlet";
+				var params:URLVariables = new URLVariables();
+                params.filePath = encodeURIComponent(fileWindow.getFilePath());
+                params.random = Math.random();
+                layoutComboBox.selectedIndex = 2;
+                edgeLabelCheckBox.selected = true;
+				getXML.addEventListener(ResultEvent.RESULT,  showGraphDataHandler);
+				getXML.addEventListener(FaultEvent.FAULT, fHandler);
+				getXML.send(params); 
+			}
+			
+			private function showGraphDataHandler(evt:ResultEvent):void {
+				var xmlData:XML = XML(evt.message.body);
+				graphDataGridWindow = new DataGridWindow;
+				PopUpManager.addPopUp(graphDataGridWindow,this,true);
+				PopUpManager.centerPopUp(graphDataGridWindow);
+				graphDataGridWindow.init(xmlData);
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:HTTPService id="getLocalFile" url="" resultFormat="e4x" result="loadFile(event)" fault="fHandler(event)"/>
+	<mx:HTTPService id="getLocalFile2" url="" resultFormat="e4x" result="loadFile2(event)" fault="fHandler(event)"/>
+	
+	<mx:Box id="controlPad" x="0" y="0" width="220" height="100%" 
+	    paddingTop="10" paddingBottom="10" paddingLeft="5" paddingRight="0" >
+    	
+    	<mx:Accordion id="acc" x="0" y="0" width="100%" height="100%" 
+    		selectedIndex="0" creationPolicy="all" >
+    		<mx:VBox label="算法处理" width="100%" height="100%" horizontalAlign="left" paddingTop="10" paddingLeft="15">
+				<mx:Button label="启动分析" click="start()"/>
+				<mx:Button label="直方图查看" click="showChart()"/>
+				<mx:Button label="折线查看" click="showLineChart()"/>
+				<mx:Button label="漏斗查看" click="showTundish()"/>
+				<mx:Button label="路径查看" click="findPath()"/>
+				<mx:Label text="用户数："/>
+				<mx:HBox>
+					<mx:Label text="下限"/>
+					<mx:TextInput id="pathUserMin" width="50" text="0" restrict="0-9"/>
+					<mx:Label text="上限"/>
+					<mx:TextInput id="pathUserMax" width="50" text="0" restrict="0-9"/>
+				</mx:HBox>
+				<mx:Label text="路径长度："/>
+				<mx:HBox>
+					<mx:Label text="下限"/>
+					<mx:TextInput id="pathLengthMin" width="50" text="0" restrict="0-9"/>
+					<mx:Label text="上限"/>
+					<mx:TextInput id="pathLengthMax" width="50" text="0" restrict="0-9"/>
+				</mx:HBox>
+				<mx:Button label="路径过滤" click="pathFilter()"/>
+				<mx:Button label="图数据查看" click="showGraphData()"/>
+				<mx:Button label="文件目录查看" click="fileDir()"/>
+			</mx:VBox>
+    		<mx:VBox id="contralPad" label="控制面板" width="100%" height="100%" 
+    			paddingTop="5" paddingBottom="5" paddingLeft="5" paddingRight="5"  >
+    			<mx:HBox>
+    				<mx:Button id="openFileBtn" label="打开文件" click="openFile()"/>
+    				<mx:Button id="openFileBtn2" label="另打开文件" click="openFile2()"/>
+    			</mx:HBox>
+    			<mx:VBox id="graphChoose" visible="false" includeInLayout="false">
+    				<mx:Label text="操作对象："/>
+					<mx:HBox>
+						<mx:RadioButtonGroup id="graphRadiogroup" change="graphChange()"/>
+						<mx:RadioButton id="leftGraph" label="左图" groupName="graphRadiogroup" selected="true"/>
+						<mx:RadioButton id="rightGraph" label="右图" groupName="graphRadiogroup"/>
+					</mx:HBox>
+    			</mx:VBox>
+				<mx:HBox>
+					<mx:Label text="布局算法："/>
+					<mx:ComboBox id="layoutComboBox" rowCount="7" selectedIndex="4" change="layoutChange(event)" width="97">
+						<mx:ArrayCollection>
+							<mx:Object label="Radom" />
+							<mx:Object label="Tree" />
+							<mx:Object label="TreeH" />
+							<mx:Object label="RTree" />
+							<mx:Object label="Circle" />
+							<mx:Object label="CRTre" />
+							<mx:Object label="FDirec" />
+						</mx:ArrayCollection>
+					</mx:ComboBox>
+				</mx:HBox>
+				
+				<mx:HBox>
+					<mx:Button label="start" click="startLayout()" width="82"/>
+					<mx:Button label="Stop" click="stopLayout()" width="82"/>
+				</mx:HBox>
+				
+				<mx:HBox>
+					<mx:CheckBox id="arrowCheckBox" x="20" y="230" label="显示箭头" change="showArrowChange()"/>
+					<mx:CheckBox id="edgeLabelCheckBox" x="20" y="255" label="显示边标签" change="showEdgeLabelChange()"/>
+				</mx:HBox>
+				<mx:HBox>
+					<mx:CheckBox includeInLayout="false" visible="false" id="communitiesCheckBox" x="20" y="280" label="显示社团" change="showCommunitiesChange()"/>
+					<mx:Button label="属性展示" click="propertyDisplay()"/>
+				</mx:HBox>
+				<mx:Label id="nodePropertyLabel"/>
+				<mx:HBox includeInLayout="false" visible="false">
+					<mx:Label text="社团算法："/>
+					<mx:ComboBox id="communitiesComboBox" x="20" y="119" change="showCommunitiesChange()">
+						<mx:ArrayCollection>
+							<mx:Object label="Default" />
+							<mx:Object label="CP" />
+							<mx:Object label="GN" />
+							<mx:Object label="FastGN" />
+						</mx:ArrayCollection>
+					</mx:ComboBox>
+				</mx:HBox>
+				<mx:HRule width="181" height="1"/>
+				<mx:Label text="目标节点："/>
+				<mx:HBox>
+					<mx:TextInput id="searchNodeText" x="20" y="344" width="85"/>
+					<mx:Button label="查看属性" click="searchNode()"/>
+				</mx:HBox>
+				<mx:HBox>
+					<mx:CheckBox id="SingleNodeDirCheckBox" label="有向" selected="true"/>
+					<mx:Label text="深度"/>
+					<mx:TextInput id="depth" text="1" width="56"/>
+				</mx:HBox>
+				<mx:Button label="单节点查看" click="viewSingleNode()"/>
+				<mx:HRule width="181" height="1"/>
+				<mx:HBox>
+					<mx:RadioButtonGroup id="pathRadiogroup" change="pathStyleChange()"/>	
+					<mx:RadioButton id="pathRadioBtn" label="直接显示" groupName="pathRadiogroup" selected="true"/>
+					<mx:RadioButton id="pathAnimationRadioBtn" label="动态显示" groupName="pathRadiogroup"/>
+				</mx:HBox>
+				<mx:Button id="pathBtn" label="显示路径" click="showPath()"/>	
+				<mx:HRule width="181" height="1"/>
+				<mx:Label text="点权值："/>
+				<mx:HBox>
+					<mx:Label text="下限"/>
+					<mx:TextInput id="nodeMinW" width="50" text="-1" restrict="-\0-9"/>
+					<mx:Label text="上限"/>
+					<mx:TextInput id="nodeMaxW" width="50" text="-1" restrict="-\0-9"/>
+				</mx:HBox>
+				<mx:Label text="边权值："/>
+				<mx:HBox>
+					<mx:Label text="下限"/>
+					<mx:TextInput id="edgeMinW" width="50" text="-1" restrict="-\0-9"/>
+					<mx:Label text="上限"/>
+					<mx:TextInput id="edgeMaxW" width="50" text="-1" restrict="-\0-9"/>
+				</mx:HBox>
+				<mx:Button label="过滤" click="filter()"/>
+				<mx:HBox>
+					<mx:Button label="刷新" click="refresh()" />
+					<mx:Button id="fishEyeBtn" label="局部放大" click="localMagnify()"/>
+				</mx:HBox>
+			</mx:VBox>
+    	</mx:Accordion>
+	</mx:Box>
+	<mx:Canvas id="canvas" name="graphCanvas" x="230" y="10" 
+		width="{this.width-240}" height="{this.height-20}" backgroundColor="#F8F8FF"/>
+	<mx:Canvas id="canvas2" name="graphCanvas2" backgroundColor="#F8F8FF"/>
+</mx:Application>

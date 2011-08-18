@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<controls:IBSStatusBar xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:controls="SNADisplay.status.com.ccac.ibs.controls.*" 
+	width="30%" height="23" 
+	styleName="mainStatusBar">
+	
+	<mx:Script>
+		<![CDATA[
+			import SNADisplay.status.com.ccac.ibs.controls.IBSStatusPanelMode;
+			
+			import flash.events.TimerEvent;
+			import flash.utils.Timer;
+			
+			import mx.events.FlexEvent;
+			import mx.formatters.DateFormatter;
+			import mx.utils.StringUtil;
+			import mx.utils.UIDUtil;
+			
+			private const STATUSTEXT_TIMEOUT:Number = 3000;
+			
+			private var timer:Timer = null;
+			
+			private var defaultText:String = "";
+			
+			private var lastText:String = "";
+			
+			private var lastWaitText:String = "";
+			
+			[ArrayElementType("Object")]
+			private var waitings:Array = [];
+			
+			override protected function createChildren():void
+			{
+				super.createChildren();
+				timer = new Timer(1000, 1);
+				timer.addEventListener(TimerEvent.TIMER_COMPLETE, timerCompleteHandler);
+				panelConfig = [{percentWidth: 100}, 
+						{width: 120}, 
+						{width: 180}, 
+						{width: 180, textAlign: "center"}];
+				clearProgressBar();
+			}
+			
+			public function showStatusText(text:String, timeout:Number = STATUSTEXT_TIMEOUT):void
+			{
+				if (text == null)
+					text = "";
+				if (isNaN(timeout))
+					timeout = STATUSTEXT_TIMEOUT;
+				if (timer)
+					timer.stop();
+				lastText = text;
+				if (timeout <= 0)
+				{
+					defaultText = text;
+				}
+				else
+				{
+					timer.delay = timeout;
+					timer.start();
+				}
+				if (panels(0))
+				{
+					if (panels(0).mode != IBSStatusPanelMode.TEXT)
+						panels(0).mode = IBSStatusPanelMode.TEXT;
+					panels(0).label = text;
+				}
+			}
+			
+			public function clearStatusText():void
+			{
+				if (panels(0) && panels(0).mode == IBSStatusPanelMode.TEXT)
+				{
+					panels(0).label = "";
+					lastText = "";
+					defaultText = "";
+				}
+			}
+			
+			public function showWaiting(text:String):String
+			{
+				var waitingId:String = UIDUtil.createUID();
+				if (text == null)
+					text = "";
+				waitings.push({"id": waitingId, "text": text});
+				lastWaitText = text;
+				if (panels(0))
+				{
+					panels(0).label = text;
+					if (panels(0).mode != IBSStatusPanelMode.WAITING)
+						panels(0).mode = IBSStatusPanelMode.WAITING;
+				}
+				return waitingId;
+			}
+			
+			public function clearWaiting(waitingId:String = null):void
+			{
+				var index:int = -1;
+				if (waitingId == null)
+					waitings = [];
+				for (var i:int = 0; i < waitings.length; i++)
+				{
+					var waiting:Object = waitings[i];
+					if (waiting.id == waitingId)
+					{
+						index = i;
+						waitings.splice(index, 1);
+						break;
+					}
+				}
+				if (index == -1 && waitings.length > 0)
+					return;
+				if (panels(0))
+				{
+					if (waitings.length > 0)
+					{
+						if (panels(0).mode != IBSStatusPanelMode.WAITING)
+							panels(0).mode = IBSStatusPanelMode.WAITING;
+						lastWaitText = waitings[waitings.length - 1].text;
+						panels(0).label = waitings[waitings.length - 1].text;
+					}
+					else
+					{
+						if (panels(0).mode != IBSStatusPanelMode.TEXT)
+							panels(0).mode = IBSStatusPanelMode.TEXT;
+						panels(0).label = lastText;
+					}
+				}
+			}
+			
+			public function showProgressBar(marqueeMode:Boolean = false):void
+			{
+				if (panels(1))
+				{
+					panels(1).mode = IBSStatusPanelMode.PROGRESSBAR;
+					panels(1).marqueeMode = marqueeMode;
+					panels(1).progressValue = 0;
+					panels(1).visible = true;
+					panels(1).includeInLayout = true;
+				}
+			}
+			
+			public function setProgressValue(value:Number):void
+			{
+				if (panels(1))
+					panels(1).progressValue = value;
+			}
+			
+			public function setProgress(loaded:Number, total:Number):void
+			{
+				if (panels(1))
+					panels(1).setProgress(loaded, total);
+			}
+			
+			public function clearProgressBar():void
+			{
+				if (panels(1))
+				{
+					panels(1).visible = false;
+					panels(1).includeInLayout = false;
+					panels(1).mode = IBSStatusPanelMode.TEXT;
+				}
+			}
+			
+			public function showCurrentUser(userName:String):void
+			{
+				clearCurrentUser();
+				if (panels(2))
+					panels(2).label = "执行任务: " + userName;
+			}
+			
+			public function clearCurrentUser():void
+			{
+				if (panels(2))
+					panels(2).label = "";
+			}
+			
+			public function showLoginTime(time:Date):void
+			{
+				clearLoginTime();
+				if (panels(3) && time)
+				{
+					var formatter:DateFormatter = new DateFormatter();
+					formatter.formatString = "YYYY-MM-DD JJ:NN";
+					panels(3).label = "开始时间: " + formatter.format(time);
+				}
+			}
+			
+			public function clearLoginTime():void
+			{
+				if (panels(3))
+					panels(3).label = "";
+			}
+			
+			private function timerCompleteHandler(event:TimerEvent):void
+			{
+				if (panels(0) && panels(0).mode == IBSStatusPanelMode.TEXT)
+					panels(0).label = defaultText;
+				lastText = defaultText;
+			}
+		]]>
+	</mx:Script>
+	
+</controls:IBSStatusBar>

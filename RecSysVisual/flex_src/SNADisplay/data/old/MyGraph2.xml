@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Graph>
+  <Community id="-1" level="0" size="3">
+	<Member>
+    	<Node id="-2" />
+    	<Node id="-3" />
+		<Node id="-4" />
+	</Member>
+	<Link>
+		<Edge fromID="-2" toID="-3" />
+ 		<Edge fromID="-2" toID="-4" /> 
+	</Link>
+  </Community>
+  
+</Graph>

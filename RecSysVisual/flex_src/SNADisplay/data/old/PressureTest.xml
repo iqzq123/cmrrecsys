@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph>
+<Community id="-1" level="0" size="8">
+<Member>
+<Node id="-0" />
+<Node id="-1" />
+<Node id="-2" />
+<Node id="-3" />
+<Node id="-4" />
+<Node id="-5" />
+<Node id="-6" />
+<Node id="-7" />
+</Member>
+<Link>
+<Edge fromID="-0" toID="-1" />
+<Edge fromID="-0" toID="-7" />
+<Edge fromID="-1" toID="-4" />
+<Edge fromID="-2" toID="-4" />
+<Edge fromID="-2" toID="-5" />
+<Edge fromID="-3" toID="-5" />
+<Edge fromID="-3" toID="-1" />
+<Edge fromID="-3" toID="-7" />
+<Edge fromID="-4" toID="-7" />
+<Edge fromID="-5" toID="-4" />
+<Edge fromID="-6" toID="-2" />
+<Edge fromID="-7" toID="-2" />
+<Edge fromID="-7" toID="-1" />
+</Link>
+</Community>
+</Graph>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph><Member><Node id="张扬"/><Node id="张梅"/><Node id="杜雷"/></Member><Link><Edge fromID="张扬" toID="杜雷"/>
+<Edge fromID="张梅" toID="张扬"/>
+<Edge fromID="张梅" toID="杜雷"/>
+</Link></Graph>

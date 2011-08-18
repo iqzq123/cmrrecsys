@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="390" height="276"
+    showCloseButton="true" close="closeWindow()" >
+    <mx:Script>
+    	<![CDATA[
+	    	import SNADisplay.org.Source.EmbeddedIcons;
+	    	import SNADisplay.org.utils.Events.ConfirmEvent;
+	  		import mx.managers.PopUpManager;
+    		//EmbeddedIcons.ballEmbeddedIcons.ball
+    		private function closeWindow():void {
+    			PopUpManager.removePopUp(this);
+    		}
+    		private function comfirmHandler():void {
+    			var label:String;
+    			if ( tileList.selectedItem == null )
+    				label = "";
+    			else
+    				label = tileList.selectedItem.label;
+    			dispatchEvent(new ConfirmEvent(ConfirmEvent.CONFIRMTYPE,label,false));
+    			PopUpManager.removePopUp(this);
+    		}
+    	]]>
+    </mx:Script>
+	<mx:TileList id="tileList" x="10" y="10" width="350" height="186" columnCount="4" >
+		<mx:dataProvider>
+			<mx:Array id="imagesData">
+				<mx:Object label="ball" icon="{EmbeddedIcons.ball}" />
+				<mx:Object label="bars" icon="{EmbeddedIcons.bars}" />
+				<mx:Object label="blueCube" icon="{EmbeddedIcons.blueCube}" />
+				<mx:Object label="budget" icon="{EmbeddedIcons.budget}" />
+				<mx:Object label="bulb" icon="{EmbeddedIcons.bulb}" />
+				<mx:Object label="clock" icon="{EmbeddedIcons.clock}" />
+				<mx:Object label="closeHand" icon="{EmbeddedIcons.closeHand}" />
+				<mx:Object label="colorSquare" icon="{EmbeddedIcons.colorSquare}" />
+				<mx:Object label="excalmatry" icon="{EmbeddedIcons.excalmatry}" />
+				<mx:Object label="female" icon="{EmbeddedIcons.female}" />
+				<mx:Object label="male" icon="{EmbeddedIcons.male}" />
+				<mx:Object label="file" icon="{EmbeddedIcons.file}" />
+				<mx:Object label="greenCube" icon="{EmbeddedIcons.greenCube}" />
+				<mx:Object label="group" icon="{EmbeddedIcons.group}" />
+				<mx:Object label="leaf" icon="{EmbeddedIcons.leaf}" />
+				<mx:Object label="note" icon="{EmbeddedIcons.note}" />
+				<mx:Object label="openHand" icon="{EmbeddedIcons.openHand}" />
+				<mx:Object label="org" icon="{EmbeddedIcons.org}" />
+				<mx:Object label="smileFace" icon="{EmbeddedIcons.smileFace}" />
+				<mx:Object label="star" icon="{EmbeddedIcons.star}" />
+			</mx:Array>
+		</mx:dataProvider>
+	</mx:TileList>
+	<mx:Button x="244" y="204" label="确定" id="comfirm" click="comfirmHandler()"/>
+	<mx:Button x="300" y="204" label="取消" click="closeWindow()"/>
+	
+</mx:TitleWindow>
