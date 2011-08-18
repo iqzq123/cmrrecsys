@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -21,7 +23,7 @@ public class BookModel {
 	private HashMap<String, Integer> bookNameMap = new HashMap<String, Integer>();
 	//private HashMap<String, ArrayList<Book>> userReadingMap = new HashMap<String, ArrayList<Book>>();
 	private ArrayList<Book> targetBooksAL = new ArrayList<Book>();
-	private final int BOOK_ATTRI_NUM = 15;
+	//private final int BOOK_ATTRI_NUM = 15;
 	private final int CHAPTER_ATTRI_NUM = 7;
 	
 	/**
@@ -122,6 +124,7 @@ public class BookModel {
 			String str;
 			reader.readLine();
 			Book book = null;
+			int i = 0;
 			while ((str = reader.readLine()) != null) {
 				String[] strArray = str.split(",");
 				
@@ -136,6 +139,9 @@ public class BookModel {
 				
 				if ( book != null )
 					countChapterUserNumber(strArray, book);
+				i++;
+				if ( i % 100000 == 0)
+					System.out.println(i);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -157,9 +163,15 @@ public class BookModel {
 	public void saveBookXML() {
 		System.out.println("savaBookXML");
 		for ( Book book : this.targetBooksAL ){
+			
 			Iterator<Integer> iterator = book.getChapterMap().keySet().iterator();
+			ArrayList<Integer> keyArrayList = new ArrayList<Integer>();
 			while ( iterator.hasNext() ) {
-				Chapter chapter = book.getChapterMap().get(iterator.next());
+				keyArrayList.add(iterator.next());
+			}
+			Collections.sort(keyArrayList);
+			for ( int key : keyArrayList ) {
+				Chapter chapter = book.getChapterMap().get(key);
 				System.out.println(chapter.getId()+","+chapter.getUserNum());
 				
 			}
