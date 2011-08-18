@@ -83,7 +83,7 @@ public class AnalyseRunner {
 //		c.runFastGN(outFloder + "/simGraph.txt", outFloder + "/cluster.txt");
 //
 //		this.marbuilder.buildGroupModel(c.getCommunityList(), subOutFloder2);
-		System.out.println("success11111111111111111111111");
+		System.out.println("success11111111112222");
 
 	}
 
