@@ -29,15 +29,18 @@ import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 public class PathFinder extends Analyse {
 	private static final String NAME = "PathFinderClass";
-	//private final String SEPARATOR_STR = ";\t|;";
 	private String localOutputPath = "";
-	private final int MAX_LENGTH = 100;
 	private final int MIN_LENGTH = 2;
+	private final int MAX_LENGTH = Integer.MAX_VALUE;
+	private final int MIN_USER = 1;
+	private final int MAX_USER = Integer.MAX_VALUE;
 	private PVHistory curPVHis = null;
 	private ArrayList<EndPoint> endPoints = new ArrayList<EndPoint>();
-	private ArrayList<HashMap> hasPathAL = new ArrayList<HashMap>();
-	private int minLength = 0;
+	private ArrayList<HashMap<String,Integer>> pathCntMapAL = new ArrayList<HashMap<String,Integer>>();
+	private int minLength = MIN_LENGTH;
 	private int maxLength = MAX_LENGTH;
+	private int minUser = MIN_USER;
+	private int maxUser = MAX_USER;
 
 	@Override
 	public String getName() {
@@ -50,7 +53,7 @@ public class PathFinder extends Analyse {
 		// TODO Auto-generated method stub
 		System.out.println("inPathFinder:" + params);
 		String[] pArr = params.split(Separator.PARAM_SEPARATOR1);
-		//byte a=Byte.valueOf(pArr[0]);
+		// byte a=Byte.valueOf(pArr[0]);
 		this.setType(Byte.parseByte(pArr[0]));
 		this.minLength = Integer.valueOf(pArr[1]);
 		this.maxLength = Integer.valueOf(pArr[2]);
@@ -58,9 +61,15 @@ public class PathFinder extends Analyse {
 			this.minLength = MIN_LENGTH;
 		if (this.maxLength < this.minLength) {
 			this.maxLength = MAX_LENGTH;
-			this.minLength = MIN_LENGTH;
 		}
-		String[] endPointsArr = pArr[3].split(Separator.PARAM_SEPARATOR2);
+		this.minUser = Integer.valueOf(pArr[3]);
+		this.maxUser = Integer.valueOf(pArr[4]);
+		if (this.minUser < MIN_USER)
+			this.minUser = MIN_USER;
+		if (this.maxUser < this.minUser) {
+			this.maxUser = MAX_USER;
+		}
+		String[] endPointsArr = pArr[5].split(Separator.PARAM_SEPARATOR2);
 		setEndPoints(endPointsArr);
 	}
 
@@ -90,8 +99,8 @@ public class PathFinder extends Analyse {
 			endPoint.fromPage = strArray[0];
 			endPoint.toPage = strArray[1];
 			this.endPoints.add(endPoint);
-			HashMap hasPath = new HashMap();
-			this.hasPathAL.add(hasPath);
+			HashMap<String,Integer> pathCnt = new HashMap<String,Integer>();
+			this.pathCntMapAL.add(pathCnt);
 		}
 		reader.close();
 		fr.close();
@@ -99,18 +108,21 @@ public class PathFinder extends Analyse {
 
 	public void savePathList() {
 		try {
-			System.out.println(this.localOutputPath + "/findPath.txt");
+			System.out.println(this.NAME + ":savePath:" + this.localOutputPath + "/findPath.txt");
 			FileWriter fw = new FileWriter(this.localOutputPath
 					+ "/findPath.txt");
 			BufferedWriter writer = new BufferedWriter(fw);
-			Iterator<EndPoint> iter = this.endPoints.iterator();
-			while (iter.hasNext()) {
-				EndPoint ep = iter.next();
+			//Iterator<EndPoint> iter = this.endPoints.iterator();
+			//while (iter.hasNext()) {
+			int index = 0;
+			for ( EndPoint ep : this.endPoints ) {
 				for (String s : ep.pathList) {
 					String newStr = s.replace(Separator.PARAM_SEPARATOR3, ",");
-					writer.write(newStr + '\n');
-					System.out.println(newStr);
+					String weight = this.pathCntMapAL.get(index).get(s).toString();
+					writer.write(newStr + "," + weight + '\n');
+					System.out.println(newStr + "," + weight);
 				}
+				index ++;
 			}
 			writer.flush();
 			writer.close();
@@ -119,7 +131,7 @@ public class PathFinder extends Analyse {
 			ioexp.printStackTrace();
 		}
 	}
-
+	
 	public void savePathListXML() {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = null;
@@ -129,63 +141,27 @@ public class PathFinder extends Analyse {
 			System.err.println(pce);
 		}
 		Document doc = db.newDocument();
-		Element root = doc.createElement("Graph");
+		Element root = doc.createElement("PathFinder");
 		doc.appendChild(root);
-		Element nodes = doc.createElement("Nodes");
-		root.appendChild(nodes);
-		Element edges = doc.createElement("Edges");
-		root.appendChild(edges);
-		Iterator<EndPoint> iter = this.endPoints.iterator();
 		int index = 0;
-		String prePage = "";
-		String[] pages;
-		String fromPage = "";
 		// String toPage = "";
 		Element node;
 		// 每一对端点的结果
-		while (iter.hasNext()) {
-			EndPoint ep = iter.next();
-			if (ep.pathList.size() == 0)
-				break;
-			pages = ep.pathList.get(0).split(Separator.PARAM_SEPARATOR3);
-			if (pages.length == 0)
-				continue;
-			node = doc.createElement("Node");
-			fromPage = pages[0] + "(p" + index + ")";
-			node.setAttribute("id", fromPage);
-			node.setAttribute("name", pages[0]);
-			node.setAttribute("type", "from");
-			nodes.appendChild(node);
-			int seq = 0;
-			for (int i = 0; i < ep.pathList.size(); i++) {
-				pages = ep.pathList.get(i).split(Separator.PARAM_SEPARATOR3);
-				String weight = this.hasPathAL.get(index).get(
-						ep.pathList.get(i)).toString();
-				for (int j = 1; j < pages.length; j++) {
-					String curPage = pages[j] + "(p" + index + "," + seq + ")";
-					node = doc.createElement("Node");
-					node.setAttribute("id", curPage);
-					node.setAttribute("name", pages[j]);
-					if (j < pages.length - 1)
-						node.setAttribute("type", "middle");
-					else
-						node.setAttribute("type", "to");
-					nodes.appendChild(node);
-					if (j == 1) {
-						Element edge = doc.createElement("Edge");
-						edge.setAttribute("fromID", fromPage);
-						edge.setAttribute("toID", curPage);
-						edge.setAttribute("weight", weight);
-						edges.appendChild(edge);
-					} else {
-						Element edge = doc.createElement("Edge");
-						edge.setAttribute("fromID", prePage);
-						edge.setAttribute("toID", curPage);
-						edge.setAttribute("weight", weight);
-						edges.appendChild(edge);
-					}
-					prePage = curPage;
-					seq++;
+		for ( EndPoint ep: this.endPoints ){
+			Element endPointEmt = doc.createElement("EndPoints");
+			endPointEmt.setAttribute("fromPage", ep.fromPage);
+			endPointEmt.setAttribute("toPage", ep.toPage);
+			root.appendChild(endPointEmt);
+			for (String path : ep.pathList ) {
+				String weight = this.pathCntMapAL.get(index).get(path).toString();
+				Element pathEmt = doc.createElement("Path");
+				pathEmt.setAttribute("userNum", weight);
+				endPointEmt.appendChild(pathEmt);
+				String[] pages = path.split(Separator.PARAM_SEPARATOR3);
+				for (int i = 0; i < pages.length ; i++) {
+					Element pageEmt = doc.createElement("Page");
+					pageEmt.setAttribute("pageName", pages[i]);
+					pathEmt.appendChild(pageEmt);
 				}
 			}
 			index++;
@@ -195,116 +171,6 @@ public class PathFinder extends Analyse {
 			FileOutputStream os = null;
 			OutputFormat outformat = new OutputFormat(doc);
 			os = new FileOutputStream(this.localOutputPath + "/findPath.xml");
-			XMLSerializer xmlSerilizer = new XMLSerializer(os, outformat);
-			xmlSerilizer.serialize(doc);
-
-		} catch (IOException ioexp) {
-			ioexp.printStackTrace();
-		}
-
-	}
-
-	public void savePathListXML2() {
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = null;
-		try {
-			db = dbf.newDocumentBuilder();
-		} catch (Exception pce) {
-			System.err.println(pce);
-		}
-		Document doc = db.newDocument();
-		Element root = doc.createElement("Graph");
-		doc.appendChild(root);
-		Element nodes = doc.createElement("Nodes");
-		root.appendChild(nodes);
-		Element edges = doc.createElement("Edges");
-		root.appendChild(edges);
-		Iterator<EndPoint> iter = this.endPoints.iterator();
-		int index = 0;
-		String prePage = "";
-		String[] pages;
-		String fromPage = "";
-		String toPage = "";
-		Element node;
-		HashMap<String, Integer> hashMap = new HashMap<String, Integer>();
-		// 每一对端点的结果
-		while (iter.hasNext()) {
-			EndPoint ep = iter.next();
-			if (ep.pathList.size() == 0)
-				break;
-			pages = ep.pathList.get(0).split(Separator.PARAM_SEPARATOR3);
-			if (pages.length == 0)
-				continue;
-			node = doc.createElement("Node");
-			fromPage = pages[0] + "(p" + index + ")";
-			node.setAttribute("id", fromPage);
-			node.setAttribute("name", pages[0]);
-			node.setAttribute("type", "from");
-			nodes.appendChild(node);
-			// int seq = 0;
-			// 每一条路径
-			for (int i = 0; i < ep.pathList.size(); i++) {
-				pages = ep.pathList.get(i).split(Separator.PARAM_SEPARATOR3);
-				// this.hasPathAL.get(index).get(ep.pathList.get(i)).toString();
-				int seq = 0;
-				for (int j = 1; j < pages.length; j++) {
-					String curPage = pages[j] + "(p" + (seq + 1) + ")";// pages[j]+"(p"+index+","+seq+")";
-					// 去重
-					if (hashMap.containsKey(curPage) == true) {
-						prePage = curPage;
-						seq++;
-						continue;
-					} else
-						hashMap.put(curPage, 1);
-					// 计算边权值
-					String weight = "";
-					int w = 0;
-					for (int k = 0; k < ep.pathList.size(); k++) {
-						String[] tempPages = ep.pathList.get(k).split(
-								Separator.PARAM_SEPARATOR3);
-						if (tempPages.length > j) {
-							if (tempPages[j].equals(pages[j])) {
-								w += Integer.parseInt(this.hasPathAL.get(index)
-										.get(ep.pathList.get(k)).toString());
-							}
-						}
-					}
-					weight = String.valueOf(w);
-					// 构造节点
-					node = doc.createElement("Node");
-					node.setAttribute("id", curPage);
-					node.setAttribute("name", pages[j]);
-					if (j < pages.length - 1)
-						node.setAttribute("type", "middle");
-					else
-						node.setAttribute("type", "to");
-					nodes.appendChild(node);
-					// 构造边
-					if (j == 1) {
-						Element edge = doc.createElement("Edge");
-						edge.setAttribute("fromID", fromPage);
-						edge.setAttribute("toID", curPage);
-						edge.setAttribute("weight", weight);
-						edges.appendChild(edge);
-					} else {
-						Element edge = doc.createElement("Edge");
-						edge.setAttribute("fromID", prePage);
-						edge.setAttribute("toID", curPage);
-						edge.setAttribute("weight", weight);
-						edges.appendChild(edge);
-					}
-					prePage = curPage;
-					seq++;
-				}
-			}
-			index++;
-		}
-		try {
-			// 用xmlserializer把document的内容进行串化
-			FileOutputStream os = null;
-			OutputFormat outformat = new OutputFormat(doc);
-			System.out.println("hehehe");
-			os = new FileOutputStream(this.localOutputPath + "/findPathAgg.xml");
 			XMLSerializer xmlSerilizer = new XMLSerializer(os, outformat);
 			xmlSerilizer.serialize(doc);
 
@@ -336,11 +202,26 @@ public class PathFinder extends Analyse {
 	@Override
 	public void onReadEnd() throws IOException {
 		System.out.println("PathFinder: onReadEnd");
+		this.userNumFilter();
 		this.savePathList();
 		this.savePathListXML();
-		this.savePathListXML2();
 	}
-
+	
+	private void userNumFilter() {
+		int index = 0;
+		for ( EndPoint ep : this.endPoints ) {
+			ArrayList<String> newPathList = new ArrayList<String>();
+			for (String s : ep.pathList) {
+				String weight = this.pathCntMapAL.get(index).get(s).toString();
+				int w = Integer.parseInt(weight);
+				if ( w >= this.minUser && w <= this.maxUser ){
+					newPathList.add(s);
+				}
+			}
+			ep.pathList = newPathList;
+			index ++;
+		}
+	}
 	@Override
 	public void onReadLog(String[] log) throws IOException {
 		// TODO Auto-generated method stub
@@ -387,13 +268,11 @@ public class PathFinder extends Analyse {
 	}
 
 	private void onReadHis(PVHistory his, int minLength, int maxLength) {
-	
-		Iterator iter = his.getPathString().iterator();
 		int[] states = new int[this.endPoints.size()];
 		String[] targetPathes = new String[this.endPoints.size()];
+		HashMap<String,Integer> rmDuplicatesMap = new HashMap<String,Integer>();
 		// 遍历每个Session
-		while (iter.hasNext()) {
-			String path = (String) iter.next();
+		for (String path : his.getPathString()) {
 			String[] visits = path.split(Separator.pathSeparator);
 			for (int i = 0; i < states.length; i++) {
 				states[i] = 0;
@@ -419,27 +298,36 @@ public class PathFinder extends Analyse {
 							targetPathes[index] = visit;
 						} else if (!visit.equals(ep.toPage)) {
 							states[index] = 1;
-							targetPathes[index] += Separator.PARAM_SEPARATOR3 + visit;
+							targetPathes[index] += Separator.PARAM_SEPARATOR3
+									+ visit;
 						} else {
 							states[index] = 0;
-							targetPathes[index] += Separator.PARAM_SEPARATOR3 + visit;
-							HashMap hasPath = (HashMap) this.hasPathAL
-									.get(index);
-							int length = targetPathes[index]
-									.split(Separator.PARAM_SEPARATOR3).length;
-
-							if (length >= minLength && length <= maxLength) {
-								// System.out.println(path);
-								if (hasPath.get(targetPathes[index]) == null) {
-									hasPath.put(targetPathes[index], 1);
-									ep.pathList.add(targetPathes[index]);
-								} else {
-									int cnt = Integer.parseInt(hasPath.get(
-											targetPathes[index]).toString());
-									cnt++;
-									hasPath.put(targetPathes[index], cnt);
+							targetPathes[index] += Separator.PARAM_SEPARATOR3
+									+ visit;
+							if ( rmDuplicatesMap.get(targetPathes[index]) == null ){
+								rmDuplicatesMap.put(targetPathes[index], 1);
+							
+								HashMap<String,Integer> pathCntMap = (HashMap<String,Integer>) this.pathCntMapAL
+										.get(index);
+								int length = targetPathes[index]
+										.split(Separator.PARAM_SEPARATOR3).length;
+	
+								if (length >= minLength && length <= maxLength) {
+									// System.out.println(path);
+									if ( pathCntMap.get(targetPathes[index]) == null ) {
+										pathCntMap.put(targetPathes[index], 1);
+										ep.pathList.add(targetPathes[index]);
+									} else {
+										int cnt = Integer.parseInt(pathCntMap.get(
+												targetPathes[index]).toString());
+										cnt++;
+										pathCntMap.put(targetPathes[index], cnt);
+									}
 								}
 							}
+//							else {
+//								System.out.println("id:"+his.getId()+" pvNum:"+his.getPvNum()+" "+targetPathes[index]);
+//							}
 						}
 						break;
 					}
@@ -449,45 +337,19 @@ public class PathFinder extends Analyse {
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		// AnalyseRunner b = new AnalyseRunner();
-		// // ReplaceFilter r=new ReplaceFilter();
-		// try {
-		//
-		// b.setInputPath("E:/data/pagevisit/test.txt");
-		// b.setSiteDataPath("E:/data");
-		// PathFinder fp = new PathFinder();
-		// fp.readEndPointList("E:/data/pagevisit/endPoints.txt");
-		// //fp.setEndPoints(epAL) //直接配置端点参数
-		// fp.setMinLength(2); //长度包括起始点
-		// fp.setMaxLength(10);
-		// b.addAnalyse(fp);
-		//
-		// b.seqRun();
-		// System.out.println("success");
-		//
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-
 		Starter s = new Starter();
 		s.setInputPath("E:/data/pagevisit/test.txt");
 		s.setOutputPath("E:/data/pagevisit/testout.txt");
 		s.setSiteDataPath("E:/data");
-		//s.setNegCate(true);
 		try {
-			String ss="PathFinderClass" + Separator.cmdSeparator
-			+ AnalyseType.Original + Separator.PARAM_SEPARATOR1 + 2
-			+ Separator.PARAM_SEPARATOR1 + 100
-			+ Separator.PARAM_SEPARATOR1 + "login*"
-			+ Separator.PARAM_SEPARATOR2 + "费用提示页面";
 			s.start("PathFinderClass" + Separator.cmdSeparator
 					+ AnalyseType.NegCate + Separator.PARAM_SEPARATOR1 + 2
 					+ Separator.PARAM_SEPARATOR1 + 100
+					+ Separator.PARAM_SEPARATOR1 + 1
+					+ Separator.PARAM_SEPARATOR1 + 0
 					+ Separator.PARAM_SEPARATOR1 + "login*"
 					+ Separator.PARAM_SEPARATOR3 + "费用提示页面");
-			//s.start("PathFinderClass	0?	|?2?	|?100?	|?login*;	|;费用提示页面");
+			 //s.start("PathFinderClass	1@@@2@@@5@@@2@@@0@@@login*###费用提示页面");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -497,23 +359,21 @@ public class PathFinder extends Analyse {
 
 	public void setEndPoints(String[] epArr) {
 		this.endPoints.clear();
-		this.hasPathAL.clear();
+		this.pathCntMapAL.clear();
 		for (int i = 0; i < epArr.length; i++) {
 			String s = epArr[i];
 			EndPoint ep = new EndPoint();
 			ep.fromPage = s.split(Separator.PARAM_SEPARATOR3)[0];
 			ep.toPage = s.split(Separator.PARAM_SEPARATOR3)[1];
 			this.endPoints.add(ep);
-			HashMap hasPath = new HashMap();
-			this.hasPathAL.add(hasPath);
+			HashMap<String,Integer> pathCnt = new HashMap<String,Integer>();
+			this.pathCntMapAL.add(pathCnt);
 		}
 	}
 
 	public ArrayList<String> getEndPoints() {
 		ArrayList<String> epAL = new ArrayList<String>();
-		Iterator iter = this.endPoints.iterator();
-		while (iter.hasNext()) {
-			EndPoint ep = (EndPoint) iter.next();
+		for ( EndPoint ep:this.endPoints ) {
 			String s = ep.fromPage + "," + ep.toPage;
 			epAL.add(s);
 		}
