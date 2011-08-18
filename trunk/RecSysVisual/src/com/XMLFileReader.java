@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
 public class XMLFileReader{
 	public static void main(String args[]) 
     {
-		XMLFileReader.readXMLToStr("D:\\tree.xml");
+		XMLFileReader.readXMLToStr("D:\\tree.xml"); 
     }
 	
 	public static String readXMLToStr(String fileName){
