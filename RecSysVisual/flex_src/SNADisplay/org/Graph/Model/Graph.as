@@ -1376,7 +1376,6 @@ package SNADisplay.org.Graph.Model
 			var node:INode;
 			var component:UIComponent;
 			var nodeArr:Array = new Array;
-			
 
 			for each ( node in _graphData.nodes ){
 				if ( node.edges.length != 0 ) {
@@ -1398,6 +1397,7 @@ package SNADisplay.org.Graph.Model
 				}
 			}
 		}
+		
 		public function singleNodefilter(nodeId:String, depth:int, direction:Boolean = true):void {
 			var arrNodes:Array = new Array;
 			var arrEdges:Array = new Array;

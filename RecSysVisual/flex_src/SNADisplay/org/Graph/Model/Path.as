@@ -3,7 +3,6 @@ package SNADisplay.org.Graph.Model
 	import SNADisplay.org.Graph.Logical.*;
 	
 	import flash.utils.Dictionary;
-	
 	import mx.containers.Canvas;
 	import mx.events.IndexChangedEvent;
 	import mx.controls.Alert;
@@ -54,16 +53,16 @@ package SNADisplay.org.Graph.Model
 				graphData.nodes.push(newNode);
 	
 				var pathXMLList:XMLList = endPointXML.child("Path");//endPointXML.attribute("Path");
-				
+				if ( maxUser <= 0 )
+						maxUser = int.MAX_VALUE;
+				if ( maxLength <= 0 )
+					maxLength = int.MAX_VALUE;
 				//Alert.show("pathLength:" + pathXMLList.length());
 				for each ( var pathXML:XML in pathXMLList ){
 					var userNum:Number =  new Number( pathXML.attribute("userNum") );
 					var pagesXMLList:XMLList = pathXML.descendants("Page");
 					var length:int = pagesXMLList.length() - 1;
-				 	if ( maxUser <= 0 )
-						maxUser = int.MAX_VALUE;
-					if ( maxLength <= 0 )
-						maxLength = int.MAX_VALUE;
+				 	
 						
 					if ( userNum >= minUser && userNum <= maxUser && length >= minLength && length <= maxLength){
 						filteredPathes.push( pathXML );			
@@ -122,7 +121,7 @@ package SNADisplay.org.Graph.Model
 				s +="curPageName:"+curPageName+"prePageName:"+preNode.name + "\n";
 				
 				newNode = new SimpleNode( curPageName+"("+ taskIndex + "," + level+")" , curPageName);
-				newEdge = new SimpleEdge( preNode.name+","+newNode.name , preNode, newNode);
+				newEdge = new SimpleEdge( preNode.id+","+newNode.id , preNode, newNode);
 				preNode.addOutEdge(newNode);
 				newNode.addInEdge(preNode);
 				var w:int = 0;

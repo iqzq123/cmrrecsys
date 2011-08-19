@@ -7,6 +7,7 @@
 			import SNADisplay.org.utils.Events.ConfirmEvent;
 			import SNADisplay.org.Graph.Model.Graph;
 			import SNADisplay.org.Graph.Model.Path;
+			import SNADisplay.org.Graph.Model.FRPath;
 			import SNADisplay.org.Graph.Model.IGraph;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
@@ -22,7 +23,12 @@
 			private var _graph:IGraph;
 			private var _graph2:IGraph;
 			private var _fileOpen:FileReferenceList;
-			private var _isPathMode:Boolean = false;
+			//private var _isPathMode:Boolean = false;
+			
+			private const SIMPLE_MODE:int = 0;
+			private const PATH_MODE:int = 1;
+			private const FR_PATH_MODE:int = 2;
+			private var _mode:int = SIMPLE_MODE;
 			
 			private function init():void {
 				_curGraph =  _graph;
@@ -188,7 +194,7 @@
 					initCanvasListeners(_graphCanvas);
 					if ( _graph != null )
 						_graph.destroy();
-					_isPathMode = false;
+					this._mode = this.SIMPLE_MODE;
 					_graph = new Graph("MyGraph",false,true);
 					_graph.initGraphData(xmlData,_graphCanvas);
 					communitiesCheckBox.selected = false;
@@ -206,6 +212,39 @@
 							break;
 					}
 					saveProperty(xmlData);
+				}
+			}
+			
+			private function loadFile2(evt:ResultEvent):void {
+				var xmlData:XML = XML(evt.message.body);
+				if ( xmlData == null ){
+					Alert.show("文件为空","出错");
+				}
+				else {
+					var canvas:DisplayObject = this.getChildByName("graphCanvas2");
+					if ( canvas != null )
+						this.removeChild(canvas);
+					_graphCanvas2 = new Canvas;
+					_graphCanvas2.name = "graphCanvas2";
+					_graphCanvas2.x = (controlPad.width+10) + (this.width - (controlPad.width+20))/2 + 5;
+					_graphCanvas2.y = 10;
+					_graphCanvas2.width = (this.width - (controlPad.width+20))/2 - 5;
+					_graphCanvas2.height = this.height - 20;
+					
+					_graphCanvas2.setStyle("backgroundColor","#F8F8FF");
+					this.addChild(_graphCanvas2);
+					initCanvasListeners(_graphCanvas2);
+					if ( _graph2 != null )
+						_graph2.destroy();
+			
+					this._mode = this.SIMPLE_MODE;
+					_graph2 = new Graph("MyGraph",false,true);
+					_graph2.initGraphData(xmlData,_graphCanvas2);
+					communitiesCheckBox.selected = false;
+					setGraph(_graph2);
+					_graph2.draw();
+					graphChoose.visible = true;
+					graphChoose.includeInLayout = true;
 				}
 			}
 			
@@ -232,7 +271,8 @@
 					initCanvasListeners(_graphCanvas);
 					if ( _graph != null )
 						_graph.destroy();
-					_isPathMode = true;
+			
+					this._mode = this.PATH_MODE;
 					_graph = new Path("MyGraph",false,true);
 					_graph.initGraphData(xmlData,_graphCanvas);
 					
@@ -249,37 +289,6 @@
 							_curGraph = _graph2;
 							break;
 					}
-				}
-			}
-			private function loadFile2(evt:ResultEvent):void {
-				var xmlData:XML = XML(evt.message.body);
-				if ( xmlData == null ){
-					Alert.show("文件为空","出错");
-				}
-				else {
-					var canvas:DisplayObject = this.getChildByName("graphCanvas2");
-					if ( canvas != null )
-						this.removeChild(canvas);
-					_graphCanvas2 = new Canvas;
-					_graphCanvas2.name = "graphCanvas2";
-					_graphCanvas2.x = (controlPad.width+10) + (this.width - (controlPad.width+20))/2 + 5;
-					_graphCanvas2.y = 10;
-					_graphCanvas2.width = (this.width - (controlPad.width+20))/2 - 5;
-					_graphCanvas2.height = this.height - 20;
-					
-					_graphCanvas2.setStyle("backgroundColor","#F8F8FF");
-					this.addChild(_graphCanvas2);
-					initCanvasListeners(_graphCanvas2);
-					if ( _graph2 != null )
-						_graph2.destroy();
-					_isPathMode = false;
-					_graph2 = new Graph("MyGraph",false,true);
-					_graph2.initGraphData(xmlData,_graphCanvas2);
-					communitiesCheckBox.selected = false;
-					setGraph(_graph2);
-					_graph2.draw();
-					graphChoose.visible = true;
-					graphChoose.includeInLayout = true;
 				}
 			}
 			
@@ -552,7 +561,7 @@
 			}
 			
 			private function pathFilter():void {
-				if ( this._isPathMode = false )
+				if ( this._mode == this.SIMPLE_MODE )
 					return ;
 				var userMin:int = new int(pathUserMin.text);
 				var userMax:int = new int(pathUserMax.text);
@@ -564,15 +573,17 @@
 				}
 				if ( userMax == 0 )
 					userMax = int.MAX_VALUE;
-					
 				if ( lengthMax != 0 && ( lengthMax < lengthMin ) ) {
 					Alert.show("提示：路径长度上限值必须大于下限值，或者为0表示无上限。");
 					return ;
 				}
 				if ( lengthMax == 0 )
 					lengthMax = int.MAX_VALUE;
-				(_curGraph as Path).filter(userMin, userMax, lengthMin, lengthMax);
-
+				if ( this._mode == this.PATH_MODE )
+					(_curGraph as Path).filter(userMin, userMax, lengthMin, lengthMax);
+				else if ( this._mode == this.FR_PATH_MODE )
+					(_curGraph as FRPath).filter(userMin, userMax, lengthMin, lengthMax);
+					
 				setGraph(_curGraph);
 				_curGraph.draw();
 			}
@@ -769,6 +780,69 @@
 				graphDataGridWindow.init(xmlData);
 			}
 			
+			private function showFRPath():void {
+				fileWindow = new FileWindow;
+				PopUpManager.addPopUp(fileWindow,this,true);
+				PopUpManager.centerPopUp(fileWindow);
+				fileWindow.addEventListener(Event.SELECT, getFRPathXML);
+			}
+			
+			private function getFRPathXML(evt:Event):void {
+				var getXML : HTTPService = new HTTPService();
+				getXML.resultFormat = "e4x";
+				getXML.url = "getXMLServlet";
+				var params:URLVariables = new URLVariables();
+                params.filePath = encodeURIComponent(fileWindow.getFilePath());
+                params.random = Math.random();
+				layoutComboBox.selectedIndex = 2;
+                edgeLabelCheckBox.selected = true;
+				getXML.addEventListener(ResultEvent.RESULT,  loadFRPathFile);
+				getXML.addEventListener(FaultEvent.FAULT, fHandler);
+				getXML.send(params); 
+			}
+			
+			private function loadFRPathFile(evt:ResultEvent):void {
+				var xmlData:XML = XML(evt.message.body);
+				if ( xmlData == null ){
+					Alert.show("文件为空","出错");
+				}
+				else {
+					var graphCanvas:DisplayObject = this.getChildByName("graphCanvas");
+					if ( graphCanvas != null )
+						this.removeChild(graphCanvas);
+					_graphCanvas = new Canvas;
+					_graphCanvas.name = "graphCanvas";
+					_graphCanvas.x = (controlPad.width+10);
+					_graphCanvas.y = 10;
+					if ( _graph2 == null )
+						_graphCanvas.width = this.width - (controlPad.width+20);
+					else
+						_graphCanvas.width = (this.width - (controlPad.width+20))/2 - 5;
+					_graphCanvas.height = this.height - 20;
+					_graphCanvas.setStyle("backgroundColor","#F8F8FF");
+					this.addChild(_graphCanvas);
+					initCanvasListeners(_graphCanvas);
+					if ( _graph != null )
+						_graph.destroy();
+				
+					this._mode = this.FR_PATH_MODE;
+					_graph = new FRPath("MyGraph",false,true);
+					_graph.initGraphData(xmlData,_graphCanvas);
+					communitiesCheckBox.selected = false;
+ 					setGraph(_graph);
+					_graph.draw(); 
+					if ( _graph2 == null )
+						_curGraph = _graph;
+					switch ( graphRadiogroup.selection.label ){
+						case "左图":
+							_curGraph = _graph;
+							break;
+						case "右图":
+							_curGraph = _graph2;
+							break;
+					}
+				}
+			}
 		]]>
 	</mx:Script>
 	<mx:HTTPService id="getLocalFile" url="" resultFormat="e4x" result="loadFile(event)" fault="fHandler(event)"/>
@@ -801,6 +875,7 @@
 				</mx:HBox>
 				<mx:Button label="路径过滤" click="pathFilter()"/>
 				<mx:Button label="图数据查看" click="showGraphData()"/>
+				<mx:Button label="频繁路径查看" click="showFRPath()"/>
 				<mx:Button label="文件目录查看" click="fileDir()"/>
 			</mx:VBox>
     		<mx:VBox id="contralPad" label="控制面板" width="100%" height="100%" 
