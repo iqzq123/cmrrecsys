@@ -5,7 +5,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import java.util.TimeZone;
 import org.tseg.Ulits.Separator;
@@ -37,6 +39,7 @@ public class SeqLBA extends Analyse {
 	private Histogram durationHis = new Histogram();
 	private Histogram pathLenghtHis = new Histogram();
 	private Histogram pvNumHis = new Histogram();
+	private Histogram pageNumHis= new Histogram();
 
 	private List<String> cacheFrePathList = new ArrayList<String>();
 	private List<PVHistory> cachePVHis = new ArrayList<PVHistory>();
@@ -72,6 +75,11 @@ public class SeqLBA extends Analyse {
 		this.pvNumHis.setXName("pvNumber");
 		this.pvNumHis.setYName("population");
 		this.pvNumHis.setColumnNum(15);
+		
+		this.pageNumHis.setName("pageNumHis");
+		this.pageNumHis.setXName("pageNumber");
+		this.pageNumHis.setYName("population");
+		this.pageNumHis.setColumnNum(15);
 	}
 
 	@Override
@@ -142,30 +150,33 @@ public class SeqLBA extends Analyse {
 		this.pathLenghtHis.saveXML(statPath + "/pathHis.xml");
 		this.pvNumHis.build();
 		this.pvNumHis.saveXML(statPath + "/pvNumHis.xml");
+		this.pageNumHis.build();
+		this.pageNumHis.saveXML(statPath+"/pageNumHis.xml");
 	}
 
 	public void saveAndClean() throws IOException {
 
-		FileWriter fw = new FileWriter(this.pvHisPath + "/" + this.saveIndex
-				+ ".txt");
-		BufferedWriter writer = new BufferedWriter(fw);
-		for (PVHistory s : this.cachePVHis) {
-			writer.write(s.toString());
-		}
-		writer.flush();
-		writer.close();
-
-		FileWriter fw1 = new FileWriter(this.fpPath + "/" + this.saveIndex
-				+ ".txt");
-		BufferedWriter writer1 = new BufferedWriter(fw1);
-		for (String s : this.cacheFrePathList) {
-			writer1.write(s);
-		}
-		writer1.flush();
-		writer1.close();
-
-		this.cacheFrePathList.clear();
-		this.cachePVHis.clear();
+	
+//		FileWriter fw = new FileWriter(this.pvHisPath + "/" + this.saveIndex
+//				+ ".txt");
+//		BufferedWriter writer = new BufferedWriter(fw);
+//		for (PVHistory s : this.cachePVHis) {
+//			writer.write(s.toString());
+//		}
+//		writer.flush();
+//		writer.close();
+//
+//		FileWriter fw1 = new FileWriter(this.fpPath + "/" + this.saveIndex
+//				+ ".txt");
+//		BufferedWriter writer1 = new BufferedWriter(fw1);
+//		for (String s : this.cacheFrePathList) {
+//			writer1.write(s);
+//		}
+//		writer1.flush();
+//		writer1.close();
+//
+//		this.cacheFrePathList.clear();
+//		this.cachePVHis.clear();
 
 	}
 
@@ -176,8 +187,15 @@ public class SeqLBA extends Analyse {
 		int duration = his.getDuration();
 		this.durationHis.getDataList().add(duration);
 		this.pvNumHis.getDataList().add(his.getPvNum());
+		
 		for (String s : his.getPathString()) {
-			this.pathLenghtHis.getDataList().add(s.split(",").length);
+			String []pageArray=s.split(",");
+			this.pathLenghtHis.getDataList().add(pageArray.length);
+			Set<String> set=new HashSet<String>();
+			for(String page:pageArray){
+				set.add(page);
+			}
+			this.pageNumHis.getDataList().add(set.size()-2);
 			// System.out.println(s);
 		}
 

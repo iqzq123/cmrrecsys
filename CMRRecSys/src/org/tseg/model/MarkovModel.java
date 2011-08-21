@@ -167,6 +167,8 @@ public class MarkovModel {
 	public void saveModelMXL(String fileName, int linkThreshold,
 			boolean isFilter) {
 
+		
+		
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = null;
 		try {

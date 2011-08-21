@@ -56,12 +56,12 @@ public class SeqMKBuilder extends Analyse {
 	@Override
 	public void onReadEnd() throws IOException {
 		// TODO Auto-generated method stub
-		this.globalModel.saveModelMXL(this.getOutputPath() + "/gModel.xml", 400,
+		this.globalModel.saveModelMXL(this.getOutputPath() + "/gModel"+this.getType()+".xml", 40,
 				false);
-		this.globalModel.saveRelatedPage(this.getOutputPath() + "/relPage.txt");
-		this.saveSortedPage(this.getOutputPath() + "/page_uv.xml", "userNum");
-		this.saveSortedPage(this.getOutputPath() + "/page_pv.xml", "clickNum");
-		this.saveSortedPage(this.getOutputPath() + "/page_duration.xml", "duration");
+		this.globalModel.saveRelatedPage(this.getOutputPath() + "/relPage"+this.getType()+".txt");
+		this.saveSortedPage(this.getOutputPath() + "/page_uv"+this.getType()+".xml", "userNum");
+		this.saveSortedPage(this.getOutputPath() + "/page_pv"+this.getType()+".xml", "clickNum");
+		this.saveSortedPage(this.getOutputPath() + "/page_duration"+this.getType()+".xml", "duration");
 
 	}
 
@@ -86,10 +86,10 @@ public class SeqMKBuilder extends Analyse {
 				//////////////计算UV			
 				updateUVStat(this.curPerModel);
 				//////////只保存一定数量的个人model
-				if(this.curPerModelNum<this.maxPerModelNum){
-					this.curPerModel.saveModelMXL(this.subFloder + "/"
-						+ this.curPerID + ".xml", 0, false);
-				}
+//				if(this.curPerModelNum<this.maxPerModelNum){
+//					this.curPerModel.saveModelMXL(this.subFloder + "/"
+//						+ this.curPerID + ".xml", 0, false);
+//				}
 				
 				this.curPerModelNum++;
 				
