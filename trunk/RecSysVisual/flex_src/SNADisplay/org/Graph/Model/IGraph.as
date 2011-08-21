@@ -70,7 +70,6 @@ package SNADisplay.org.Graph.Model {
 		function setRadialTreeLayout():void;
 		function setTreeLayout():void;
 		function setTreeHorizonLayout():void;
-		function setPathLayout():void;
 		
 		function setCliquePercolation():void;
 		function setGN():void;

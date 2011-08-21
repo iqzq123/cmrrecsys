@@ -259,8 +259,8 @@ package SNADisplay.org.Graph.Model
 					
 				}
 			}
-
-			_root = graphData.nodes[0];
+			if ( graphData.nodes.length != 0 )
+				_root = graphData.nodes[0];
 			_mapNodeColor = setNodeColor(graphData.nodes);
 			_mapEdgeColor = setEdgeColor(graphData.edges);
 			return graphData;
@@ -1531,11 +1531,7 @@ package SNADisplay.org.Graph.Model
 			_layout.init(_graphData,_graphCanvas);
 			(_layout as ForceDirectedLayout).graph = this;
 		}
-		public function setPathLayout():void {
-			stopLayout();
-			_layout = new PathLayout();
-			_layout.init(_graphData,_graphCanvas);
-		}
+
 		public function setCliquePercolation():void {
 			_communityDectection = new CliquePercolation(_graphData);
 			findCommunities();

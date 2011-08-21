@@ -24,8 +24,12 @@ package SNADisplay.org.LayoutAlgorithm
 			var tree:Tree;
 			nodes = _graphData.nodes;
 			//设置根节点，如果没有指定，则默认为nodes[0]
-			if ( _root == null )
-				_root = nodes[0];
+			if ( _root == null ){
+				if ( nodes.length != 0 )
+					_root = nodes[0];
+				else 
+					return _mapPosition;
+			}
 			//生成森林
 			_forest = new Forest(_graphData,_root);
 			_mapNode = new Dictionary; 
