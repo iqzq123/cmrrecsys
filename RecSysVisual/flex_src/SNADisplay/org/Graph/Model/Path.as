@@ -3,9 +3,8 @@ package SNADisplay.org.Graph.Model
 	import SNADisplay.org.Graph.Logical.*;
 	
 	import flash.utils.Dictionary;
+	
 	import mx.containers.Canvas;
-	import mx.events.IndexChangedEvent;
-	import mx.controls.Alert;
 	
 	public class Path extends Graph implements IGraph
 	{
@@ -29,8 +28,84 @@ package SNADisplay.org.Graph.Model
 			}
 			this.setTreeHorizonLayout();
 		}
-		
+		import mx.controls.Alert;
 		private function  initFromXML(xmlData:XML, minUser:Number = -1 , maxUser:Number = -1 , minLength:Number = -1, maxLength:Number = -1):IGraphData {
+			var graphData:IGraphData = new GraphData;
+			var endPointsXMLList:XMLList = xmlData.child("EndPoints");
+			
+			var pathXMLList:XMLList = endPointsXMLList.child("Path");
+			var rootNodeMap:Dictionary = new Dictionary;
+			
+			var newNode:INode;
+			var newEdge:IEdge;
+			var tempEdge:IEdge;
+			var curNode:INode;
+			if ( maxUser <= 0 )
+				maxUser = int.MAX_VALUE;
+			if ( maxLength <= 0 )
+				maxLength = int.MAX_VALUE;
+			var index:int = 0;
+			for each ( var endPointXML:XML in endPointsXMLList ){
+				for each ( var pathXML:XML in pathXMLList ){
+					var userNum:Number =  new Number( pathXML.attribute("userNum") );
+					var pagesXMLList:XMLList = pathXML.descendants("Page");
+					var length:int = pagesXMLList.length() - 1;
+					if ( userNum >= minUser && userNum <= maxUser && length >= minLength && length <= maxLength){
+						for ( var i:int = 0 ; i <pagesXMLList.length() ; i++ ){
+							var pageXML:XML = pagesXMLList[i];
+							var pageName:String = pageXML.attribute("pageName");
+							//处理树的根节点
+							if ( i == 0 ) {
+								//Alert.show(pageName+"("+index+","+i+")");
+								if ( rootNodeMap[pageName+"("+index+","+i+")"] == null ){
+									curNode = new SimpleNode(pageName+"("+index+","+i+")" , pageName );
+									graphData.nodes.push(curNode);
+									rootNodeMap[pageName+"("+index+","+i+")"] = curNode;
+								}
+								else {
+									curNode = rootNodeMap[pageName+"("+index+","+i+")"];
+								}
+							}
+							//非根节点，处理节点和边
+							else {
+								var childNodesArr:Array = curNode.outEdges;
+								var targetNode:INode = null;
+								for each ( var node:INode in childNodesArr ){
+									if ( node.id == pageName+"("+index+","+i+")" ){
+										tempEdge = graphData.getEdge(curNode,node);
+										tempEdge.weight += userNum;
+										tempEdge.label = tempEdge.weight.toString();
+										targetNode = node;
+										curNode = targetNode;
+										break;
+									}
+								}
+								if ( targetNode == null ){
+									newNode = new SimpleNode(pageName+"("+index+","+i+")", pageName );
+									curNode.addOutEdge(newNode);
+									newNode.addInEdge(curNode);
+									graphData.nodes.push(newNode);
+									newEdge = new SimpleEdge( curNode.id+","+newNode.id , curNode, newNode);
+									newEdge.weight = userNum;
+									newEdge.label = newEdge.weight.toString();
+									graphData.edges.push(newEdge);
+									curNode = newNode;
+								}
+							}
+						}			
+					}
+				}
+				index ++;
+			}
+			if ( graphData.nodes.length != 0 )
+				_root = graphData.nodes[0];
+			_mapNodeColor = setNodeColor(graphData.nodes);
+			_mapEdgeColor = setEdgeColor(graphData.edges);
+			return graphData;
+		}
+		
+		//递归的旧方法，不用了
+		private function  initFromXML2(xmlData:XML, minUser:Number = -1 , maxUser:Number = -1 , minLength:Number = -1, maxLength:Number = -1):IGraphData {
 			var graphData:IGraphData = new GraphData;
 			var endPointsXMLList:XMLList = xmlData.child("EndPoints");
 			var index:int = 0;

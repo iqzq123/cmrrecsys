@@ -94,7 +94,8 @@ package SNADisplay.org.Graph.Model
 					}
 				}
 			} 
-			_root = graphData.nodes[0];
+			if ( graphData.nodes.length != 0 )
+				_root = graphData.nodes[0];
 			_mapNodeColor = setNodeColor(graphData.nodes);
 			_mapEdgeColor = setEdgeColor(graphData.edges);
 			return graphData;
