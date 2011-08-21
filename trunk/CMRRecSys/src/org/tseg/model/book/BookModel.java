@@ -1,8 +1,10 @@
 package org.tseg.model.book;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ public class BookModel {
 		b.setBookInfoPath("E:\\data\\book\\bookinfo.txt");
 		b.setChapterInfoPath("E:\\data\\book\\chapterinfo.txt");
 		b.setInputPath("E:\\data\\book\\msisdn_chapterid.txt");
+		b.setOutputPath("E:\\tun.txt");
 		b.onInitial();
 		b.run();
 		b.saveBookXML();
@@ -162,19 +165,34 @@ public class BookModel {
 	
 	public void saveBookXML() {
 		System.out.println("savaBookXML");
-		for ( Book book : this.targetBooksAL ){
+		try{
+			File f = new File(outputPath);
+			f.mkdir();
 			
-			Iterator<Integer> iterator = book.getChapterMap().keySet().iterator();
-			ArrayList<Integer> keyArrayList = new ArrayList<Integer>();
-			while ( iterator.hasNext() ) {
-				keyArrayList.add(iterator.next());
+			String str = "";
+			for ( Book book : this.targetBooksAL ){
+				File file = new File(f.getAbsolutePath()+"/"+book.getId());
+				BufferedWriter output = new BufferedWriter(new FileWriter(file));
+				Iterator<Integer> iterator = book.getChapterMap().keySet().iterator();
+				ArrayList<Integer> keyArrayList = new ArrayList<Integer>();
+				while ( iterator.hasNext() ) {
+					keyArrayList.add(iterator.next());
+				}
+				Collections.sort(keyArrayList);
+				for ( int key : keyArrayList ) {
+					Chapter chapter = book.getChapterMap().get(key);
+					System.out.println(chapter.getId()+","+chapter.getUserNum()+","+chapter.getName()+","+book.getName());
+					str+=chapter.getId()+","+chapter.getUserNum()+","+chapter.getName()+","+book.getName()+"\n";
+					
+				}
+				output.write(str);
+				output.close();
 			}
-			Collections.sort(keyArrayList);
-			for ( int key : keyArrayList ) {
-				Chapter chapter = book.getChapterMap().get(key);
-				System.out.println(chapter.getId()+","+chapter.getUserNum());
-				
-			}
+			
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
 		}
 		System.out.println("savaBookXML END");
 	}
