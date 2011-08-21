@@ -8,6 +8,7 @@ import org.tseg.analyse.Analyse;
 import org.tseg.analyse.AnalyseRunner;
 import org.tseg.analyse.PathFinder;
 import org.tseg.analyse.SeqLBA;
+import org.tseg.analyse.SeqMKBuilder;
 import org.tseg.analyse.Tundish;
 
 public class Starter {
@@ -46,6 +47,8 @@ public class Starter {
 		PathFinder pathFinder = new PathFinder();
 		analyseMap.put(pathFinder.getName(), pathFinder);
 
+		SeqMKBuilder mk=new SeqMKBuilder();
+		analyseMap.put(mk.getName(), mk);
 	}
 
 	
@@ -82,13 +85,16 @@ public class Starter {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Starter s=new Starter();
-		s.setInputPath("E:/data/pagevisit/test.txt");
-		s.setOutputPath("E:/data/pagevisit/testout");
+		s.setInputPath("E:/data/pagevisit/pv6.txt");
+		s.setOutputPath("E:/data/pagevisit/pv6_out");
 		s.setSiteDataPath("E:/data");
 		try{
 			String cmd="basic analyse\t"+AnalyseType.NegCate+"\n"+
 			"basic analyse\t"+AnalyseType.PageToCate+"\n"+
-			"basic analyse\t"+AnalyseType.Original+"\n";
+			"basic analyse\t"+AnalyseType.Original+"\n"+
+			"global analyse\t"+AnalyseType.Original+"\n"+
+			"global analyse\t"+AnalyseType.PageToCate+"\n"+
+			"global analyse\t"+AnalyseType.NegCate;
 			s.start(cmd);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
