@@ -44,5 +44,14 @@
     <url-pattern>/anlayseStarterServlet</url-pattern>
    </servlet-mapping>
    
+   <servlet>
+    <servlet-name>getBookTundish</servlet-name>
+    <servlet-class>com.Servlet.GetBookTundishServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>getBookTundish</servlet-name>
+    <url-pattern>/getBookTundish</url-pattern>
+   </servlet-mapping>
+   
 </web-app>
 
