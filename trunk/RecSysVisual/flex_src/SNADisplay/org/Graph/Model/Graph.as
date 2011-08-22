@@ -33,7 +33,9 @@ package SNADisplay.org.Graph.Model
 		private const MIN_SCALE:Number = 0.5;
 		private var _isFastMode:Boolean = false; //是否是快速模式
 		private var _id:String;  	//图的i
+		protected var _graphFullData:IGraphData;		//图信息的数据结构
 		protected var _graphData:IGraphData;		//图信息的数据结构
+		protected var _graphParts:Array;		//图信息的数据结构
 		private var _graphCanvas:Canvas;		//画布
 		
 		private var _drawCommunities:UIComponent;		//绘制社团的句柄
@@ -101,6 +103,7 @@ package SNADisplay.org.Graph.Model
 
 			_id = id;
 			_graphData = new GraphData();
+			_graphParts = new Array;
 			_isFastMode = isFastMode;
 
 			_nodeStyle = false;
@@ -131,16 +134,14 @@ package SNADisplay.org.Graph.Model
 			_disableClick = false;
 			_isDoubleClick = false;
 			
-			
-			
-
-			
 		}
 		
 		public function initGraphData(xmlData:XML, canvas:Canvas = null):void {
 			_xmlData = xmlData;	
 			if(_xmlData != null) {
-				_graphData = initFromXML(_xmlData);
+				_graphFullData = initFromXML(_xmlData);
+				_graphData.nodes = _graphFullData.nodes.concat();
+				_graphData.edges = _graphFullData.edges.concat();
 			}
 			else {
 				throw Error("the xmlData is null"); 
@@ -156,7 +157,7 @@ package SNADisplay.org.Graph.Model
 		}
 		//从XML文件初始化网络数据
 		private function initFromXML(xmlData:XML,minNodeW:Number = -1,maxNodeW:Number = -1,minEdgeW:Number = -1,maxEdgeW:Number = -1):IGraphData {
-			var graphData:IGraphData = new GraphData;
+			var graphFullData:IGraphData = new GraphData;
 			var xnode:XML;
 			var xedge:XML;
 			
@@ -172,7 +173,7 @@ package SNADisplay.org.Graph.Model
 			var string:String;
 			var s:String = "";
 
-			graphData.isDirected = _directional;
+			graphFullData.isDirected = _directional;
 
 			if ( this._isFastMode == false ){ //一般模式下建立数据结构
 				for each(xnode in xmlData.descendants("Node")) {
@@ -187,15 +188,15 @@ package SNADisplay.org.Graph.Model
 					
 					newNode.visualNode.addEventListener(MouseEvent.MOUSE_OVER, mouseOver);
 					newNode.visualNode.addEventListener(MouseEvent.MOUSE_OUT, mouseOut);
-					graphData.nodes.push(newNode);
+					graphFullData.nodes.push(newNode);
 				}
 				for each(xedge in xmlData.descendants("Edge")) {
 					fromNodeId = xedge.attribute("fromID");
 					toNodeId = xedge.attribute("toID");
-					fromNode = graphData.getNodeById(fromNodeId);
-					toNode = graphData.getNodeById(toNodeId);
+					fromNode = graphFullData.getNodeById(fromNodeId);
+					toNode = graphFullData.getNodeById(toNodeId);
 					newEdge = new Edge(currentEdgeId.toString(), fromNode, toNode);
-					graphData.edges.push(newEdge);
+					graphFullData.edges.push(newEdge);
 					
 					fromNode.addOutEdge(toNode);
 					toNode.addInEdge(fromNode);
@@ -210,7 +211,7 @@ package SNADisplay.org.Graph.Model
 					newNode.weight = 0;//new Number(xnode.attribute("clickNum"));
 					newNode.dataObject = xnode;
 					if ( minNodeW == -1 && maxNodeW == -1 ){
-						graphData.nodes.push(newNode);
+						graphFullData.nodes.push(newNode);
 						//s += newNode.id+'\n';
 						if ( _maxNodeWeight < newNode.weight )
 							_maxNodeWeight = newNode.weight;
@@ -218,7 +219,7 @@ package SNADisplay.org.Graph.Model
 						if ( maxNodeW == -1 )
 							maxNodeW = int.MAX_VALUE
 						if ( newNode.weight >= minNodeW && newNode.weight <= maxNodeW ){
-							graphData.nodes.push(newNode);
+							graphFullData.nodes.push(newNode);
 							//s += newNode.id+'\n';
 							if ( _maxNodeWeight < newNode.weight )
 								_maxNodeWeight = newNode.weight;
@@ -228,8 +229,8 @@ package SNADisplay.org.Graph.Model
 				for each(xedge in xmlData.descendants("Edge")) {
 					fromNodeId = xedge.attribute("fromID");
 					toNodeId = xedge.attribute("toID");
-					fromNode = graphData.getNodeById(fromNodeId);
-					toNode = graphData.getNodeById(toNodeId);
+					fromNode = graphFullData.getNodeById(fromNodeId);
+					toNode = graphFullData.getNodeById(toNodeId);
 					if ( fromNode == null || toNode == null )
 						continue;
 					newEdge = new SimpleEdge(currentEdgeId.toString(), fromNode, toNode);
@@ -237,7 +238,7 @@ package SNADisplay.org.Graph.Model
 					newEdge.weight = new Number(xedge.attribute("weight"));
 					
 					if ( minEdgeW == -1 && maxEdgeW == -1 ){
-						graphData.edges.push(newEdge);
+						graphFullData.edges.push(newEdge);
 						fromNode.addOutEdge(toNode);
 						toNode.addInEdge(fromNode);
 						currentEdgeId++;
@@ -248,7 +249,7 @@ package SNADisplay.org.Graph.Model
 						if ( maxEdgeW == -1 )
 							maxEdgeW = int.MAX_VALUE;
 						if ( newEdge.weight >= minEdgeW && newEdge.weight <= maxEdgeW ){
-							graphData.edges.push(newEdge);
+							graphFullData.edges.push(newEdge);
 							fromNode.addOutEdge(toNode);
 							toNode.addInEdge(fromNode);
 							currentEdgeId++;
@@ -259,11 +260,12 @@ package SNADisplay.org.Graph.Model
 					
 				}
 			}
-			if ( graphData.nodes.length != 0 )
-				_root = graphData.nodes[0];
-			_mapNodeColor = setNodeColor(graphData.nodes);
-			_mapEdgeColor = setEdgeColor(graphData.edges);
-			return graphData;
+			if ( graphFullData.nodes.length != 0 )
+				_root = graphFullData.nodes[0];
+			createForest(graphFullData, _root);
+			_mapNodeColor = setNodeColor(graphFullData.nodes);
+			_mapEdgeColor = setEdgeColor(graphFullData.edges);
+			return graphFullData;
 		}
 		
 		protected function setNodeColor(nodes:Array):Dictionary {
@@ -468,12 +470,17 @@ package SNADisplay.org.Graph.Model
 			var node:INode;
 			var position:Point;
 			var s:String;
+			//Alert.show("h1 "+this._graphData.nodes.length);
+			this.filterByGraphDataPart(this._graphParts[1]);
+			//Alert.show("h2 "+this._graphData.nodes.length);
 			_layout.root = _root;
 			if ( _graphData != null && _graphCanvas != null ){
 				if ( _layout.layoutName != "ForceDirectedLayout" ){
 					_drawCommunities.graphics.clear();
 					_zoomScale = 1;
+					//Alert.show("heiil123");
 					_mapPosition = _layout.placement();
+					//Alert.show("heiil");
 					for each ( node in _graphData.nodes ){
 						position = new Point;			
 						//s += (_mapPosition[node] as Point).x +" "+(_mapPosition[node] as Point).x+"\n";
@@ -1883,6 +1890,104 @@ package SNADisplay.org.Graph.Model
 			}
 			_mapNodeColor = setNodeColor(_graphData.nodes);
 			this.refresh();
+		}
+		
+		protected function createForest(graphFullData:IGraphData, root:INode):void {
+			if ( root == null ){
+				if ( graphFullData.nodes.length != 0 ){
+					root = graphFullData.nodes[0];
+				}
+				else
+					return ;
+			}
+			var forest:Forest = new Forest(graphFullData, root);
+			var trees:Array = forest.tree;
+			var tempTree:Tree;
+			var sortedTrees:Array = new Array;
+			for ( var i:int = 0 ; i < trees.length - 1 ; i++ ){
+				for ( var j:int = 0 ; j < trees.length - i - 1 ; j++ ){
+					if ( (trees[j] as Tree).nodes.length < (trees[j+1] as Tree).nodes.length ) {
+						tempTree = trees[j];
+						trees[j] = trees[j+1];
+						trees[j+1] = tempTree;
+					}
+				}
+			}
+/*  			var s:String = "";
+			for ( var n:int = 0 ; n < trees.length ; n++ ){
+				s += (trees[n] as Tree).nodes.length + ",";
+			}
+			Alert.show(s);  */
+			var sortedTreesNodes:Array = new Array;
+			for ( var n:int = 0 ; n < trees.length ; n++ ){
+				sortedTreesNodes.push((trees[n] as Tree).nodes);
+			}
+			this._graphParts = createGraphParts(sortedTreesNodes);
+		}
+		
+		private function createGraphParts(treesNodes:Array):Array {
+			var graphParts:Array = new Array;
+			var part:Array = new Array;;
+			const MIN_SIZE:int = 150;
+			for each ( var nodes:Array in treesNodes ){
+				part = part.concat(nodes);
+				if ( part.length > MIN_SIZE ) {
+					graphParts.push(part);
+					part = new Array;
+				}
+			}
+			if ( part.length != 0 ){
+				graphParts.push(part);
+			}
+/* 			var s:String = "";
+			for ( var n:int = 0 ; n < graphParts.length ; n++ ){
+				s += (graphParts[n] as Array).length + ",";
+			}
+			Alert.show(s); */
+			return graphParts;
+		}
+		
+		private function filterByGraphDataPart(nodes:Array):void {
+			var nodeMap:Dictionary = new Dictionary;
+			var newEdges:Array = new Array;
+			var node:INode;
+			var adjNode:INode;
+			var fromNode:INode;
+			var toNode:INode;
+			var edge:IEdge;
+			var tempArr:Array = new Array;
+			this._graphData.nodes = nodes;
+			for each ( node in nodes ){
+				nodeMap[node.id] = true;
+			}
+			/* for each ( node in this._graphData.nodes ){
+				tempArr = new Array;
+				for each ( adjNode in node.inEdges ){
+					if ( nodeMap[adjNode.id] == true ){
+						tempArr.push(adjNode);
+					}
+				}
+				node.inEdges = tempArr;
+				
+				tempArr = new Array;
+				for each ( adjNode in node.outEdges ){
+					if ( nodeMap[adjNode.id] == true ){
+						tempArr.push(adjNode);
+					}
+				}
+				node.outEdges = tempArr;
+			} */
+			for each ( edge in this._graphData.edges ){
+				fromNode = edge.fromNode;
+				toNode = edge.toNode;
+				if ( nodeMap[fromNode.id] == true && nodeMap[toNode.id] == true ){
+					newEdges.push(edge)
+				}
+			}
+			this._graphData.edges = newEdges;
+			if ( this._graphData.nodes.length != 0 )
+				_root = this._graphData.nodes[0];
+			this.updateFilteredGraph();
 		}
 	}
 }

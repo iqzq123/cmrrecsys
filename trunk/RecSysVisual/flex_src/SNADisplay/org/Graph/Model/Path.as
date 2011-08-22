@@ -16,7 +16,9 @@ package SNADisplay.org.Graph.Model
 		override public function initGraphData(xmlData:XML, canvas:Canvas = null):void {
 			_xmlData = xmlData;	
 			if(_xmlData != null) {
-				_graphData = initFromXML(_xmlData);
+				_graphFullData = initFromXML(_xmlData);
+				_graphData.nodes = _graphFullData.nodes.concat();
+				_graphData.edges = _graphFullData.edges.concat();
 			}
 			else {
 				throw Error("the xmlData is null"); 
@@ -30,7 +32,7 @@ package SNADisplay.org.Graph.Model
 		}
 		import mx.controls.Alert;
 		private function  initFromXML(xmlData:XML, minUser:Number = -1 , maxUser:Number = -1 , minLength:Number = -1, maxLength:Number = -1):IGraphData {
-			var graphData:IGraphData = new GraphData;
+			var graphFullData:IGraphData = new GraphData;
 			var endPointsXMLList:XMLList = xmlData.child("EndPoints");
 			
 			var pathXMLList:XMLList = endPointsXMLList.child("Path");
@@ -59,7 +61,7 @@ package SNADisplay.org.Graph.Model
 								//Alert.show(pageName+"("+index+","+i+")");
 								if ( rootNodeMap[pageName+"("+index+","+i+")"] == null ){
 									curNode = new SimpleNode(pageName+"("+index+","+i+")" , pageName );
-									graphData.nodes.push(curNode);
+									graphFullData.nodes.push(curNode);
 									rootNodeMap[pageName+"("+index+","+i+")"] = curNode;
 								}
 								else {
@@ -72,7 +74,7 @@ package SNADisplay.org.Graph.Model
 								var targetNode:INode = null;
 								for each ( var node:INode in childNodesArr ){
 									if ( node.id == pageName+"("+index+","+i+")" ){
-										tempEdge = graphData.getEdge(curNode,node);
+										tempEdge = graphFullData.getEdge(curNode,node);
 										tempEdge.weight += userNum;
 										tempEdge.label = tempEdge.weight.toString();
 										targetNode = node;
@@ -84,11 +86,11 @@ package SNADisplay.org.Graph.Model
 									newNode = new SimpleNode(pageName+"("+index+","+i+")", pageName );
 									curNode.addOutEdge(newNode);
 									newNode.addInEdge(curNode);
-									graphData.nodes.push(newNode);
+									graphFullData.nodes.push(newNode);
 									newEdge = new SimpleEdge( curNode.id+","+newNode.id , curNode, newNode);
 									newEdge.weight = userNum;
 									newEdge.label = newEdge.weight.toString();
-									graphData.edges.push(newEdge);
+									graphFullData.edges.push(newEdge);
 									curNode = newNode;
 								}
 							}
@@ -97,11 +99,12 @@ package SNADisplay.org.Graph.Model
 				}
 				index ++;
 			}
-			if ( graphData.nodes.length != 0 )
-				_root = graphData.nodes[0];
-			_mapNodeColor = setNodeColor(graphData.nodes);
-			_mapEdgeColor = setEdgeColor(graphData.edges);
-			return graphData;
+			if ( graphFullData.nodes.length != 0 )
+				_root = graphFullData.nodes[0];
+			this.createForest(graphFullData, _root);
+			_mapNodeColor = setNodeColor(graphFullData.nodes);
+			_mapEdgeColor = setEdgeColor(graphFullData.edges);
+			return graphFullData;
 		}
 		
 		//递归的旧方法，不用了
