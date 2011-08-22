@@ -92,8 +92,16 @@ package SNADisplay.org.Graph.Logical
 			return _inEdges;
 		}
 		
+		public function set inEdges(inEdges:Array):void {
+			_inEdges = inEdges;
+		}
+		
 		public function get outEdges():Array {
 			return _outEdges;
+		}
+		
+		public function set outEdges(outEdges:Array):void {
+			_outEdges = outEdges;
 		}
 		
 		public function get edges():Array {

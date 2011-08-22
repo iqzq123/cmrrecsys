@@ -32,7 +32,11 @@ package SNADisplay.org.Graph.Logical
 		
 		function get inEdges():Array;
 		
+		function set inEdges(inEdges:Array):void;
+		
 		function get outEdges():Array;
+		
+		function set outEdges(outEdges:Array):void;
 		
 		function get edges():Array;
 		

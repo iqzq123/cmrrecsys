@@ -16,7 +16,9 @@ package SNADisplay.org.Graph.Model
 		override public function initGraphData(xmlData:XML, canvas:Canvas = null):void {
 			_xmlData = xmlData;	
 			if(_xmlData != null) {
-				_graphData = initFromXML(_xmlData);
+				_graphFullData = initFromXML(_xmlData);
+				_graphData.nodes = _graphFullData.nodes.concat();
+				_graphData.edges = _graphFullData.edges.concat();
 			}
 			else {
 				throw Error("the xmlData is null"); 
@@ -30,7 +32,7 @@ package SNADisplay.org.Graph.Model
 		}
 		
 		private function  initFromXML(xmlData:XML, minUser:Number = -1 , maxUser:Number = -1 , minLength:Number = -1, maxLength:Number = -1):IGraphData {
-			var graphData:IGraphData = new GraphData;
+			var graphFullData:IGraphData = new GraphData;
 			var pathXMLList:XMLList = xmlData.descendants("Path");
 			var rootNodeMap:Dictionary = new Dictionary;
 			
@@ -61,7 +63,7 @@ package SNADisplay.org.Graph.Model
 					if ( i == 0 ) {
 						if ( rootNodeMap[pageName] == null ){
 							curNode = new SimpleNode(pageName , pageName );
-							graphData.nodes.push(curNode);
+							graphFullData.nodes.push(curNode);
 							rootNodeMap[pageName] = curNode;
 						}
 						else {
@@ -84,21 +86,22 @@ package SNADisplay.org.Graph.Model
 							newNode = new SimpleNode(pageName+"("+rootPageId+","+i+")", pageName );
 							curNode.addOutEdge(newNode);
 							newNode.addInEdge(curNode);
-							graphData.nodes.push(newNode);
+							graphFullData.nodes.push(newNode);
 							newEdge = new SimpleEdge( curNode.id+","+newNode.id , curNode, newNode);
 							newEdge.weight = new Number(pathXML.attribute("pathNum").toString());
 							newEdge.label = newEdge.weight.toString();
-							graphData.edges.push(newEdge);
+							graphFullData.edges.push(newEdge);
 							curNode = newNode;
 						}
 					}
 				}
 			} 
-			if ( graphData.nodes.length != 0 )
-				_root = graphData.nodes[0];
-			_mapNodeColor = setNodeColor(graphData.nodes);
-			_mapEdgeColor = setEdgeColor(graphData.edges);
-			return graphData;
+			if ( graphFullData.nodes.length != 0 )
+				_root = graphFullData.nodes[0];
+			this.createForest(graphFullData, _root);
+			_mapNodeColor = setNodeColor(graphFullData.nodes);
+			_mapEdgeColor = setEdgeColor(graphFullData.edges);
+			return graphFullData;
 		}
 		
 		override public function filter(minUser:Number = -1,maxUser:Number = -1,minLength:Number = -1,maxLength:Number = -1):void {
