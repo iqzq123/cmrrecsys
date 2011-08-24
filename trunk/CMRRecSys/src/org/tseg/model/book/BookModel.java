@@ -182,7 +182,7 @@ public class BookModel {
 				for ( int key : keyArrayList ) {
 					Chapter chapter = book.getChapterMap().get(key);
 					System.out.println(chapter.getId()+","+chapter.getUserNum()+","+chapter.getName()+","+book.getName());
-					str+=chapter.getId()+","+chapter.getUserNum()+","+chapter.getName()+","+book.getName()+"\n";
+					str+=chapter.getId()+","+chapter.getUserNum()+","+chapter.getName()+","+book.getName()+","+chapter.getFee()+"\n";
 					
 				}
 				output.write(str);
