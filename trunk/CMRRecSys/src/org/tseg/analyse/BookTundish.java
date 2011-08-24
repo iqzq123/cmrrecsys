@@ -43,9 +43,15 @@ public class BookTundish {
 		saveTundishXML();
 	}
 	
+	/*
+	 * 读取BookModel保存的文本文件，生成xml文件
+	 * 读取数据各字段：chaptID,userNum,chaptName,bookName,chaptFee
+	 * 生成xml文件各属性：chapterID,chapterName,userNum,propotion,runOffRatio,chapterFee
+	 */
 	public void saveTundishXML(){
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = null;
+		
 		try {
 			db = dbf.newDocumentBuilder();
 		} catch (Exception pce) {
@@ -57,41 +63,45 @@ public class BookTundish {
 		
 		String str = "";
 		String [] sStrings;
-		ArrayList<String[]> chapAndUsernum = new ArrayList<String[]>();		
+		ArrayList<String[]> aRecord = new ArrayList<String[]>();		
 		try {
 			File inFile = new File(outputPath);
 			File [] bookFiles = inFile.listFiles();
-			File outFile = new File(tundishPath);
+
 			for(int i=0;i<bookFiles.length;i++)
 			{
 				BufferedReader br = new BufferedReader(new FileReader(bookFiles[i]));
 				while((str=br.readLine())!=null){
 					sStrings = str.split(",");
-					chapAndUsernum.add(sStrings);
+					aRecord.add(sStrings);
 				}
 				Element bookEmt = doc.createElement("book");
 				bookEmt.setAttribute("bookID", bookFiles[i].getName());
-				bookEmt.setAttribute("bookName", (chapAndUsernum.get(0))[3]);
+				bookEmt.setAttribute("bookName", (aRecord.get(0))[3]);
 				root.appendChild(bookEmt);
-				int baseUserNum = Integer.parseInt((chapAndUsernum.get(0))[1]);
-				for(int j=0;j<chapAndUsernum.size();j++)
+				int baseUserNum = Integer.parseInt((aRecord.get(0))[1]);
+				for(int j=0;j<aRecord.size();j++)
 				{
-					String [] ss = chapAndUsernum.get(j);
+					String [] ss = aRecord.get(j);
+					
 					String chapterID = ss[0];
 					int userNum = Integer.parseInt(ss[1]);
 					double propotion = (double)userNum/baseUserNum;
 					String chaptName = ss[2];
+					int chapterFee = Integer.parseInt(ss[4]);
+					
 					Element chaptEmt = doc.createElement("chaptEmt");
 					chaptEmt.setAttribute("chapterID", chapterID);			
 					chaptEmt.setAttribute("chaptName", chaptName);
 					chaptEmt.setAttribute("userNum", String.valueOf(userNum));
 					chaptEmt.setAttribute("propotion", String.valueOf(propotion));
+					chaptEmt.setAttribute("chapterFee", String.valueOf(chapterFee));
+					
 					if(j==0){
-						chaptEmt.setAttribute("runOffRatio", "0");
-						
+						chaptEmt.setAttribute("runOffRatio", "0");						
 					}
 					else {
-						int lastUserNum = Integer.parseInt((chapAndUsernum.get(j-1))[1]);
+						int lastUserNum = Integer.parseInt((aRecord.get(j-1))[1]);
 						double runOffRatio = (double) (lastUserNum-userNum)/lastUserNum;
 						chaptEmt.setAttribute("runOffRatio", String.valueOf(runOffRatio));
 					}
