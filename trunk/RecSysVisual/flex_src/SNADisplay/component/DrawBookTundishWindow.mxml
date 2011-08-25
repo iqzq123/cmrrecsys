@@ -199,8 +199,8 @@
    		}
    		
    		public function setTundishPath(str:String):void {
-   			this.tundishPath = str+"/tundish.xml";
-   			this.packagePath = str+"/bookPackage.xml";
+   			this.tundishPath = str;
+   			this.packagePath = str.substring(0,str.lastIndexOf("/"))+"/package.xml";
    		}
    		
    		public function setBookID(str:String):void {
