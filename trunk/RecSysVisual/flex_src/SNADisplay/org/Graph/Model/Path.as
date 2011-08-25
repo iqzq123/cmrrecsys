@@ -28,6 +28,7 @@ package SNADisplay.org.Graph.Model
 			}else {
 				throw Error("the canvas is null"); 
 			}
+			setCanvasPageComp(this.canvas);
 			this.setTreeHorizonLayout();
 		}
 		import mx.controls.Alert;
