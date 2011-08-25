@@ -707,6 +707,51 @@
 				PopUpManager.centerPopUp(fileWindow);
 			}
 			
+			private var bookInfoPathWindow:BookInfoPathWindow;
+			private function bookTundish():void {
+				bookInfoPathWindow = new BookInfoPathWindow;
+				PopUpManager.addPopUp(bookInfoPathWindow,this,true);
+				PopUpManager.centerPopUp(bookInfoPathWindow);				
+			}
+			
+			private function showBookTundish():void {
+				fileWindow = new FileWindow();
+				PopUpManager.addPopUp(fileWindow,this,true);
+				PopUpManager.centerPopUp(fileWindow);
+				fileWindow.addEventListener(Event.SELECT,getBookTundishXML);
+				
+			}
+			
+			private var bookTundishPath:String;
+			private function getBookTundishXML(e:Event):void {				
+				var getXML : HTTPService = new HTTPService();
+				getXML.resultFormat = "e4x";
+				getXML.url = "getXMLServlet";
+				var params:URLVariables = new URLVariables();				
+                params.filePath = encodeURIComponent(fileWindow.getFilePath()); 
+                bookTundishPath = encodeURIComponent(fileWindow.getFilePath());              
+				getXML.addEventListener(ResultEvent.RESULT,  openBookTundish);
+				getXML.addEventListener(FaultEvent.FAULT, fHandler);
+				getXML.send(params);
+			}
+//			private var bookTundish:BookTundishWindow;
+			private function openBookTundish(e:ResultEvent):void {
+				var xmlData:XML = XML(e.message.body);
+				var bookTundish:BookTundishWindow;
+				bookTundish = new BookTundishWindow;
+				PopUpManager.addPopUp(bookTundish,this,true);
+				PopUpManager.centerPopUp(bookTundish);
+				bookTundish.init(xmlData);
+				bookTundish.setTundishPath(bookTundishPath);
+			}
+			
+			
+//			private function confirm():void {
+//				Alert.show("confirm");
+//				
+//			private function test(e:ResultEvent):void{
+//				Alert.show(String(e.message.body).substr(0,200));
+//			}
 			private var _nodePropertyArr:Array;
 			private function saveProperty(xmlData:XML):void {
 				var nodeXML:XML = xmlData.descendants("Node")[0];
@@ -877,6 +922,8 @@
 				<mx:Button label="图数据查看" click="showGraphData()"/>
 				<mx:Button label="频繁路径查看" click="showFRPath()"/>
 				<mx:Button label="文件目录查看" click="fileDir()"/>
+				<mx:Button label="图书流失漏斗分析" click="bookTundish()"/>
+				<mx:Button label="图书流失漏斗展示" click="showBookTundish()"/>
 			</mx:VBox>
     		<mx:VBox id="contralPad" label="控制面板" width="100%" height="100%" 
     			paddingTop="5" paddingBottom="5" paddingLeft="5" paddingRight="5"  >
