@@ -46,7 +46,7 @@
 				params.bookInfoPath = textinput1.text;
 				params.chapterInfoPath = textinput2.text;
 				params.readingInfoPath = textinput3.text;
-				params.tundishPath = textinput4.text;
+				params.tundishPath = textinput4.text+"/tundish.xml";
 				
 				getBookTundish.addEventListener(ResultEvent.RESULT,genTundish);
 				getBookTundish.addEventListener(FaultEvent.FAULT,faultHandler);
@@ -63,7 +63,7 @@
 				PopUpManager.addPopUp(bookTundish,this,false);
 				PopUpManager.centerPopUp(bookTundish);
 				bookTundish.init(xmlData);
-				bookTundish.setTundishPath(textinput4.text);
+				bookTundish.setTundishPath(textinput4.text+"/tundish.xml");
 			}
 			
 			private function faultHandler(e:FaultEvent):void {

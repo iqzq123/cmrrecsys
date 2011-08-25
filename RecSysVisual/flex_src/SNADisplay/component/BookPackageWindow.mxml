@@ -56,7 +56,11 @@
         	datagridcolumns.push(dataGridColumn4);
         	dataGrid = new DataGrid;
         	dataGrid.dataProvider = columns;
-        	dataGrid.columns = datagridcolumns;      
+        	dataGrid.columns = datagridcolumns;
+        	dataGrid.x = select.width+10;
+        	dataGrid.y = 10;
+        	dataGrid.width = this.width - select.width - 40;
+        	dataGrid.height = this.height - 40;      
         }
         
         private function selectVolumn(e:Event):void {
@@ -74,6 +78,7 @@
         
         private function showColumn(volumnXML:XML):void {
         	hbox.removeAllChildren();
+
         	columns.removeAll();       	       	
         	hbox.addChild(dataGrid);
         	for each(var chapterXML:XML in  volumnXML.child("chapter")) {        		
@@ -95,7 +100,7 @@
 	 </mx:Script>
 	 
 	 	
-	 	<mx:ComboBox x="0" y="30" dataProvider="{attrs}" width="138" close="selectVolumn(event)">
+	 	<mx:ComboBox id="select" x="0" y="30" dataProvider="{attrs}" width="138" close="selectVolumn(event)">
 	 		 
 	 		
 	 	</mx:ComboBox>

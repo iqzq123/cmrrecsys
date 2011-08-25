@@ -44,7 +44,6 @@
 			}
 			private var drawBookTundish:DrawBookTundishWindow;
 			public function drawTundish(bookXML:XML):void {
-				
 				drawBookTundish = new DrawBookTundishWindow;
 				PopUpManager.addPopUp(drawBookTundish,this,true);
 				PopUpManager.centerPopUp(drawBookTundish);
