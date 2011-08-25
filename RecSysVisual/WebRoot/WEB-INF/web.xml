@@ -53,5 +53,14 @@
     <url-pattern>/getBookTundish</url-pattern>
    </servlet-mapping>
    
+   <servlet>
+    <servlet-name>getBookPackage</servlet-name>
+    <servlet-class>com.Servlet.BookPackageServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>getBookPackage</servlet-name>
+    <url-pattern>/getBookPackage</url-pattern>
+   </servlet-mapping>
+   
 </web-app>
 
