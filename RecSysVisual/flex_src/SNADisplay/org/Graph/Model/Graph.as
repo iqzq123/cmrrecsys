@@ -23,6 +23,8 @@ package SNADisplay.org.Graph.Model
 	import flash.utils.Timer;
 	
 	import mx.containers.Canvas;
+	import mx.controls.Button;
+	import mx.controls.Label;
 	import mx.controls.Text;
 	import mx.core.UIComponent;
 	import mx.events.ResizeEvent;
@@ -36,6 +38,7 @@ package SNADisplay.org.Graph.Model
 		protected var _graphFullData:IGraphData;		//图信息的数据结构
 		protected var _graphData:IGraphData;		//图信息的数据结构
 		protected var _graphParts:Array;		//图信息的数据结构
+		private var _curPart:int = 0;		//当前的现实部分序号
 		private var _graphCanvas:Canvas;		//画布
 		
 		private var _drawCommunities:UIComponent;		//绘制社团的句柄
@@ -152,7 +155,7 @@ package SNADisplay.org.Graph.Model
 			}else {
 				throw Error("the canvas is null"); 
 			}
-			
+			setCanvasPageComp(this.canvas);
 			this.setCircleLayout();
 		}
 		//从XML文件初始化网络数据
@@ -471,7 +474,7 @@ package SNADisplay.org.Graph.Model
 			var position:Point;
 			var s:String;
 			//Alert.show("h1 "+this._graphData.nodes.length);
-			//this.filterByGraphDataPart(this._graphParts[0]);
+			this.filterByGraphDataPart(this._graphParts[this._curPart]);
 			//Alert.show("h2 "+this._graphData.nodes.length);
 			_layout.root = _root;
 			if ( _graphData != null && _graphCanvas != null ){
@@ -1556,6 +1559,8 @@ package SNADisplay.org.Graph.Model
 			findCommunities();
 		}
 		
+		
+		
 		//配置画布的各个参数和响应函数
 		public function set canvas(canvas:Canvas):void {
 			_graphCanvas = canvas;
@@ -1596,6 +1601,56 @@ package SNADisplay.org.Graph.Model
 			}
 			//实例化当前画布
 			_graphCanvas.validateNow();
+			
+		}
+		private var prePageBtn:Button;
+		private var nextPageBtn:Button;
+		private var pageTip:Label;
+		protected function setCanvasPageComp(canvas:Canvas):void {
+			var height:int = canvas.height - 30;
+			var padding:int = 20;
+			var btnWidth:int = 50;
+			var tipWidth:int = 20;
+			prePageBtn = new Button;
+			nextPageBtn = new Button;
+			pageTip = new Label;
+			canvas.addChild(prePageBtn);
+			canvas.addChild(nextPageBtn);
+			canvas.addChild(pageTip);
+			
+			prePageBtn.label = "上一页";
+			nextPageBtn.label = "下一页";
+			pageTip.text = "1/" + this._graphParts.length;
+		
+			prePageBtn.x = 0;
+			prePageBtn.y = height;
+			pageTip.x = btnWidth + padding;
+			pageTip.y = height;
+			nextPageBtn.x = btnWidth + padding + tipWidth + padding;
+			nextPageBtn.y = height;
+			
+			prePageBtn.addEventListener(MouseEvent.CLICK, prePageBtnClick);
+			nextPageBtn.addEventListener(MouseEvent.CLICK, nextPageBtnClick);
+		}
+		//_curPart
+		private function prePageBtnClick(evt:MouseEvent):void {
+			evt.stopImmediatePropagation();
+			if ( this._curPart > 0 ){
+				this._curPart --;
+				pageTip.text = (this._curPart+1) + "/" + this._graphParts.length;
+				this.draw();
+			}
+			
+		}
+		private function nextPageBtnClick(evt:MouseEvent):void {
+			evt.stopImmediatePropagation();
+			var partsCnt:int = this._graphParts.length;
+			if ( this._curPart < partsCnt - 1 ){
+				this._curPart ++;
+				pageTip.text = (this._curPart+1) + "/" + this._graphParts.length;
+				this.draw();
+			}
+			
 		}
 		public function get canvas():Canvas {
 			return _graphCanvas;
@@ -1977,7 +2032,7 @@ package SNADisplay.org.Graph.Model
 				}
 				node.outEdges = tempArr;
 			} */
-			for each ( edge in this._graphData.edges ){
+			for each ( edge in this._graphFullData.edges ){
 				fromNode = edge.fromNode;
 				toNode = edge.toNode;
 				if ( nodeMap[fromNode.id] == true && nodeMap[toNode.id] == true ){
