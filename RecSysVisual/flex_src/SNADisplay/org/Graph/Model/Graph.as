@@ -471,7 +471,7 @@ package SNADisplay.org.Graph.Model
 			var position:Point;
 			var s:String;
 			//Alert.show("h1 "+this._graphData.nodes.length);
-			this.filterByGraphDataPart(this._graphParts[1]);
+			this.filterByGraphDataPart(this._graphParts[0]);
 			//Alert.show("h2 "+this._graphData.nodes.length);
 			_layout.root = _root;
 			if ( _graphData != null && _graphCanvas != null ){
