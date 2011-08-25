@@ -17,6 +17,8 @@
 			[Bindable]
 			private var attrs:ArrayCollection=new ArrayCollection();
 			private var _xmlData:XML;
+			private var tundishPath:String;
+			private var bookID:String;
 			
 //			private var canvas:Canvas;
 //			private var drawComp:UIComponent;
@@ -26,28 +28,29 @@
 				for each( var bookXML:XML in xmlData.child("book") ) {
 					var o:Object = new Object();
 					o.bookID = bookXML.attribute("bookID");
-					o.label = bookXML.attribute("bookName");
-					
+					o.label = bookXML.attribute("bookName");					
 					attrs.addItem(o);
 			
 				}
 			}
 			
 			public function getBookXML(event:Event):void {
-				var bookID:String = ComboBox(event.target).selectedItem.bookID;
+				bookID = ComboBox(event.target).selectedItem.bookID;
 				for each( var bookXML:XML in _xmlData.child("book") ) {
 					if(bookXML.attribute("bookID")==bookID) {
 						drawTundish(bookXML);
 					}
 				}				
 			}
-			
+			private var drawBookTundish:DrawBookTundishWindow;
 			public function drawTundish(bookXML:XML):void {
 				
-				var drawBookTundish:DrawBookTundishWindow = new DrawBookTundishWindow;
+				drawBookTundish = new DrawBookTundishWindow;
 				PopUpManager.addPopUp(drawBookTundish,this,true);
 				PopUpManager.centerPopUp(drawBookTundish);
 				drawBookTundish.drawTundish(bookXML);
+				drawBookTundish.setTundishPath(this.tundishPath);
+				drawBookTundish.setBookID(this.bookID);
 			}
 			
 			
@@ -55,9 +58,13 @@
    		private function closeHandle():void {
    			PopUpManager.removePopUp(this);
    		}
+   		
+   		public function setTundishPath(str:String):void {
+   			tundishPath = str;
+   		}
 			
 		]]>
 	</mx:Script>
-	<mx:Label x="10" y="10" text="选择图书：" width="99" height="24" fontSize="15"/>
+	<mx:Label x="10" y="10" text="选择图书：" width="99" height="24" fontSize="15" />
 	<mx:ComboBox x="10" y="42" width="120" dataProvider="{attrs}" close="getBookXML(event)"></mx:ComboBox>
 </mx:TitleWindow>

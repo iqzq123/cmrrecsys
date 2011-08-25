@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="416" height="300"
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="416" height="360"
 	showCloseButton="true" close="closeHandle()" creationPolicy="all">
 	<mx:Metadata>
 		[Event(name="mouseClick")]
@@ -33,6 +33,9 @@
 				else if(selectedButton == "bt3") {
 					textinput3.text = fileWindow.getFilePath();
 				}
+				else if(selectedButton == "bt4") {
+					textinput4.text = fileWindow.getFilePath();
+				}
 			}
 			
 			private function confirm():void {
@@ -43,6 +46,7 @@
 				params.bookInfoPath = textinput1.text;
 				params.chapterInfoPath = textinput2.text;
 				params.readingInfoPath = textinput3.text;
+				params.tundishPath = textinput4.text;
 				
 				getBookTundish.addEventListener(ResultEvent.RESULT,genTundish);
 				getBookTundish.addEventListener(FaultEvent.FAULT,faultHandler);
@@ -59,6 +63,7 @@
 				PopUpManager.addPopUp(bookTundish,this,false);
 				PopUpManager.centerPopUp(bookTundish);
 				bookTundish.init(xmlData);
+				bookTundish.setTundishPath(textinput4.text);
 			}
 			
 			private function faultHandler(e:FaultEvent):void {
@@ -68,18 +73,23 @@
 			private function closeHandle():void {
 	   			PopUpManager.removePopUp(this);
 	   		}
+	   		
+	   		
 		]]>
 	</mx:Script>
 	<mx:Label id="label1" x="36" y="58" text="图书信息路径" width="104" height="27" fontSize="15"/>
 	<mx:Label id="label2" x="36" y="108" text="章节信息路径" width="104" height="27" fontSize="15"/>
-	<mx:Label id="label3" x="36" y="158" text="数据路径" width="104" height="27" fontSize="15"/>
+	<mx:Label id="label3" x="36" y="158" text="数据路径" width="104" height="27" fontSize="15" />
+	<mx:Label id="label4" x="36" y="208" text="漏斗文件保存目录" width="104" height="27" fontSize="15" />
 	<mx:TextInput id="textinput1" x="139" y="58"/>
 	<mx:TextInput id="textinput2" x="139" y="108"/>
 	<mx:TextInput id="textinput3" x="139" y="158"/>
+	<mx:TextInput id="textinput4" x="139" y="208"/>
 	<mx:Button id="bt1" x="305" y="58" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
-	<mx:Button id="bt2" x="307" y="108" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
+	<mx:Button id="bt2" x="305" y="108" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
 	<mx:Button id="bt3" x="305" y="158" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
-	<mx:Button id="bt4" x="234" y="211" label="确定" fontSize="12" click="confirm()"/>
-	<mx:Button id="bt5" x="307" y="211" label="取消" fontSize="12" click="closeHandle()"/>
+	<mx:Button id="bt4" x="305" y="208" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
+	<mx:Button id="bt5" x="235" y="251" label="确定" fontSize="12" click="confirm()"/>
+	<mx:Button id="bt6" x="305" y="251" label="取消" fontSize="12" click="closeHandle()"/>
 	
 </mx:TitleWindow>
