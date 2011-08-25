@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="600" height="450"
+	 showCloseButton="true" creationPolicy="all" close="closeHandle()">
+	 <mx:Script>
+	 	<![CDATA[
+	 		import mx.controls.dataGridClasses.DataGridColumn;
+	 		import mx.controls.DataGrid;
+	 	import mx.controls.Button;
+		import mx.charts.BubbleChart;
+		import mx.controls.Label;
+		import mx.collections.ArrayCollection;
+		import mx.managers.PopUpManager;
+		import SNADisplay.org.utils.Colour;
+		import SNADisplay.component.DataGridWindow;
+        import mx.core.UIComponent;
+        import mx.controls.Alert;
+        
+        private var _xmlData:XML = new XML();
+        private var selectedVolumnXML:XML = new XML();
+        
+        [Bindable]
+        private var attrs:ArrayCollection = new ArrayCollection();
+        [Bindable]
+        private var columns:ArrayCollection = new ArrayCollection();
+        private var datagridcolumns:Array = new Array();
+        private var dataGrid:DataGrid;
+  
+        
+        public function init(xmlData:XML):void {
+        	_xmlData = xmlData;
+        	var i:Number = 1;
+        	for each(var volumnXML:XML in xmlData.child("volumn")) {       		
+        		var volumnName:String = new String(volumnXML.attribute("name"));
+        		var o:Object = new Object();
+        		o.label = volumnName;
+        		o.id = i;
+        		i++;
+        		attrs.addItem(o);
+        	}
+        	
+        	var dataGridColumn1:DataGridColumn = new DataGridColumn;
+        	var dataGridColumn2:DataGridColumn = new DataGridColumn;
+        	var dataGridColumn3:DataGridColumn = new DataGridColumn;
+        	var dataGridColumn4:DataGridColumn = new DataGridColumn;
+        	dataGridColumn1.headerText = "章节名";
+        	dataGridColumn2.headerText = "流失率";
+        	dataGridColumn3.headerText = "读者数量";
+        	dataGridColumn4.headerText = "费用"; 
+        	dataGridColumn1.dataField = "name";
+        	dataGridColumn2.dataField = "ror";
+        	dataGridColumn3.dataField = "num";
+        	dataGridColumn4.dataField = "fee";
+        	datagridcolumns.push(dataGridColumn1);
+        	datagridcolumns.push(dataGridColumn2);
+        	datagridcolumns.push(dataGridColumn3);
+        	datagridcolumns.push(dataGridColumn4);
+        	dataGrid = new DataGrid;
+        	dataGrid.dataProvider = columns;
+        	dataGrid.columns = datagridcolumns;      
+        }
+        
+        private function selectVolumn(e:Event):void {
+        	var selectedVolumn:String = ComboBox(e.target).selectedItem.label;
+        	for each(var volumnXML:XML in _xmlData.child("volumn")) {
+        		var volumnName:String = new String(volumnXML.attribute("name"));
+        		if (selectedVolumn == volumnName) {
+        			selectedVolumnXML = volumnXML;
+        			break;
+        		}
+        	}
+        	showColumn(selectedVolumnXML);
+        }
+        
+        
+        private function showColumn(volumnXML:XML):void {
+        	hbox.removeAllChildren();
+        	columns.removeAll();       	       	
+        	hbox.addChild(dataGrid);
+        	for each(var chapterXML:XML in  volumnXML.child("chapter")) {        		
+        		
+        		var o:Object = new Object();
+        		o.name = new String(chapterXML.attribute("chaptName"));
+        		o.ror = new String(chapterXML.attribute("runOffRatio"));
+        		o.num = new String(chapterXML.attribute("userNum"));
+        		o.fee = new String(chapterXML.attribute("chapterFee"));
+        		columns.addItem(o);
+        	}        	
+        }
+        
+        private function closeHandle():void {
+        	PopUpManager.removePopUp(this);
+        }
+        
+	 	]]>
+	 </mx:Script>
+	 
+	 	
+	 	<mx:ComboBox x="0" y="30" dataProvider="{attrs}" width="138" close="selectVolumn(event)">
+	 		 
+	 		
+	 	</mx:ComboBox>
+	 	
+	 	<mx:HBox id="hbox" x="146" y="0" width="428" height="90%">
+	 		
+	 	</mx:HBox>
+	 
+	<!--<mx:Canvas width="100%" height="90%">
+		<mx:ColumnChart id="columnChart" width="100%" height="100%" paddingLeft="5" paddingRight="5"
+			 dataProvider="{attrs}" showDataTips="true" x="0" y="0">
+			 
+			
+		</mx:ColumnChart>
+	</mx:Canvas>-->
+	
+		
+</mx:TitleWindow>
