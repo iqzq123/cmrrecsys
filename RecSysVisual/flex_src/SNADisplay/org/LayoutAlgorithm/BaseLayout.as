@@ -26,6 +26,7 @@ package SNADisplay.org.LayoutAlgorithm
 
 		public function init(graphData:IGraphData,canvas:Canvas):void {
 			_graphData = graphData;
+			_root = _graphData.root;
 			_canvas = canvas;
 			_center.x = canvas.width/2;
 			_center.y = canvas.height/2;

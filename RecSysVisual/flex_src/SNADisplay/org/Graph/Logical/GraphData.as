@@ -6,6 +6,7 @@ package SNADisplay.org.Graph.Logical
 	{
 		private var _nodes:Array;
 		private var _edges:Array;
+		private var _root:INode;
 		private var _isDirected:Boolean;
 		private var _xmlData:XML;
 		public function GraphData()
@@ -170,6 +171,12 @@ package SNADisplay.org.Graph.Logical
 		}
 		public function get isDirected():Boolean {
 			return _isDirected;
+		}
+		public function set root(n:INode):void {
+			this._root = n;
+		}
+		public function get root():INode {
+			return this._root;
 		}
 	}
 }

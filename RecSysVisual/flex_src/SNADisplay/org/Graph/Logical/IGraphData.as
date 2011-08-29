@@ -10,7 +10,8 @@ package SNADisplay.org.Graph.Logical
 		function set xmlData(xmlData:XML):void;
 		function get isDirected():Boolean;
 		function set isDirected(b:Boolean):void;
-	
+		function get root():INode;
+		function set root(n:INode):void;
 		function getNodeById(id:String):INode;
 		function copy():IGraphData;
 		function deleteEdge(edge:IEdge):void;

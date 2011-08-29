@@ -96,6 +96,12 @@ package SNADisplay.org.Graph.Model
 		private var _curPathIndex:int = 0;
 		private var _path:Array;
 		
+		private var prePageBtn:Button;
+		private var nextPageBtn:Button;
+		private var pageTip:Label;
+		
+		private var _nodeWeightAtt:String = "";
+		private var _nodeLabelAtt:Array =  new Array;
 		//初始化网络
 		public function Graph(id:String, directional:Boolean = false, isFastMode:Boolean = false)
 		{
@@ -210,8 +216,8 @@ package SNADisplay.org.Graph.Model
 				for each(xnode in xmlData.descendants("Node")) {
 					newNode = new SimpleNode(xnode.@id , xnode.@name, xnode);
 					//Graph中每个节点的单独设计
-					newNode.name = xnode.@id;//+"("+ xnode.attribute("clickNum").toString()+","+ xnode.attribute("time").toString()+")";
-					newNode.weight = 0;//new Number(xnode.attribute("clickNum"));
+					newNode.name = this.genNodeLabelString(newNode.dataObject as XML)//xnode.@id;
+					newNode.weight = this.genNodeWeight(newNode.dataObject as XML);//0;//new Number(xnode.attribute("clickNum"));
 					newNode.dataObject = xnode;
 					if ( minNodeW == -1 && maxNodeW == -1 ){
 						graphFullData.nodes.push(newNode);
@@ -484,12 +490,9 @@ package SNADisplay.org.Graph.Model
 					_mapPosition = _layout.placement();
 					s += _graphData.nodes.length+"\n";
 					for each ( node in _graphData.nodes ){
-						//Alert.show( node.id );
 						position = new Point;			
-						//s += (_mapPosition[node] as Point).x +" "+(_mapPosition[node] as Point).x+"\n";
 						position.x = (_mapPosition[node] as Point).x;
 						position.y = (_mapPosition[node] as Point).y;
-						//Alert.show( node.id +":"+position.x+","+position.y);
 						s += i+":"+node.id +":\n"+position.x+","+position.y+"\n";
 						i++;
 						//实现动画效果，初始节点坐标都为图的中心
@@ -497,11 +500,8 @@ package SNADisplay.org.Graph.Model
 						(_mapPosition[node] as Point).y = _center.y;
 						_mapPositionTo[node] = position;
 					}
-					//Alert.show(s);
 					drawNodes();
-					//Alert.show("a2");
 					drawEdges();
-					//Alert.show("a3");
 					drawCommunities();
 					calNetRegion();
 					flash.utils.setTimeout(layoutAnimation, 15, 1);
@@ -510,7 +510,6 @@ package SNADisplay.org.Graph.Model
 					_layout.placement();
 				}
 			}
-			//drawPath(_graphData.nodes);
 		}
 		//更新当前网络
 		public function refresh():void {
@@ -631,14 +630,10 @@ package SNADisplay.org.Graph.Model
 			}
 			_compDrawEdge.graphics.clear();
 			var i:int = 0;
-			//Alert.show("edge.length:"+_graphData.edges.length);
 			for each(edge in _graphData.edges){
-				//Alert.show(i+" "+edge.fromNode.id+" "+edge.toNode.id);
-				//Alert.show(edge.fromNode.id+" "+edge.toNode.id);
 				_compDrawEdge.graphics.lineStyle(1,Colour.BLUE,1);
 				fromNode = edge.fromNode;
 				toNode = edge.toNode;
-				//Alert.show("e");
 				if ( this._isFastMode == false ){
 					fromX = fromNode.visualNode.x + fromNode.visualNode.width/2;
 					fromY = fromNode.visualNode.y + fromNode.visualNode.nodeIcon.height/2;
@@ -646,14 +641,11 @@ package SNADisplay.org.Graph.Model
 					toY = toNode.visualNode.y + toNode.visualNode.nodeIcon.height/2;
 				}
 				else {
-					//Alert.show("s:"+fromNode.id);
 					fromX = (_mapPosition[fromNode] as Point).x;
-					//Alert.show("s1");
 					fromY = (_mapPosition[fromNode] as Point).y;
 					toX = (_mapPosition[toNode] as Point).x;
 					toY = (_mapPosition[toNode] as Point).y;
 				}
-				//Alert.show("e1");
 				if ( fromX != toX || fromY != toY ){
 					_compDrawEdge.graphics.moveTo(fromX, fromY);
 					_compDrawEdge.graphics.lineTo(toX, toY);
@@ -661,7 +653,6 @@ package SNADisplay.org.Graph.Model
 				else {
 					_compDrawEdge.graphics.drawCircle(fromX, fromY - 10, 10);
 				}
-				//Alert.show("e2");
 				//绘制边上面的箭头
 				if ( _showEdgeDirection == true ){
 					_compDrawEdge.graphics.lineStyle(1,Colour.getWeightColour(this._mapEdgeColor[edge]),1);
@@ -685,7 +676,6 @@ package SNADisplay.org.Graph.Model
 						_compDrawEdge.graphics.lineTo((arrowPosition[1] as Point).x, (arrowPosition[1] as Point).y);
 					}
 				}
-				//Alert.show("e3");
 				//绘制边的标签
 				if ( _showEdgeLabel == true ){
 					var label:Text = new Text;
@@ -699,13 +689,11 @@ package SNADisplay.org.Graph.Model
 						label.x = fromX;
 						label.y = fromY-20;
 					}
-					_graphCanvas.addChildAt(label,2);//_graphCanvas.numChildren-1);
+					_graphCanvas.addChildAt(label,2);
 				}
-				//Alert.show(i+" end");
 				i++;
 			}
 			refreshPath(_graphData.nodes);
-			//Alert.show("drawEdge End");
 		}
 		
 		private function drawPath(path:Array):void {
@@ -875,7 +863,6 @@ package SNADisplay.org.Graph.Model
 			//记录鼠标点下的时长
 			timeInterval = date.time - _time;
 			if ( timeInterval > CLICK_INTERVAL ){
-				//Alert.show("timeInterval="+timeInterval+"\nCLICK_INTERVAL="+CLICK_INTERVAL);
 				_disableClick = true;
 			}
 
@@ -1395,7 +1382,20 @@ package SNADisplay.org.Graph.Model
 		}
 		
 		public function filter(minNodeW:Number = -1,maxNodeW:Number = -1,minEdgeW:Number = -1,maxEdgeW:Number = -1):void {
-			_graphData = initFromXML(_xmlData,minNodeW,maxNodeW,minEdgeW,maxEdgeW);
+			this._graphFullData = initFromXML(_xmlData,minNodeW,maxNodeW,minEdgeW,maxEdgeW);
+			var node:INode;
+			var nodeArr:Array = new Array;
+			for each ( node in this._graphFullData.nodes ){
+				if ( node.edges.length != 0 ) {
+					nodeArr.push(node);
+				}
+			}
+			this._graphFullData.nodes = nodeArr;
+			this._graphData.nodes = this._graphFullData.nodes.concat();
+			this._graphData.edges = this._graphFullData.edges.concat();
+			createForest(this._graphFullData, _root);
+			_mapNodeColor = setNodeColor(this._graphFullData.nodes);
+			_mapEdgeColor = setEdgeColor(this._graphFullData.edges);
 			updateFilteredGraph();
 		}
 		
@@ -1433,18 +1433,24 @@ package SNADisplay.org.Graph.Model
 			var newQeueu:Array = new Array;
 			var mapVisit:Dictionary = new Dictionary;
 			var node:INode;
+			var rootNode:INode;
 			var curNode:INode;
 			var adjNode:INode;
 	
 			var i:int = 0;
 			filter(-1, -1, -1, -1);
-			curNode = _graphData.getNodeById(nodeId);
+			curNode = _graphFullData.getNodeById(nodeId);
+			rootNode = curNode;
+			
+			//this._layout.root = curNode;
 			if ( curNode == null )
 				return ;
-			_root = curNode;
+			
+			//_root = curNode;
+		
 			arrNodes.push(curNode);
 			mapVisit[curNode] = true;
-			queue.push(_graphData.getNodeById(nodeId));
+			queue.push(_graphFullData.getNodeById(nodeId));
 			var s:String = "";
 			for ( i = 0 ; i < depth ; i++) {
 				//s += i+":\n";
@@ -1457,7 +1463,7 @@ package SNADisplay.org.Graph.Model
 							mapVisit[adjNode] = true;
 							//s += adjNode.id+"\n";
 						}
-						arrEdges.push(_graphData.getEdgeByNodeId(curNode.id,adjNode.id));
+						arrEdges.push(_graphFullData.getEdgeByNodeId(curNode.id,adjNode.id));
 					}
 					if ( direction == false ){
 						for each ( adjNode in curNode.inEdges ){
@@ -1468,7 +1474,7 @@ package SNADisplay.org.Graph.Model
 								
 								//s += adjNode.id+"\n";
 							}
-							arrEdges.push(_graphData.getEdgeByNodeId(adjNode.id,curNode.id));
+							arrEdges.push(_graphFullData.getEdgeByNodeId(adjNode.id,curNode.id));
 						}
 					}
  					 
@@ -1477,9 +1483,14 @@ package SNADisplay.org.Graph.Model
 				queue = newQeueu.concat();
 				newQeueu = new Array;
 			}
-			//Alert.show(s);
-			_graphData.nodes = arrNodes;
-			_graphData.edges = arrEdges;
+			
+			this._graphFullData.nodes = arrNodes;
+			this._graphFullData.edges = arrEdges;
+			this._graphData.nodes = this._graphFullData.nodes.concat();
+			this._graphData.edges = this._graphFullData.edges.concat();
+			createForest(this._graphFullData, curNode);
+			
+			this._root = rootNode;
 			
 			//更新画布上的节点标签
 			var component:UIComponent;
@@ -1490,7 +1501,7 @@ package SNADisplay.org.Graph.Model
 				}
 			}
 			if ( _graphCanvas != null ){
-				for each (node in _graphData.nodes){
+				for each (node in this._graphFullData.nodes){
 					node.label.id = "nodeLabel"+i;
 					_graphCanvas.addChildAt(node.label,_graphCanvas.numChildren-1);
 					i++;
@@ -1621,9 +1632,7 @@ package SNADisplay.org.Graph.Model
 			_graphCanvas.validateNow();
 			
 		}
-		private var prePageBtn:Button;
-		private var nextPageBtn:Button;
-		private var pageTip:Label;
+		
 		protected function setCanvasPageComp(canvas:Canvas):void {
 			var height:int = canvas.height - 30;
 			var padding:int = 20;
@@ -1632,20 +1641,26 @@ package SNADisplay.org.Graph.Model
 			prePageBtn = new Button;
 			nextPageBtn = new Button;
 			pageTip = new Label;
-			canvas.addChild(prePageBtn);
-			canvas.addChild(nextPageBtn);
-			canvas.addChild(pageTip);
+			//canvas.addChild(prePageBtn);
+			//canvas.addChild(nextPageBtn);
+			//canvas.addChild(pageTip);
+			
+			canvas.parent.addChild(prePageBtn);
+			canvas.parent.addChild(nextPageBtn);
+			canvas.parent.addChild(pageTip);
 			
 			prePageBtn.label = "上一页";
 			nextPageBtn.label = "下一页";
 			pageTip.text = "1/" + this._graphParts.length;
-		
-			prePageBtn.x = 0;
-			prePageBtn.y = height;
-			pageTip.x = btnWidth + padding;
-			pageTip.y = height;
-			nextPageBtn.x = btnWidth + padding + tipWidth + padding;
-			nextPageBtn.y = height;
+			
+			prePageBtn.x = canvas.x;
+			prePageBtn.y = canvas.y + height;
+			
+			pageTip.x = canvas.x + btnWidth + padding;
+			pageTip.y = canvas.y + height;
+			
+			nextPageBtn.x = canvas.x + btnWidth + padding + tipWidth + padding;
+			nextPageBtn.y = canvas.y + height;
 			
 			prePageBtn.addEventListener(MouseEvent.CLICK, prePageBtnClick);
 			nextPageBtn.addEventListener(MouseEvent.CLICK, nextPageBtnClick);
@@ -1913,6 +1928,36 @@ package SNADisplay.org.Graph.Model
 			_layout.stop();
 		}
 		
+		private function genNodeLabelString( nodeXML:XML):String {
+			var labelStr:String = "";
+			var idLabel:String = "";
+			var attachedAttr:String = "";
+			var targetAttrName:String;
+			var attrName:String;
+			if ( this._nodeLabelAtt.length == 0 ){
+				this._nodeLabelAtt.push("id");
+			}
+			for each ( targetAttrName in this._nodeLabelAtt ){
+				for each ( var attribut:XML in nodeXML.attributes() ){
+					attrName = attribut.name();
+					if ( attrName == targetAttrName ){
+						if ( attrName == "id" ){
+							idLabel = nodeXML.attribute(attrName);
+						}
+						else {
+							attachedAttr += nodeXML.attribute(attrName) + ",";
+						}
+					}
+				}
+		    }
+		    if ( attachedAttr != "" )
+		    	labelStr = idLabel + "(" + attachedAttr.substr(0,attachedAttr.length-1) + ")";
+		    else 
+		    	labelStr = idLabel;
+		    return labelStr;
+		}
+		
+		
 		public function setLabelContent(propertyArr:Array):void {
 			var node:INode;
 			var nodeXML:XML;
@@ -1920,46 +1965,37 @@ package SNADisplay.org.Graph.Model
 			var targetAttrName:String;
 			var label:String = "";
 			var attachedAttr:String = "";
+			this._nodeLabelAtt = propertyArr;
 			for each ( node in this._graphData.nodes ){
-				label = "";
-				attachedAttr = "";
-				nodeXML = node.dataObject as XML;
-				for each ( targetAttrName in propertyArr  ){
-					for each ( var attribut:XML in nodeXML.attributes() ){
-						attrName = attribut.name();
-						if ( attrName == targetAttrName ){
-							if ( attrName == "id" ){
-								label = nodeXML.attribute(attrName);
-							}
-							else {
-								attachedAttr += nodeXML.attribute(attrName) + ",";
-							}
-						}
-					}
-			    }
-			    if ( attachedAttr != "" )
-			    	node.label.text = label + "(" + attachedAttr.substr(0,attachedAttr.length-1) + ")";
-			    else 
-			    	node.label.text = label;
-			    //node.label.invalidateDisplayList();
-
-			    node.label.validateNow();
+				node.label.text = this.genNodeLabelString(node.dataObject as XML);
+				node.label.validateNow();
 			}
-			//this.refresh();
 			this.drawNodeLabel();
+		}
+		
+		protected function genNodeWeight(nodeXML:XML):Number {
+			var weight:Number = 0;
+			for each ( var attribut:XML in nodeXML.attributes() ){
+				if ( attribut.name() == this._nodeWeightAtt ){
+					weight = new Number(nodeXML.attribute(this._nodeWeightAtt));
+				}
+			}
+			return weight;
 		}
 		
 		public function setNodeWeightProperty(property:String):void {
 			var node:INode;
 			var nodeXML:XML;
+			this._nodeWeightAtt = property;
 			for each ( node in _graphData.nodes ){
-				nodeXML = node.dataObject as XML;
+				node.weight = this.genNodeWeight(node.dataObject as XML);
+/* 				nodeXML = node.dataObject as XML;
 				node.weight = 0;
 				for each ( var attribut:XML in nodeXML.attributes() ){
 					if ( attribut.name() == property ){
 						node.weight = new Number(nodeXML.attribute(property));
 					}
-				}
+				} */
 			}
 			_mapNodeColor = setNodeColor(_graphData.nodes);
 			this.refresh();
@@ -1986,11 +2022,6 @@ package SNADisplay.org.Graph.Model
 					}
 				}
 			}
-/*  			var s:String = "";
-			for ( var n:int = 0 ; n < trees.length ; n++ ){
-				s += (trees[n] as Tree).nodes.length + ",";
-			}
-			Alert.show(s);  */
 			var sortedTreesNodes:Array = new Array;
 			for ( var n:int = 0 ; n < trees.length ; n++ ){
 				sortedTreesNodes.push((trees[n] as Tree).nodes);
@@ -2006,19 +2037,12 @@ package SNADisplay.org.Graph.Model
 				part = part.concat(nodes);
 				if ( part.length > MIN_SIZE ) {
 					graphParts.push(part);
-					//Alert.show("part.length:"+part.length);
 					part = new Array;
 				}
 			}
 			if ( part.length != 0 ){
 				graphParts.push(part);
-				//Alert.show("part.length:"+part.length);
 			}
-/* 			var s:String = "";
-			for ( var n:int = 0 ; n < graphParts.length ; n++ ){
-				s += (graphParts[n] as Array).length + ",";
-			}
-			Alert.show(s); */
 			return graphParts;
 		}
 		
@@ -2053,10 +2077,15 @@ package SNADisplay.org.Graph.Model
 				}
 			}
 			this._graphData.edges = newEdges;
+			for each ( node in nodes ){
+				if ( _root == node ){
+					this.updateFilteredGraph();
+					return ;
+				}
+			}
 			if ( this._graphData.nodes.length != 0 )
 				_root = this._graphData.nodes[0];
 			this.updateFilteredGraph();
-			//Alert.show(s);
 		}
 	}
 }
