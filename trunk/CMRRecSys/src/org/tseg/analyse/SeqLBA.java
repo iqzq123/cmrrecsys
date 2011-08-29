@@ -1,7 +1,5 @@
 package org.tseg.analyse;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -12,7 +10,6 @@ import java.util.Set;
 import java.util.TimeZone;
 import org.tseg.Ulits.Separator;
 import org.tseg.Ulits.Ulits;
-import org.tseg.algorithm.fp.*;
 import org.tseg.model.Histogram;
 import org.tseg.model.PVHistory;
 
@@ -41,7 +38,7 @@ public class SeqLBA extends Analyse {
 	private Histogram pvNumHis = new Histogram();
 	private Histogram pageNumHis= new Histogram();
 
-	private List<String> cacheFrePathList = new ArrayList<String>();
+
 	private List<PVHistory> cachePVHis = new ArrayList<PVHistory>();
 	private int index = 0;
 	private int saveIndex = 0;
@@ -117,17 +114,15 @@ public class SeqLBA extends Analyse {
 
 			} else {
 				// ////////////////////////////////////////////////////
-				this.cachePVHis.add(index, this.curPVHis);
+				//this.cachePVHis.add(index, this.curPVHis);
 				this.updateHistogram(this.curPVHis);
-				// this.getPerFrePath(this.curPVHis);
+				
 
 				this.index++;
 
 				if (this.index > this.maxCacheNum) {
-					System.out.print(index
-							+ "..................................\n");
-					System.out.println("save and clean");
-					this.saveAndClean();
+					//System.out.println("save and clean");
+					//this.saveAndClean();
 					this.saveIndex++;
 					index = 0;
 				}
@@ -201,38 +196,7 @@ public class SeqLBA extends Analyse {
 
 	}
 
-	public void getPerFrePath(PVHistory his) throws IOException {
 
-		String s = his.getId() + "\n";
-		try {
-			GenFAP g = new GenFAP();
-
-			List<String> l1 = his.getPathString();
-
-			// s+=l1.toString();
-			// for (String str : l1) {
-			// s += str + "\n";
-			// }
-			// s += "..................................\n";
-			g.setInput(l1);
-			g.readFromlist();
-			g.run();
-			List<String> l = g.getFrePath(3);
-
-			for (String p : l) {
-				System.out.println(p);
-				s += p + "\n";
-			}
-			if (l.size() > 0) {
-				this.cacheFrePathList.add(this.index, s);
-			}
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
 
 	/**
 	 * @param args

@@ -38,7 +38,7 @@ public class FPAnalyser {
 	private FPAlgorithm fpAlgo = new FPAlgorithm();
 	private int maxFPLenght = 10;
 	private int curFPLenght = 1;
-	private Byte analyseType = AnalyseType.PageToCate;
+	private Byte analyseType = AnalyseType.NegCate;
 	private boolean isClosed=false;
 	private HashMap<String,Integer> pageMap=new HashMap<String,Integer>();
 	
@@ -136,12 +136,12 @@ public class FPAnalyser {
 		FPAnalyser fp = new FPAnalyser();
 		String param="E:/data"+Separator.PARAM_SEPARATOR1+
 		"E:/data/pagevisit/pv6.txt"+Separator.PARAM_SEPARATOR1+
-		"E:/data/pagevisit/pv6_fp"+Separator.PARAM_SEPARATOR1+
-		AnalyseType.Original+Separator.PARAM_SEPARATOR1+
-		true+Separator.PARAM_SEPARATOR1+
+		"E:/data/pagevisit/pv6_NegCate"+Separator.PARAM_SEPARATOR1+
+		AnalyseType.NegCate+Separator.PARAM_SEPARATOR1+
+		false+Separator.PARAM_SEPARATOR1+
 		10+Separator.PARAM_SEPARATOR1+
 		0.001+Separator.PARAM_SEPARATOR1+
-		0.8+Separator.PARAM_SEPARATOR1;
+		0.9+Separator.PARAM_SEPARATOR1;
 		fp.readParam(param);
 		
 
