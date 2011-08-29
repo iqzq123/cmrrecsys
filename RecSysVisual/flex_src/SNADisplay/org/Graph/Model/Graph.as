@@ -472,30 +472,36 @@ package SNADisplay.org.Graph.Model
 		public function draw():void {
 			var node:INode;
 			var position:Point;
-			var s:String;
-			//Alert.show("h1 "+this._graphData.nodes.length);
+			var s:String = "";
 			this.filterByGraphDataPart(this._graphParts[this._curPart]);
-			//Alert.show("h2 "+this._graphData.nodes.length);
+			//this.filterByGraphDataPart(this._graphParts[1]);
 			_layout.root = _root;
+			var i:int = 0;
 			if ( _graphData != null && _graphCanvas != null ){
 				if ( _layout.layoutName != "ForceDirectedLayout" ){
 					_drawCommunities.graphics.clear();
 					_zoomScale = 1;
-					//Alert.show("heiil123");
 					_mapPosition = _layout.placement();
-					//Alert.show("heiil");
+					s += _graphData.nodes.length+"\n";
 					for each ( node in _graphData.nodes ){
+						//Alert.show( node.id );
 						position = new Point;			
 						//s += (_mapPosition[node] as Point).x +" "+(_mapPosition[node] as Point).x+"\n";
 						position.x = (_mapPosition[node] as Point).x;
 						position.y = (_mapPosition[node] as Point).y;
+						//Alert.show( node.id +":"+position.x+","+position.y);
+						s += i+":"+node.id +":\n"+position.x+","+position.y+"\n";
+						i++;
 						//实现动画效果，初始节点坐标都为图的中心
 						(_mapPosition[node] as Point).x = _center.x;
 						(_mapPosition[node] as Point).y = _center.y;
 						_mapPositionTo[node] = position;
 					}
+					//Alert.show(s);
 					drawNodes();
+					//Alert.show("a2");
 					drawEdges();
+					//Alert.show("a3");
 					drawCommunities();
 					calNetRegion();
 					flash.utils.setTimeout(layoutAnimation, 15, 1);
@@ -616,6 +622,7 @@ package SNADisplay.org.Graph.Model
 			var arrowX:Number;
 			var arrowY:Number
 			var component:UIComponent;
+
 			for each ( component in _graphCanvas.getChildren() ){
 				if ( component.id != null ){
 					if ( component.id.substr(0,5) == "label")
@@ -623,10 +630,15 @@ package SNADisplay.org.Graph.Model
 				}
 			}
 			_compDrawEdge.graphics.clear();
+			var i:int = 0;
+			//Alert.show("edge.length:"+_graphData.edges.length);
 			for each(edge in _graphData.edges){
+				//Alert.show(i+" "+edge.fromNode.id+" "+edge.toNode.id);
+				//Alert.show(edge.fromNode.id+" "+edge.toNode.id);
 				_compDrawEdge.graphics.lineStyle(1,Colour.BLUE,1);
 				fromNode = edge.fromNode;
 				toNode = edge.toNode;
+				//Alert.show("e");
 				if ( this._isFastMode == false ){
 					fromX = fromNode.visualNode.x + fromNode.visualNode.width/2;
 					fromY = fromNode.visualNode.y + fromNode.visualNode.nodeIcon.height/2;
@@ -634,13 +646,14 @@ package SNADisplay.org.Graph.Model
 					toY = toNode.visualNode.y + toNode.visualNode.nodeIcon.height/2;
 				}
 				else {
+					//Alert.show("s:"+fromNode.id);
 					fromX = (_mapPosition[fromNode] as Point).x;
+					//Alert.show("s1");
 					fromY = (_mapPosition[fromNode] as Point).y;
 					toX = (_mapPosition[toNode] as Point).x;
 					toY = (_mapPosition[toNode] as Point).y;
 				}
-				
-				
+				//Alert.show("e1");
 				if ( fromX != toX || fromY != toY ){
 					_compDrawEdge.graphics.moveTo(fromX, fromY);
 					_compDrawEdge.graphics.lineTo(toX, toY);
@@ -648,6 +661,7 @@ package SNADisplay.org.Graph.Model
 				else {
 					_compDrawEdge.graphics.drawCircle(fromX, fromY - 10, 10);
 				}
+				//Alert.show("e2");
 				//绘制边上面的箭头
 				if ( _showEdgeDirection == true ){
 					_compDrawEdge.graphics.lineStyle(1,Colour.getWeightColour(this._mapEdgeColor[edge]),1);
@@ -671,6 +685,7 @@ package SNADisplay.org.Graph.Model
 						_compDrawEdge.graphics.lineTo((arrowPosition[1] as Point).x, (arrowPosition[1] as Point).y);
 					}
 				}
+				//Alert.show("e3");
 				//绘制边的标签
 				if ( _showEdgeLabel == true ){
 					var label:Text = new Text;
@@ -686,8 +701,11 @@ package SNADisplay.org.Graph.Model
 					}
 					_graphCanvas.addChildAt(label,2);//_graphCanvas.numChildren-1);
 				}
+				//Alert.show(i+" end");
+				i++;
 			}
 			refreshPath(_graphData.nodes);
+			//Alert.show("drawEdge End");
 		}
 		
 		private function drawPath(path:Array):void {
@@ -1387,12 +1405,12 @@ package SNADisplay.org.Graph.Model
 			var component:UIComponent;
 			var nodeArr:Array = new Array;
 
-			for each ( node in _graphData.nodes ){
+/* 			for each ( node in _graphData.nodes ){
 				if ( node.edges.length != 0 ) {
 					nodeArr.push(node);
 				}
 			}
-			_graphData.nodes = nodeArr;
+			_graphData.nodes = nodeArr; */
 			for each ( component in _graphCanvas.getChildren() ){
 				if ( component.id != null ){
 					if ( component.id.substr(0,9) == "nodeLabel")
@@ -1988,11 +2006,13 @@ package SNADisplay.org.Graph.Model
 				part = part.concat(nodes);
 				if ( part.length > MIN_SIZE ) {
 					graphParts.push(part);
+					//Alert.show("part.length:"+part.length);
 					part = new Array;
 				}
 			}
 			if ( part.length != 0 ){
 				graphParts.push(part);
+				//Alert.show("part.length:"+part.length);
 			}
 /* 			var s:String = "";
 			for ( var n:int = 0 ; n < graphParts.length ; n++ ){
@@ -2012,37 +2032,31 @@ package SNADisplay.org.Graph.Model
 			var edge:IEdge;
 			var tempArr:Array = new Array;
 			this._graphData.nodes = nodes;
+			var s:String = "";
 			for each ( node in nodes ){
+				//s += node.id+",";
 				nodeMap[node.id] = true;
+				nodeMap[node] = true;
 			}
-			/* for each ( node in this._graphData.nodes ){
-				tempArr = new Array;
-				for each ( adjNode in node.inEdges ){
-					if ( nodeMap[adjNode.id] == true ){
-						tempArr.push(adjNode);
-					}
-				}
-				node.inEdges = tempArr;
-				
-				tempArr = new Array;
-				for each ( adjNode in node.outEdges ){
-					if ( nodeMap[adjNode.id] == true ){
-						tempArr.push(adjNode);
-					}
-				}
-				node.outEdges = tempArr;
-			} */
+			//Alert.show(s);
 			for each ( edge in this._graphFullData.edges ){
 				fromNode = edge.fromNode;
 				toNode = edge.toNode;
 				if ( nodeMap[fromNode.id] == true && nodeMap[toNode.id] == true ){
-					newEdges.push(edge)
+					newEdges.push(edge);
+					if ( nodeMap[edge.fromNode] == true && nodeMap[edge.toNode] == true ){
+						
+					}
+					else {
+						Alert.show("bug:"+edge.fromNode.id+" "+edge.toNode.id);
+					}
 				}
 			}
 			this._graphData.edges = newEdges;
 			if ( this._graphData.nodes.length != 0 )
 				_root = this._graphData.nodes[0];
 			this.updateFilteredGraph();
+			//Alert.show(s);
 		}
 	}
 }
