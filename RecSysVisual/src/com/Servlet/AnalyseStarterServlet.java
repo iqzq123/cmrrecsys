@@ -17,7 +17,7 @@ import com.XMLFileReader;
 public class AnalyseStarterServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException {
-		System.out.println("in start servlet");
+		System.out.println("in start servlet1111111122222222222222222");
 
 		String cmd = java.net.URLDecoder.decode(request.getParameter("cmd"),"UTF-8");
 		String inputPath = java.net.URLDecoder.decode(request.getParameter("inputPath"),"UTF-8");
@@ -28,14 +28,18 @@ public class AnalyseStarterServlet extends HttpServlet {
 		System.out.println("servlet outputPath: \n"+outputPath);
 		
 		Starter s=new Starter();
+		System.out.println("new Starter()..............................");
 		//s.setInputPath("E:/data/pagevisit/test.txt");
 		s.setInputPath(inputPath);
 		//s.setOutputPath("E:/data/pagevisit/testout.txt");
 		s.setOutputPath(outputPath);
 		s.setSiteDataPath("E:/data");
-		s.setNegCate(true);
+		System.out.println("s.setSiteDataPath..............................");
+		//s.setNegCate(true);
 		try{
-			s.start(cmd);//"PathFinderClass	2?	|?100?	|?login*;	|;·ÑÓÃÌáÊ¾Ò³Ãæ");
+			s.start(cmd);//"PathFinderClass	2?	|?100?	|?login*;	|;ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾Ò³ï¿½ï¿½");
+			System.out.println("start run..............................");
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
