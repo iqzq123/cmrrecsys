@@ -4,14 +4,12 @@ import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -20,11 +18,7 @@ import org.tseg.Ulits.Separator;
 import org.tseg.algorithm.community.clique.MaximalCliques;
 import org.tseg.algorithm.community.clique.YeQiMaximalCliques;
 import org.tseg.algorithm.community.clique.cpm.CPM;
-import org.tseg.algorithm.community.cnm.CNM;
-import org.tseg.algorithm.community.metric.StrongCommunityMetric;
 import org.tseg.graph.UndigraphImpl;
-import org.tseg.graph.community.VertexCommunity;
-import org.tseg.graph.vertex.Vertex;
 import org.tseg.preprocess.Preprocessor;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
