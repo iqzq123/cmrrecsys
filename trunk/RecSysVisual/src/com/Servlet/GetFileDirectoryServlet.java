@@ -1,7 +1,9 @@
 package com.Servlet;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
@@ -10,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.FileDirectoryBuilder;
-
+import java.util.Properties;
 
 public class GetFileDirectoryServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
@@ -27,12 +29,20 @@ public class GetFileDirectoryServlet extends HttpServlet {
 		throws ServletException, IOException {
 		response.setContentType("text/xml;charset=utf-8");
 		response.setCharacterEncoding("utf-8");
-		System.out.println("ok");
 		PrintWriter out = response.getWriter();
-		File dir = new File(".");
+		File curDir = new File(".");
 		FileDirectoryBuilder getFileDirectory = new FileDirectoryBuilder();
 		String str = "";
-		str = getFileDirectory.getFileDirXMLStr("E:\\data\\");        
+		Properties properties = new Properties();
+		System.out.println("cur Directory:"+curDir.getCanonicalPath());
+		InputStream in = new FileInputStream("../webapps/RecSysVisual/config/config.properties");
+		properties.load(in);
+		String fileDir = "";
+		fileDir = properties.getProperty("directory");
+		System.out.println(fileDir);
+		if ( fileDir != null ){
+			str = getFileDirectory.getFileDirXMLStr(fileDir);     
+		}  
 		out.println(str);
 		out.flush();
 		out.close();

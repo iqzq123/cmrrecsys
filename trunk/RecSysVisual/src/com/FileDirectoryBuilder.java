@@ -1,6 +1,7 @@
 package com;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -14,6 +15,8 @@ import org.w3c.dom.Element;
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
+import java.util.Properties;
+
 public class FileDirectoryBuilder
 {
 	private DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -22,15 +25,23 @@ public class FileDirectoryBuilder
     
 	public static void main(String args[]) 
     {
-        File directory = new File("."); 
-        try {
+		try {
+			
+			File file = new File("config/config.properties");
+			if ( !file.exists() )
+				if ( !file.createNewFile() )
+					throw new Exception("æ–‡ä»¶ä¸å­˜åœ¨ï¼Œåˆ›å»ºå¤±è´¥ï¼");
+			Properties properties = new Properties();
+			properties.setProperty("directory", "E:\\data\\");
+			properties.store(new FileOutputStream(file), null);
+	        File directory = new File("."); 
         	directory.getCanonicalPath();
-        	System.out.println("current:"+directory.getCanonicalPath());
-        	FileDirectoryBuilder ft = new FileDirectoryBuilder();
-        	ft.getFileDirXMLStr("E:\\data\\");
+        	System.out.println("current root dir:"+directory.getCanonicalPath());
+        	//FileDirectoryBuilder ft = new FileDirectoryBuilder();
+        	//ft.getFileDirXMLStr("E:\\data\\");
         }
-        catch ( IOException ioexp ){
-        	ioexp.printStackTrace();
+        catch ( Exception e ){
+        	System.out.println(e.getMessage());
         }
     }
 	
@@ -43,7 +54,7 @@ public class FileDirectoryBuilder
 		catch (IOException ioexp){
 			ioexp.printStackTrace();
 		}
-		//´¦ÀícurDir
+		//ï¿½ï¿½ï¿½ï¿½curDir
     	File file = new File(curDir);
 		try {
 			db = dbf.newDocumentBuilder();
@@ -54,7 +65,7 @@ public class FileDirectoryBuilder
 		doc.appendChild(getFile(file));
         ByteArrayOutputStream os = new ByteArrayOutputStream();     
         try {
-			// ÓÃxmlserializer°ÑdocumentµÄÄÚÈİ½øĞĞ´®»¯
+			// ï¿½ï¿½xmlserializerï¿½ï¿½documentï¿½ï¿½ï¿½ï¿½ï¿½İ½ï¿½ï¿½Ğ´ï¿½ï¿½ï¿½
 			OutputFormat of = new OutputFormat(doc);
 			of.setEncoding("UTF-8");
 			PrintWriter pw = new PrintWriter(os);
@@ -79,7 +90,7 @@ public class FileDirectoryBuilder
 		doc.appendChild(getFile(file));
         ByteArrayOutputStream os = new ByteArrayOutputStream();     
         try {
-			// ÓÃxmlserializer°ÑdocumentµÄÄÚÈİ½øĞĞ´®»¯
+			// ï¿½ï¿½xmlserializerï¿½ï¿½documentï¿½ï¿½ï¿½ï¿½ï¿½İ½ï¿½ï¿½Ğ´ï¿½ï¿½ï¿½
 			OutputFormat of = new OutputFormat(doc);
 			of.setEncoding("UTF-8");
 			PrintWriter pw = new PrintWriter(os);
@@ -100,7 +111,7 @@ public class FileDirectoryBuilder
         String[] list = f.list();
         File childFile = null;
         ArrayList<File> fileArr = new ArrayList<File>();
-        //±£´æµ±Ç°fµ½XMLÎÄ¼şÖĞ
+        //ï¿½ï¿½ï¿½æµ±Ç°fï¿½ï¿½XMLï¿½Ä¼ï¿½ï¿½ï¿½
         node = doc.createElement("node");
         node.setAttribute("label", f.getName());
         try {
@@ -109,22 +120,22 @@ public class FileDirectoryBuilder
         catch ( IOException ioexp ){
         	ioexp.printStackTrace();
         }
-        //Èç¹ûfÎªÄ¿Â¼£¬±éÀúµ±Ç°fµÄ×ÓÏî
+        //ï¿½ï¿½ï¿½fÎªÄ¿Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°fï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         while(f.isDirectory() && i < list.length)
         {
         	childFile = new File(f.getPath() + "\\" + list[i]);
-        	//Èç¹û×ÓÏîÊÇÎÄ¼ş£¬ÔİÊ±±£´æµ½Êı×éÖĞ
+        	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½æµ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         	if ( childFile.isFile() ){
         		fileArr.add(childFile);
         	}
-        	//Èç¹û×ÓÏîÊÇÄ¿Â¼£¬½øĞĞµİ¹é
+        	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿Â¼ï¿½ï¿½ï¿½ï¿½ï¿½Ğµİ¹ï¿½
         	else {
         		Element childNode = getFile(new File(f.getPath() + "\\" + list[i]));
                 node.appendChild(childNode);
         	}
         	i++;
         }
-        //±éÀúËùÓĞÎÄ¼ş×ÓÏî
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½
         Iterator iter = fileArr.iterator();
         while ( iter.hasNext() ){
         	childFile = (File)iter.next();
