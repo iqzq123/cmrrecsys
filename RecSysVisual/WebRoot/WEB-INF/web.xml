@@ -33,18 +33,18 @@
   <servlet-mapping>
     <servlet-name>getXMLServlet</servlet-name>
     <url-pattern>/getXMLServlet</url-pattern>
-   </servlet-mapping>
+  </servlet-mapping>
    
-   <servlet>
+  <servlet>
     <servlet-name>anlayseStarterServlet</servlet-name>
     <servlet-class>com.Servlet.AnalyseStarterServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>anlayseStarterServlet</servlet-name>
     <url-pattern>/anlayseStarterServlet</url-pattern>
-   </servlet-mapping>
+  </servlet-mapping>
    
-   <servlet>
+  <servlet>
     <servlet-name>getBookTundish</servlet-name>
     <servlet-class>com.Servlet.GetBookTundishServlet</servlet-class>
   </servlet>
@@ -53,14 +53,24 @@
     <url-pattern>/getBookTundish</url-pattern>
    </servlet-mapping>
    
-   <servlet>
+  <servlet>
     <servlet-name>getBookPackage</servlet-name>
     <servlet-class>com.Servlet.BookPackageServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>getBookPackage</servlet-name>
     <url-pattern>/getBookPackage</url-pattern>
-   </servlet-mapping>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>setDirectoryServlet</servlet-name>
+    <servlet-class>com.Servlet.SetDirectoryServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>setDirectoryServlet</servlet-name>
+    <url-pattern>/setDirectoryServlet</url-pattern>
+  </servlet-mapping>
+   
    
 </web-app>
 
