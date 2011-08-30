@@ -42,6 +42,19 @@
 					}
 				}				
 			}
+			
+			public function getBookFromText():void {
+				var bookName:String = textInput.text;
+				var find:Boolean = false;
+				for each( var bookXML:XML in _xmlData.child("book") ) {
+					if(bookXML.attribute("bookName") == bookName ){
+						find = true;
+						drawTundish(bookXML);
+					}
+				}
+				if(find == false)Alert.show("书库中没有这本书！");
+			}
+			
 			private var drawBookTundish:DrawBookTundishWindow;
 			public function drawTundish(bookXML:XML):void {
 				drawBookTundish = new DrawBookTundishWindow;
@@ -66,4 +79,7 @@
 	</mx:Script>
 	<mx:Label x="10" y="10" text="选择图书：" width="99" height="24" fontSize="15" />
 	<mx:ComboBox x="10" y="42" width="120" dataProvider="{attrs}" close="getBookXML(event)"></mx:ComboBox>
+	<mx:Label x="10" y="82" text="输入图书名" fontSize="15"/>
+	<mx:TextInput id="textInput" x="10" y="117"/>
+	<mx:Button x="10" y="161" label="展示" click="getBookFromText()"/>
 </mx:TitleWindow>

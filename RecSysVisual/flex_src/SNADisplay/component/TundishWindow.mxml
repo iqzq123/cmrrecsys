@@ -38,7 +38,7 @@
     			
     			levelLabel = new Label;
 	        	levelLabel.setStyle("fontSize",12);
-	   			levelLabel.text = (proportion*100) + "% (" + num + ")";
+	   			levelLabel.text = (proportion*100) + "% (" + num + ")";	   			
 	   			levelLabelArr.push(levelLabel);
 	   			this.addChild(levelLabel);
 	   			
