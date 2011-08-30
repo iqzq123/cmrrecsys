@@ -181,7 +181,8 @@ package SNADisplay.org.Graph.Model
 			var toNode:INode;
 			var string:String;
 			var s:String = "";
-
+			var nodeMap:Dictionary = new Dictionary;
+			
 			graphFullData.isDirected = _directional;
 
 			if ( this._isFastMode == false ){ //一般模式下建立数据结构
@@ -214,14 +215,18 @@ package SNADisplay.org.Graph.Model
 			}
 			else { //快速模式下建立数据结构
 				for each(xnode in xmlData.descendants("Node")) {
+					var nodeId:String = xnode.@id; 
+ 					if ( nodeMap[nodeId] != null ){
+						continue;
+					} 
 					newNode = new SimpleNode(xnode.@id , xnode.@name, xnode);
+					nodeMap[nodeId] = true;
 					//Graph中每个节点的单独设计
 					newNode.name = this.genNodeLabelString(newNode.dataObject as XML)//xnode.@id;
 					newNode.weight = this.genNodeWeight(newNode.dataObject as XML);//0;//new Number(xnode.attribute("clickNum"));
 					newNode.dataObject = xnode;
 					if ( minNodeW == -1 && maxNodeW == -1 ){
 						graphFullData.nodes.push(newNode);
-						//s += newNode.id+'\n';
 						if ( _maxNodeWeight < newNode.weight )
 							_maxNodeWeight = newNode.weight;
 					}else if ( minNodeW >= 0 && ( minNodeW <= maxNodeW || maxNodeW == -1 )){
@@ -641,6 +646,9 @@ package SNADisplay.org.Graph.Model
 					toY = toNode.visualNode.y + toNode.visualNode.nodeIcon.height/2;
 				}
 				else {
+					if ( _mapPosition[fromNode] == null ){
+						Alert.show(fromNode.id + "," + toNode.id);
+					}
 					fromX = (_mapPosition[fromNode] as Point).x;
 					fromY = (_mapPosition[fromNode] as Point).y;
 					toX = (_mapPosition[toNode] as Point).x;
