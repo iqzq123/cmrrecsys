@@ -33,6 +33,15 @@
 		private var bookID:String;
 		private var bookName:String;
 		private var serialize:String;
+		private var chaptXMLAttr:Array = new Array;
+		
+		private var norChaptNameLabelAttr:Array = new Array;
+		private var norChaptPropLabelAttr:Array = new Array;
+		private var norChaptPropAttr:Array = new Array;
+		private var norRunOffRatioAttr:Array = new Array;
+		private var norFeeAttr:Array = new Array;
+		private var norUserNumAttr:Array = new Array;
+		private var drawComp:UIComponent;
 			
 			
 		public function drawTundish(bookXML:XML):void {
@@ -49,6 +58,8 @@
 				}
 				xmlData = bookXML;
 				for each(var chaptXML:XML in bookXML.child("chaptEmt") ) {
+					chaptXMLAttr.push(chaptXML);
+					
 					var chaptName:String = new String(chaptXML.attribute("chaptName"));
 					var userNum:Number = new Number(chaptXML.attribute("userNum"));
 					var runOffRatio:Number = new Number(chaptXML.attribute("runOffRatio"));
@@ -87,7 +98,7 @@
 			
 		public function draw():void {
 				var per:Number;
-				
+//				Alert.show("1");
    				var startX:int = canvas.x + canvas.width*0.2;
    				var startY:int = canvas.y + 80;
    				var width:int = canvas.width*0.6;
@@ -100,14 +111,14 @@
    				bookNameLabel.y = canvas.y+10;
    				bookNameLabel.setStyle("fontSize",20);
    				canvas.addChild(bookNameLabel);
-   				
+//   				Alert.show("2");
    				var chaptNameLabel:Label = new Label;
    				chaptNameLabel.text = "章节名";
    				chaptNameLabel.x = canvas.x+40;
    				chaptNameLabel.y = canvas.y+60;
    				chaptNameLabel.setStyle("fontSize",12);
    				canvas.addChild(chaptNameLabel);
-   				
+//   				Alert.show("3");
 				var nameLabel:Label;
 				var propLabel:Label;
 				var runOffRatioLabel:Label;
@@ -126,7 +137,7 @@
 					runOffRatioLabel = runOffRatioAttr[i];
 					runOffRatioLabel.x = canvas.width*0.8 + 5;
 					runOffRatioLabel.y = startY + (i+1)*Vgap ;
-					drawLevel(per, i, chaptNameLabelAttr.length, startX, startY, width, nameLabel.height);
+					drawLevel(per, i,  startX, startY, width, nameLabel.height);
 				}
 				tagLabel.x = canvas.width/2 - tagLabel.width/2;
 				tagLabel.y = canvas.y+60;
@@ -140,7 +151,7 @@
 				this.validateNow();
 		}
 			
-		private function drawLevel(per:Number, levNum:int, totalNum:int, startX:int, startY:int, width:int, height:int):void {
+		private function drawLevel(per:Number, levNum:int, startX:int, startY:int, width:int, height:int):void {
    			var x:Number;
    			var y:Number;
    			var h:Number = height;
@@ -148,6 +159,9 @@
    			var Hgap:int = 60;
    			var Vgap:int = 30;
    			var colour:int;
+   			drawComp = new UIComponent;
+			canvas.addChild(drawComp);
+
    			if ( chaptFeeAttr[levNum] == 0 )colour = Colour.GREEN;
    			else colour = Colour.RED;
    			
@@ -240,6 +254,78 @@
    			bookPackage.init(xmlData);
    		}
    		
+   		public function normalize():void {
+   			if(chaptNameLabelAttr.length>100) {
+   				var totalNum:int = this.chaptXMLAttr.length;
+   				var num:Number = totalNum/100;
+
+   				canvas.removeAllChildren();      //清空画布
+   				chaptNameLabelAttr = new Array;  // 把所有数组清空
+   				chaptPropLabelAttr = new Array;  
+				chaptPropAttr = new Array;  
+				runOffRatioAttr = new Array;  
+				chaptFeeAttr = new Array;  
+				chaptUserNumAttr = new Array; 
+				
+
+   				var baseUserNum:Number = 0;
+   				for(var i:int=0;i<100;i++) {
+   					var totalUserNum:Number = 0;
+   					
+   					var totalFee:Number = 0;
+   					var nameLabel:Label = new Label;
+   					nameLabel.text = "第"+(i+1)+"部分";
+   					nameLabel.setStyle("fontSize",12);
+   					chaptNameLabelAttr.push(nameLabel);
+   					canvas.addChild(nameLabel);
+ 					
+   					var firstChaptXML:XML = new XML;
+   					var firstpos:int = (int)(i*num);
+   					firstChaptXML = chaptXMLAttr[firstpos];
+   					var runOffRatio:Number = new Number(firstChaptXML.attribute("runOffRatio"));
+   					
+   					var runOffLabel:Label = new Label;
+   					runOffLabel.text = Number((runOffRatio*100).toFixed(2)) + "%";
+   					runOffLabel.setStyle("fontSize",12);
+   					runOffRatioAttr.push(runOffLabel);
+   					canvas.addChild(runOffLabel);
+   					 					
+   					for(var j:int =(int) (i*num);j<this.chaptXMLAttr.length&&j<(int)((i+1)*num);j++) {
+   						var chaptXML:XML = new XML;
+   						chaptXML = chaptXMLAttr[j];
+   						var chaptName:String = new String(chaptXML.attribute("chaptName"));
+						var userNum:Number = new Number(chaptXML.attribute("userNum"));
+						var chaptFee:Number = new Number(chaptXML.attribute("chapterFee"));
+						totalFee+=chaptFee;
+						totalUserNum+=userNum;
+						if(i==0)baseUserNum+=userNum;
+						
+   					}
+   					
+   					var prop:Number ;
+   					if(i==0)prop=1;
+   					else prop = totalUserNum/baseUserNum;
+   					var propLabel:Label = new Label;
+   					propLabel.text = "("+Number((prop*100).toFixed(2))+"%)"+totalUserNum;
+   					propLabel.setStyle("fontSize",12);
+   					chaptPropLabelAttr.push(propLabel);
+   					chaptPropAttr.push(prop);
+   					canvas.addChild(propLabel);
+   					
+   					chaptFeeAttr.push(totalFee);   				
+   				}
+   				
+   				tagLabel.text = "留存率";
+				tagLabel.setStyle("fontSize",12);
+				canvas.addChild(tagLabel);
+				this.validateNow();
+				
+				draw();
+				
+   			}
+   			
+   		}
+   		
    		public function setTundishPath(str:String):void {
    			this.tundishPath = str;
    			this.packagePath = str.substring(0,str.lastIndexOf("/"))+"/package.xml";
@@ -255,12 +341,13 @@
 	 	]]>
 	 </mx:Script>
 	<mx:Canvas id="canvas" width="100%" height="90%">
-		<mx:UIComponent id="drawComp" />
+		<!--<mx:UIComponent id="drawComp" />/*  */-->
 	</mx:Canvas> 
 	<mx:Label id="l" x="50" y="432" text="输入需要打包的册数" width="96"/>
 	<mx:TextInput id="N" x="177" y="428" width="81" restrict="0-9"/>
 	<mx:Button id="bt1" x="286" y="428" label="分册打包" click="openPackage(event)"/>	
-	<mx:Button id="bt2" x="533" y="428" label="默认分册" click="openPackage(event)"/>
-	<mx:Button id="bt3" x="647" y="428" label="关闭" click="closeHandle()"/>
+	<mx:Button id="bt2" x="400" y="428" label="默认分册" click="openPackage(event)"/>
+	<mx:Button id="bt3" x="533" y="428" label="路径归一化" click="normalize()" />
+	<mx:Button id="bt4" x="647" y="428" label="关闭" click="closeHandle()"/>
 	
 </mx:TitleWindow>
