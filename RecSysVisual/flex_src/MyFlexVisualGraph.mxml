@@ -273,7 +273,7 @@
 						_graph.destroy();
 			
 					this._mode = this.PATH_MODE;
-					_graph = new Path("MyGraph",false,true);
+					_graph = new Path("MyGraph",false,true,mergeRootCheckBox.selected);
 					_graph.initGraphData(xmlData,_graphCanvas);
 					
 					communitiesCheckBox.selected = false;
@@ -442,7 +442,7 @@
 					Alert.show("请输入查看节点的网络深度。","提示");
 					return ;
 				}
-				if ( _curGraph.getNodeById(searchNodeText.text) == null ){
+				if ( _curGraph.hasNode(searchNodeText.text) == false ){
 					Alert.show("无法找到目标节点");
 					return ;
 				}
@@ -903,7 +903,11 @@
 				<mx:Button label="直方图查看" click="showChart()"/>
 				<mx:Button label="折线查看" click="showLineChart()"/>
 				<mx:Button label="漏斗查看" click="showTundish()"/>
-				<mx:Button label="路径查看" click="findPath()"/>
+				<mx:HBox>
+					<mx:Button label="路径查看" click="findPath()"/>
+					<mx:CheckBox id="mergeRootCheckBox" label="合并根节点" selected="false"/>
+				</mx:HBox>
+				
 				<mx:Label text="用户数："/>
 				<mx:HBox>
 					<mx:Label text="下限"/>
