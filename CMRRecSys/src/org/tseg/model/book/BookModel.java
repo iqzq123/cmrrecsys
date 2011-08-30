@@ -20,6 +20,7 @@ public class BookModel {
 	private String chapterInfoPath = "";
 	private String inputPath = "";
 	private String outputPath = "";
+	private String seprator = "\\|"; //文件分隔符
 
 	private HashMap<Integer,Book> bookMap = new HashMap<Integer, Book>();
 	private HashMap<String, Integer> bookNameMap = new HashMap<String, Integer>();
@@ -34,9 +35,9 @@ public class BookModel {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		BookModel b = new BookModel();
-		b.setBookInfoPath("E:\\data\\book\\bookinfo.txt");
-		b.setChapterInfoPath("E:\\data\\book\\chapterinfo.txt");
-		b.setInputPath("E:\\data\\book\\msisdn_chapterid.txt");
+		b.setBookInfoPath("E:\\data\\book\\bookinfo_7627034.txt");
+		b.setChapterInfoPath("E:\\data\\book\\CHAPTER_7627034.txt");
+		b.setInputPath("E:\\data\\book\\MSISDN_BOOKID_7627034.txt");
 		b.setOutputPath("E:\\tun.txt");
 		b.onInitial();
 		b.run();
@@ -68,11 +69,13 @@ public class BookModel {
 			String str;
 			reader.readLine();
 			while ((str = reader.readLine()) != null) {
-				String[] strArray = str.split(",");
+				if(str.contains(","))str = str.replace(',', '|');
+				String[] strArray = str.split(seprator);
 				
 				Book book = new Book();
 				book.setId(Integer.parseInt(strArray[0]));
 				book.setName(strArray[1]);
+				book.setSerialize(Integer.parseInt(strArray[11]));
 				
 				this.bookMap.put(book.getId(), book);
 				this.bookNameMap.put(book.getName(), book.getId());
@@ -95,7 +98,8 @@ public class BookModel {
 			String str;
 			reader.readLine();
 			while ((str = reader.readLine()) != null) {
-				String[] strArray = str.split(",");
+				if(str.contains(","))str = str.replace(',', '|');
+				String[] strArray = str.split(seprator);
 				if ( strArray.length == this.CHAPTER_ATTRI_NUM ){
 					Chapter chapter = new Chapter(Integer.parseInt(strArray[0]),
 												Integer.parseInt(strArray[1]),
@@ -129,7 +133,8 @@ public class BookModel {
 			Book book = null;
 			int i = 0;
 			while ((str = reader.readLine()) != null) {
-				String[] strArray = str.split(",");
+				if(str.contains(","))str = str.replace(',', '|');
+				String[] strArray = str.split(seprator);
 				
 				if ( strArray.length < 2 )
 					continue;
@@ -182,7 +187,7 @@ public class BookModel {
 				for ( int key : keyArrayList ) {
 					Chapter chapter = book.getChapterMap().get(key);
 					System.out.println(chapter.getId()+","+chapter.getUserNum()+","+chapter.getName()+","+book.getName());
-					str+=chapter.getId()+","+chapter.getUserNum()+","+chapter.getName()+","+book.getName()+","+chapter.getFee()+"\n";
+					str+=book.getName()+","+book.getSerialize()+","+chapter.getId()+","+chapter.getUserNum()+","+chapter.getName()+","+chapter.getFee()+"\n";
 					
 				}
 				output.write(str);

@@ -15,6 +15,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.sun.java_cup.internal.internal_error;
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
@@ -27,9 +28,12 @@ public class BookPackage {
 	private String inputPath;
 	private String outputPath;
 	private String bookID; //需要打包的图书ID
+	private String bookName;
 	private int n;  //划分的册数，由界面传递参数
 	private ArrayList<ArrayList<Chapter>> volumn = new ArrayList<ArrayList<Chapter>>();
 	private ArrayList<Chapter> chapterArrayList = new ArrayList<Chapter>();
+	private ArrayList<Boolean> beRead = new ArrayList<Boolean>();
+	private Boolean emptyVolumn = false; //判断是否有分册为空
 				
 	public void readXML() {
 		File file = new File(inputPath);
@@ -60,6 +64,7 @@ public class BookPackage {
 			System.out.println(book.getAttribute("bookID"));
 			if(book.getAttribute("bookID").equals(this.bookID)) {
 				bookElement = book;
+				bookName = book.getAttribute("bookName");
 				break;
 			}
 		}
@@ -72,86 +77,261 @@ public class BookPackage {
 			int num = Integer.parseInt(chaptEmt.getAttribute("userNum"));
 			int fee = Integer.parseInt(chaptEmt.getAttribute("chapterFee"));
 			double ror = Double.parseDouble(chaptEmt.getAttribute("runOffRatio"));
+			double prop = Double.parseDouble(chaptEmt.getAttribute("propotion"));
 			
 			chapter.setName(name);
 			chapter.setuserNum(num);
 			chapter.setFee(fee);
 			chapter.setROR(ror);
+			chapter.setProp(prop);
 
 			this.RORattr.add(ror);
 			
 			this.chapterArrayList.add(chapter);
-			
+			Boolean boolean1 = false;
+			this.beRead.add(boolean1);
 			
 		}
 	}
 	
 	
 	
-	public double getThreshold () {
-		ArrayList<Double> tempROR = new ArrayList<Double>();
-		for(int i=0;i<this.RORattr.size();i++) {
-			double ror = this.RORattr.get(i);
-			tempROR.add(ror);
+////	public void packaging() {
+////		double threshold = getThreshold();
+//		System.out.println(threshold);
+//		ArrayList<Chapter> chapters = new ArrayList<Chapter>();
+//		chapters.add(this.chapterArrayList.get(0));
+//		for(int i=1;i<this.RORattr.size();i++) {			
+//			/*
+//			 * 第一章的流失率为0.0 ，如果阈值大于0，而第一章不能作为一个划分点，所以划分点要包含该阈值
+//			 * if与else代码段的区别在于<=threshold和<threshold
+//			 */
+//			if(threshold>0) {                              
+//				if( this.RORattr.get(i) <= threshold ) {   //该章节的流失率小于阈值，就要在此分册
+////					System.out.println("  if");
+//					ArrayList<Chapter> chapterClone = new ArrayList<Chapter>();
+//					chapterClone = (ArrayList<Chapter>) chapters.clone();
+//					this.volumn.add(chapterClone);
+////					showvolumn();
+//					chapters.clear();
+//					Chapter chapter = this.chapterArrayList.get(i);
+//					chapters.add(chapter);
+//				}
+//				else {
+////					System.out.println("  else");
+//					Chapter chapter = this.chapterArrayList.get(i);
+//					chapters.add(chapter);
+////					test(chapters);
+//				}
+//			}
+//			else {
+//				if( this.RORattr.get(i) < threshold ) {   //该章节的流失率小于阈值，就要在此分册
+////					System.out.println("  if");
+//					ArrayList<Chapter> chapterClone = new ArrayList<Chapter>();
+//					chapterClone = (ArrayList<Chapter>) chapters.clone();
+//					this.volumn.add(chapterClone);
+////					showvolumn();
+//					chapters.clear();
+//					Chapter chapter = this.chapterArrayList.get(i);
+//					chapters.add(chapter);
+//				}
+//				else {
+////					System.out.println("  else");
+//					Chapter chapter = this.chapterArrayList.get(i);
+//					chapters.add(chapter);
+////					test(chapters);
+//				}
+//			}
+//				
+//		
+//			
+//		}
+//		this.volumn.add(chapters);
+//	}
+	
+	public int tunning(int i) {
+		double d1 ;
+		double d2 ;
+		double d3 ;
+		if(i == this.RORattr.size()-1){
+			d1 = this.RORattr.get(i-1);
+			d2 = this.RORattr.get(i);
+			d3 = 1.0;
 		}
-		Collections.sort(tempROR);
-		for(int i=0;i<tempROR.size();i++) {
-			System.out.println(tempROR.get(i));
+		else {
+			d1 = this.RORattr.get(i-1);
+			d2 = this.RORattr.get(i);
+			d3 = this.RORattr.get(i+1);
 		}
-		return tempROR.get(this.n-1);
+		
+		if((d1<d2)&&(d1<d3)) return -1;
+		else if ((d3<d1)&&(d3<d2)) return 1;
+		else return 0;
 	}
 	
 	public void packaging() {
-		double threshold = getThreshold();
-		System.out.println(threshold);
+		int chapterNum = this.chapterArrayList.size();
+		double m = (double)chapterNum/this.n;		
+		if(m>=2){
+			strategy1();
+		}
+		else {
+			strategy2();
+		}
+	}
+	
+	public void strategy1(){
+		int chapterNum = this.chapterArrayList.size();
+		double m = (double)chapterNum/this.n;
+		int gap = 0;
+		int i;
+		int j;
 		ArrayList<Chapter> chapters = new ArrayList<Chapter>();
-		chapters.add(this.chapterArrayList.get(0));
-		for(int i=1;i<this.RORattr.size();i++) {			
-			/*
-			 * 第一章的流失率为0.0 ，如果阈值大于0，而第一章不能作为一个划分点，所以划分点要包含该阈值
-			 * if与else代码段的区别在于<=threshold和<threshold
-			 */
-			if(threshold>0) {                              
-				if( this.RORattr.get(i) <= threshold ) {   //该章节的流失率小于阈值，就要在此分册
-//					System.out.println("  if");
-					ArrayList<Chapter> chapterClone = new ArrayList<Chapter>();
-					chapterClone = (ArrayList<Chapter>) chapters.clone();
-					this.volumn.add(chapterClone);
-//					showvolumn();
-					chapters.clear();
-					Chapter chapter = this.chapterArrayList.get(i);
-					chapters.add(chapter);
+		for(i = 0; i < this.n-1; i++ ) {
+			for(j = gap ; j < (i+1)*m ; j++) {
+				Chapter chapter = this.chapterArrayList.get(j);
+				chapters.add(chapter);
+				this.beRead.set(j, true);
+			}
+			
+			gap = (int) ((i+1)*m);
+			
+			if(this.beRead.get(gap)==true) gap++;
+			int flag = tunning(j);
+			System.out.println(j+"___"+flag);
+			if(flag == -1) {
+				if(chapters.size()>1){
+					chapters.remove(chapters.size()-1);
+					gap--;
+					this.beRead.set(gap, false);
 				}
-				else {
-//					System.out.println("  else");
-					Chapter chapter = this.chapterArrayList.get(i);
-					chapters.add(chapter);
-//					test(chapters);
-				}
+			}
+			else if(flag == 1) {
+				Chapter chapter = this.chapterArrayList.get(j);
+				chapters.add(chapter);
+				this.beRead.set(j, true);
+				gap++;
+			}
+			ArrayList<Chapter> chapterClone = new ArrayList<Chapter>();
+			chapterClone = (ArrayList<Chapter>) chapters.clone();
+			this.volumn.add(chapterClone);
+			chapters.clear();
+		}
+		
+		for(i = gap ; i<chapterNum;i++) {
+			if(this.beRead.get(i)==true) {
+				continue;
 			}
 			else {
-				if( this.RORattr.get(i) < threshold ) {   //该章节的流失率小于阈值，就要在此分册
-//					System.out.println("  if");
-					ArrayList<Chapter> chapterClone = new ArrayList<Chapter>();
-					chapterClone = (ArrayList<Chapter>) chapters.clone();
-					this.volumn.add(chapterClone);
-//					showvolumn();
-					chapters.clear();
-					Chapter chapter = this.chapterArrayList.get(i);
-					chapters.add(chapter);
-				}
-				else {
-//					System.out.println("  else");
-					Chapter chapter = this.chapterArrayList.get(i);
-					chapters.add(chapter);
-//					test(chapters);
-				}
+				Chapter chapter = this.chapterArrayList.get(i);
+				chapters.add(chapter);
 			}
-				
-		
 			
 		}
-		this.volumn.add(chapters);
+		ArrayList<Chapter> chapterClone = new ArrayList<Chapter>();
+		chapterClone = (ArrayList<Chapter>) chapters.clone();
+		this.volumn.add(chapterClone);
+	}
+	
+	public void strategy2(){
+		int chapterNum = this.chapterArrayList.size();
+		double m = (double)chapterNum/this.n;
+		int gap = 0;
+		int i;
+		int j;
+		ArrayList<Chapter> chapters = new ArrayList<Chapter>();
+		for(i = 0; i < this.n-1; i++ ) {
+			for(j = gap ; j < (i+1)*m ; j++) {
+				Chapter chapter = this.chapterArrayList.get(j);
+				chapters.add(chapter);
+				this.beRead.set(j, true);
+			}
+			
+			gap = (int) ((i+1)*m);
+			
+			if(this.beRead.get(gap)==true) gap++;
+			ArrayList<Chapter> chapterClone = new ArrayList<Chapter>();
+			chapterClone = (ArrayList<Chapter>) chapters.clone();
+			this.volumn.add(chapterClone);
+			chapters.clear();
+		}
+		
+		for(i = gap ; i<chapterNum;i++) {
+			if(this.beRead.get(i)==true) {
+				continue;
+			}
+			else {
+				Chapter chapter = this.chapterArrayList.get(i);
+				chapters.add(chapter);
+			}
+			
+		}
+		ArrayList<Chapter> chapterClone = new ArrayList<Chapter>();
+		chapterClone = (ArrayList<Chapter>) chapters.clone();
+		this.volumn.add(chapterClone);
+	}
+	
+	public void checkVolumn() {
+		double m =(double) this.chapterArrayList.size()/this.n;
+		this.emptyVolumn = false;
+		for(int i=0;i<this.volumn.size();i++) {
+			ArrayList<Chapter> chapters = new ArrayList<Chapter>();
+			chapters = this.volumn.get(i);
+			if(chapters.size()==0) {
+				this.emptyVolumn = true;
+				adjustVolumn(i);
+			}
+		}
+	}
+	
+	public void adjustVolumn(int i) {
+		if(i==0){
+			changeEmt(i, 1);
+		}
+		else if (i==this.volumn.size()-1) {
+			changeEmt(i, -1);
+		}
+		else {
+			ArrayList<Chapter> pre = new ArrayList<Chapter>();
+			ArrayList<Chapter> next = new ArrayList<Chapter>();
+			pre = this.volumn.get(i-1);
+			next = this.volumn.get(i+1);
+			if(pre.size()>next.size()){
+				changeEmt(i, -1);
+			}
+			else {
+				changeEmt(i, 1);
+			}
+		}
+	}
+	
+	public void changeEmt(int i,int pos){
+		if(pos == -1){
+			ArrayList<Chapter> pre = new ArrayList<Chapter>();
+			pre = this.volumn.get(i-1);
+			Chapter chapter = pre.get(pre.size()-1);
+			ArrayList<Chapter> now = new ArrayList<Chapter>();
+			now.add(chapter);
+			this.volumn.set(i, now);
+			ArrayList<Chapter> tempArrayList = new ArrayList<Chapter>();
+			for(int j=0;j<pre.size()-1;j++){
+				tempArrayList.add(pre.get(j));
+			}
+			this.volumn.set(i-1, tempArrayList);
+		}
+		else if(pos == 1) {
+			ArrayList<Chapter> next = new ArrayList<Chapter>();
+			next = this.volumn.get(i+1);
+			Chapter chapter = next.get(0);
+			ArrayList<Chapter> now = new ArrayList<Chapter>();
+			now.add(chapter);
+			this.volumn.set(i, now);
+			ArrayList<Chapter> tempArrayList = new ArrayList<Chapter>();
+			for(int j=1;j<next.size();j++){
+				tempArrayList.add(next.get(j));
+			}
+			this.volumn.set(i+1, tempArrayList);
+		}
 	}
 	
 	public void test(ArrayList<Chapter> chapters) {
@@ -170,6 +350,7 @@ public class BookPackage {
 				Chapter chapter = cArrayList.get(j);
 				System.out.println("  "+chapter.getName());
 			}
+			
 		}
 	}
 	
@@ -186,6 +367,8 @@ public class BookPackage {
 		}
 		Document doc = db.newDocument();
 		Element root = doc.createElement("book");
+		root.setAttribute("bookName", this.bookName);
+		root.setAttribute("bookID", this.bookID);
 		doc.appendChild(root);
 		
 		for(int i=0;i<this.volumn.size();i++) {
@@ -200,6 +383,7 @@ public class BookPackage {
 				chapt.setAttribute("userNum", String.valueOf(chapter.getuserNum()));
 				chapt.setAttribute("chapterFee", String.valueOf(chapter.getFee()));
 				chapt.setAttribute("runOffRatio", String.valueOf(chapter.getROR()));
+				chapt.setAttribute("propotion", String.valueOf(chapter.getProp()));
 				volumn.appendChild(chapt);
 			}
 		}
@@ -222,6 +406,10 @@ public class BookPackage {
 		//RORattr
 		readXML();
 		packaging();
+		do{
+			checkVolumn();
+		}
+		while (this.emptyVolumn);
 		output();
 	}
 	
@@ -231,7 +419,7 @@ public class BookPackage {
 		bPackage.setInputPath("E:/data/book/tundish.xml");
 		bPackage.setOutputPath("E:/data/book/volumn.xml");
 		bPackage.setBookID("355044051");
-		bPackage.setN(13);
+		bPackage.setN(10);
 		bPackage.run();
 		bPackage.showvolumn();
 
@@ -276,6 +464,7 @@ public class BookPackage {
 		private int fee;
 		private int userNum;
 		private double ror;
+		private double prop;
 		
 		public void setName(String str) {
 			name = str;
@@ -303,6 +492,12 @@ public class BookPackage {
 		}
 		public double getROR () {
 			return ror;
+		}
+		public void setProp (double r) {
+			prop = r;
+		}
+		public double getProp () {
+			return prop;
 		}
 	}
 
