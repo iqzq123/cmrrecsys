@@ -2105,5 +2105,25 @@ package SNADisplay.org.Graph.Model
 				_root = this._graphData.nodes[0];
 			this.updateFilteredGraph();
 		}
+		
+		public function removeNode(nodeId:String):Boolean {
+			var targetNode:INode;
+			var node:INode;
+			var edge:IEdge;	
+			targetNode = _graphFullData.getNodeById(nodeId);
+			if ( targetNode == null )
+				return false;
+			_graphFullData.deleteNode(targetNode);
+			_graphData.nodes = _graphFullData.nodes.concat();
+			_graphData.edges = _graphFullData.edges.concat();
+			if ( targetNode == _root ){
+				if ( _graphData.nodes.length != 0 )
+					_root = _graphData.nodes[0]; 
+			}
+			createForest(_graphFullData, _root);
+			_mapNodeColor = setNodeColor(_graphFullData.nodes);
+			_mapEdgeColor = setEdgeColor(_graphFullData.edges);
+			return true;
+		}
 	}
 }

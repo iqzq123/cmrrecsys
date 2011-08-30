@@ -68,15 +68,43 @@ package SNADisplay.org.Graph.Logical
 			return e;
 		}
 		//删除点
-		public function deleteNode(node:INode):void{
-			var n:INode;
+		public function deleteNode(targetNode:INode):void{
+			var node:INode;
+			var edge:IEdge;
+			var adjNode:INode;
+			var tempArr:Array;
+			var fromNode:INode;
+			var toNode:INode;
 			var i:int;
 			for ( i = 0 ; i < _nodes.length ; i++ ){
-				if ( _nodes[i] == node ){
+				if ( _nodes[i] == targetNode ){
 					_nodes.splice(i,1);
 					break;
 				}
 			} 
+			for each ( node in _nodes ){
+				tempArr = new Array;
+				for each ( adjNode in node.inEdges ){
+					if ( adjNode != targetNode )
+						tempArr.push(adjNode);
+				}
+				node.inEdges = tempArr;
+				tempArr = new Array;
+				for each ( adjNode in node.outEdges ){
+					if ( adjNode != targetNode )
+						tempArr.push(adjNode);
+				}
+				node.outEdges = tempArr;
+			}
+			tempArr = new Array;
+			for each ( edge in _edges ){
+				fromNode = edge.fromNode;
+				toNode = edge.toNode;
+				if ( fromNode != targetNode && toNode != targetNode ){
+					tempArr.push(edge)
+				}
+			}
+			_edges = tempArr;
 		}
 		//删除边
 		public function deleteEdge(edge:IEdge):void {
