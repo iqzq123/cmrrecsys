@@ -1924,6 +1924,15 @@ package SNADisplay.org.Graph.Model
 			}
 			return null;
 		}
+		public function hasNode(id:String):Boolean {
+			var node:INode;
+			for each ( node in _graphData.nodes ){
+				if ( node.id == id ){
+					return true;
+				}
+			}
+			return false;
+		}
 		public function destroy():void {
 			_layout.stop();
 		}
@@ -2072,10 +2081,11 @@ package SNADisplay.org.Graph.Model
 						
 					}
 					else {
-						Alert.show("bug:"+edge.fromNode.id+" "+edge.toNode.id);
+						s += "bug:"+edge.fromNode.id+" "+edge.toNode.id+"\n";
 					}
 				}
 			}
+			//Alert.show(s);
 			this._graphData.edges = newEdges;
 			for each ( node in nodes ){
 				if ( _root == node ){

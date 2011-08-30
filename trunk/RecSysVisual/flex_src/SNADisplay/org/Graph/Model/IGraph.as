@@ -77,6 +77,7 @@ package SNADisplay.org.Graph.Model {
 		function setDefaultCommunities():void;
 		
 		function getNodeById(id:String):Object;
+		function hasNode(id:String):Boolean;
 		
 		function destroy():void;
 		function filter(minNodeW:Number = -1,maxNodeW:Number = -1,minEdgeW:Number = -1,maxEdgeW:Number = -1):void;
