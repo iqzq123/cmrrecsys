@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="434" height="152"
+	 showCloseButton="true" borderAlpha="0.9" title="设置后台目录" close="closeHandler()" fontSize="13">
+	<mx:Script>
+		<![CDATA[
+			import mx.managers.PopUpManager;
+			import mx.rpc.http.HTTPService;
+			import mx.controls.Alert;
+			private function closeHandler():void {
+	   			PopUpManager.removePopUp(this);
+	   		}
+	   		private function confirm():void {
+	   			if ( dirTextInput.text == "" ){
+	   				Alert.show("路径设置不能为空!");
+	   				return ;
+	   			}
+	   			var getXML : HTTPService = new HTTPService();
+				getXML.resultFormat = "e4x";
+				getXML.url = "setDirectoryServlet";
+				var params:URLVariables = new URLVariables();				
+                params.directory = encodeURIComponent(dirTextInput.text); 
+				getXML.send(params);
+	   			closeHandler();
+	   		}
+		]]>
+	</mx:Script>
+	<mx:TextInput id="dirTextInput" x="21" y="28" width="362"/>
+	<mx:Button x="249" y="67" label="确定" click="confirm()"/>
+	<mx:Button x="329" y="67" label="取消" click="closeHandler()"/>
+</mx:TitleWindow>
