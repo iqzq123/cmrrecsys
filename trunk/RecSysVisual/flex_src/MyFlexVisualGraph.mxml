@@ -608,13 +608,6 @@
 				_curGraph.draw();
 			}
 			
-			private var setDirectoryWindow:SetDirectoryWindow;
-			private function setDirectory():void {
-				setDirectoryWindow = new SetDirectoryWindow;
-				PopUpManager.addPopUp(setDirectoryWindow,this,true);
-				PopUpManager.centerPopUp(setDirectoryWindow);
-			}
-			
 			private var analysisWindow:AnalysisWindow;
 			private function start():void {
 				analysisWindow = new AnalysisWindow;
@@ -921,7 +914,6 @@
     	<mx:Accordion id="acc" x="0" y="0" width="100%" height="100%" 
     		selectedIndex="0" creationPolicy="all" >
     		<mx:VBox label="算法处理" width="100%" height="100%" horizontalAlign="left" paddingTop="10" paddingLeft="15">
-				<mx:Button label="设置目录" click="setDirectory()"/>
 				<mx:Button label="启动分析" click="start()"/>
 				<mx:Button label="直方图查看" click="showChart()"/>
 				<mx:Button label="折线查看" click="showLineChart()"/>
