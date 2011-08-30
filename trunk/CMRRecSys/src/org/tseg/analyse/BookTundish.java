@@ -70,6 +70,7 @@ public class BookTundish {
 
 			for(int i=0;i<bookFiles.length;i++)
 			{
+				aRecord.clear();
 				BufferedReader br = new BufferedReader(new FileReader(bookFiles[i]));
 				while((str=br.readLine())!=null){
 					sStrings = str.split(",");
@@ -77,18 +78,20 @@ public class BookTundish {
 				}
 				Element bookEmt = doc.createElement("book");
 				bookEmt.setAttribute("bookID", bookFiles[i].getName());
-				bookEmt.setAttribute("bookName", (aRecord.get(0))[3]);
+				bookEmt.setAttribute("bookName", (aRecord.get(0))[0]);
+				bookEmt.setAttribute("serialize", aRecord.get(0)[1]);
 				root.appendChild(bookEmt);
-				int baseUserNum = Integer.parseInt((aRecord.get(0))[1]);
+				int baseUserNum = Integer.parseInt((aRecord.get(0))[3]);
+				System.out.println("baseUserNum : "+baseUserNum);
 				for(int j=0;j<aRecord.size();j++)
 				{
 					String [] ss = aRecord.get(j);
 					
-					String chapterID = ss[0];
-					int userNum = Integer.parseInt(ss[1]);
+					String chapterID = ss[2];
+					int userNum = Integer.parseInt(ss[3]);
 					double propotion = (double)userNum/baseUserNum;
-					String chaptName = ss[2];
-					int chapterFee = Integer.parseInt(ss[4]);
+					String chaptName = ss[4];
+					int chapterFee = Integer.parseInt(ss[5]);
 					
 					Element chaptEmt = doc.createElement("chaptEmt");
 					chaptEmt.setAttribute("chapterID", chapterID);			
@@ -101,7 +104,7 @@ public class BookTundish {
 						chaptEmt.setAttribute("runOffRatio", "0");						
 					}
 					else {
-						int lastUserNum = Integer.parseInt((aRecord.get(j-1))[1]);
+						int lastUserNum = Integer.parseInt((aRecord.get(j-1))[3]);
 						double runOffRatio = (double) (lastUserNum-userNum)/lastUserNum;
 						chaptEmt.setAttribute("runOffRatio", String.valueOf(runOffRatio));
 					}
