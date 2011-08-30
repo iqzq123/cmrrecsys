@@ -454,6 +454,21 @@
 				setGraph(_curGraph);
 				_curGraph.draw();
 			}
+			
+			private function removeNode():void {
+				if ( _curGraph.hasNode(searchNodeText.text) == false ){
+					Alert.show("无法找到目标节点");
+					return ;
+				}
+				this._curGraph.removeNode(searchNodeText.text);
+				this._curGraph.draw();
+				if ( this._mode == this.SIMPLE_MODE ){
+					
+				}
+				else {
+					//Alert.show("当前模式下不能删除节点。");
+				}
+			}
             private function localMagnify():void{
             	if ( _curGraph != null ){
             		if ( fishEyeBtn.label == "局部放大" ){
@@ -994,7 +1009,11 @@
 					<mx:Label text="深度"/>
 					<mx:TextInput id="depth" text="1" width="56"/>
 				</mx:HBox>
-				<mx:Button label="单节点查看" click="viewSingleNode()"/>
+				<mx:HBox>
+					<mx:Button label="单节点查看" click="viewSingleNode()"/>
+					<mx:Button label="删除该节点" click="removeNode()"/>
+				</mx:HBox>
+				
 				<mx:HRule width="181" height="1"/>
 				<mx:HBox>
 					<mx:RadioButtonGroup id="pathRadiogroup" change="pathStyleChange()"/>	

@@ -82,6 +82,7 @@ package SNADisplay.org.Graph.Model {
 		function destroy():void;
 		function filter(minNodeW:Number = -1,maxNodeW:Number = -1,minEdgeW:Number = -1,maxEdgeW:Number = -1):void;
 		function singleNodefilter(nodeId:String, depth:int, direction:Boolean = true):void;
+		function removeNode(nodeId:String):Boolean;
 		
 		function setLabelContent(propertyArr:Array):void;
 		function setNodeWeightProperty(property:String):void;
