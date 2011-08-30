@@ -62,15 +62,5 @@
     <url-pattern>/getBookPackage</url-pattern>
   </servlet-mapping>
   
-  <servlet>
-    <servlet-name>setDirectoryServlet</servlet-name>
-    <servlet-class>com.Servlet.SetDirectoryServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>setDirectoryServlet</servlet-name>
-    <url-pattern>/setDirectoryServlet</url-pattern>
-  </servlet-mapping>
-   
-   
 </web-app>
 
