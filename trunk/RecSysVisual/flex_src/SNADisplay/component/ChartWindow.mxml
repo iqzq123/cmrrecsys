@@ -32,6 +32,7 @@
                 obj.Value = data.attribute("value");
 				dataAC.addItem(obj);
         	}
+        	valueText = "";
             valueText  += "最小值：" + xmlData.elements("min")[0].attribute("value").toString() + "\t\t";
         	valueText += "最大值：" + xmlData.elements("max")[0].attribute("value").toString() + "\t\t";
         	valueText  += "平均值：" + xmlData.elements("aver")[0].attribute("value").toString() + "\t\t";
