@@ -136,9 +136,9 @@ public class FPAnalyser {
 		FPAnalyser fp = new FPAnalyser();
 		String param="E:/data"+Separator.PARAM_SEPARATOR1+
 		"E:/data/pagevisit/pv6.txt"+Separator.PARAM_SEPARATOR1+
-		"E:/data/pagevisit/pv6_NegCate"+Separator.PARAM_SEPARATOR1+
+		"E:/data/pagevisit/pv6_close1"+Separator.PARAM_SEPARATOR1+
 		AnalyseType.NegCate+Separator.PARAM_SEPARATOR1+
-		false+Separator.PARAM_SEPARATOR1+
+		true+Separator.PARAM_SEPARATOR1+
 		10+Separator.PARAM_SEPARATOR1+
 		0.001+Separator.PARAM_SEPARATOR1+
 		0.9+Separator.PARAM_SEPARATOR1;

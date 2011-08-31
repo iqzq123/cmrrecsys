@@ -1,6 +1,5 @@
 package org.tseg;
 
-
 import java.util.HashMap;
 
 import org.tseg.Ulits.AnalyseType;
@@ -15,23 +14,24 @@ public class Starter {
 
 	private String firstSplit = "\n";
 	private String secondSplit = "\t";
-	private String inputPath="";
-	private String outputPath="";
-	private String siteDataPath="";
-	private boolean isNegCate=false;
+	private String inputPath = "";
+	private String outputPath = "";
+	private String siteDataPath = "";
+	private boolean isNegCate = false;
 	private HashMap<String, Analyse> analyseMap = new HashMap<String, Analyse>();
-	
-	public Analyse getInstanceByName(String name){
-		
-		Analyse obj=this.analyseMap.get(name);
-		try{
-			Analyse newInstance=(Analyse)Class.forName(obj.getClass().getName()).newInstance();
+
+	public Analyse getInstanceByName(String name) {
+
+		Analyse obj = this.analyseMap.get(name);
+		try {
+			Analyse newInstance = (Analyse) Class.forName(
+					obj.getClass().getName()).newInstance();
 			this.analyseMap.put(newInstance.getName(), newInstance);
-		}catch(Exception e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return obj;
 	}
 
@@ -43,15 +43,14 @@ public class Starter {
 
 		Tundish analyse2 = new Tundish();
 		analyseMap.put(analyse2.getName(), analyse2);
-		
+
 		PathFinder pathFinder = new PathFinder();
 		analyseMap.put(pathFinder.getName(), pathFinder);
 
-		SeqMKBuilder mk=new SeqMKBuilder();
+		SeqMKBuilder mk = new SeqMKBuilder();
 		analyseMap.put(mk.getName(), mk);
 	}
 
-	
 	public void start(String cmd) throws Exception {
 
 		AnalyseRunner b = new AnalyseRunner();
@@ -68,7 +67,7 @@ public class Starter {
 				param += strArray[i] + this.secondSplit;
 			}
 			param = param.substring(0, param.length() - 1);
-			//Analyse analyse = this.analyseMap.get(name);
+			// Analyse analyse = this.analyseMap.get(name);
 			Analyse analyse = getInstanceByName(name);
 			if (analyse != null) {
 				analyse.readParam(param);
@@ -84,24 +83,23 @@ public class Starter {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		Starter s=new Starter();
+		Starter s = new Starter();
 		s.setInputPath("E:/data/pagevisit/pv6.txt");
-		s.setOutputPath("E:/data/pagevisit/pv6_out");
+		s.setOutputPath("E:/data/pagevisit/testtunish");
 		s.setSiteDataPath("E:/data");
-		try{
-			String cmd="basic analyse\t"+AnalyseType.NegCate+"\n"+
-			"basic analyse\t"+AnalyseType.PageToCate+"\n"+
-			"basic analyse\t"+AnalyseType.Original+"\n"+
-			"global analyse\t"+AnalyseType.Original+"\n"+
-			"global analyse\t"+AnalyseType.PageToCate+"\n"+
-			"global analyse\t"+AnalyseType.NegCate;
-			s.start(cmd);
+		try {
+			String cmd = "basic analyse\t" + AnalyseType.NegCate + "\n"
+					+ "basic analyse\t" + AnalyseType.PageToCate + "\n"
+					+ "basic analyse\t" + AnalyseType.Original + "\n"
+					+ "global analyse\t" + AnalyseType.Original + "\n"
+					+ "global analyse\t" + AnalyseType.PageToCate + "\n"
+					+ "global analyse\t" + AnalyseType.NegCate;
+			String cmd2 = "PathFinderClass	1@@@1@@@0@@@1@@@0@@@全国手机阅读首页###取消包月成功提示页面&&&女生首页###取消包月成功提示页面&&&原创首页###取消包月成功提示页面&&&畅销首页###取消包月成功提示页面&&&全国手机阅读首页###专区包月结果确认页&&&女生首页###专区包月结果确认页&&&原创首页###专区包月结果确认页&&& 畅销首页###专区包月结果确认页";
+			s.start(cmd2);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		
 
 	}
 
