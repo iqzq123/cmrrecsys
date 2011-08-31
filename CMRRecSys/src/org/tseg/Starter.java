@@ -6,8 +6,8 @@ import org.tseg.Ulits.AnalyseType;
 import org.tseg.analyse.Analyse;
 import org.tseg.analyse.AnalyseRunner;
 import org.tseg.analyse.PathFinder;
-import org.tseg.analyse.SeqLBA;
-import org.tseg.analyse.SeqMKBuilder;
+import org.tseg.analyse.StatAnalyse;
+import org.tseg.analyse.GlobalAnalyse;
 import org.tseg.analyse.Tundish;
 
 public class Starter {
@@ -38,7 +38,7 @@ public class Starter {
 	public Starter() {
 		super();
 		// TODO Auto-generated constructor stub
-		SeqLBA analyse1 = new SeqLBA();
+		StatAnalyse analyse1 = new StatAnalyse();
 		analyseMap.put(analyse1.getName(), analyse1);
 
 		Tundish analyse2 = new Tundish();
@@ -47,7 +47,7 @@ public class Starter {
 		PathFinder pathFinder = new PathFinder();
 		analyseMap.put(pathFinder.getName(), pathFinder);
 
-		SeqMKBuilder mk = new SeqMKBuilder();
+		GlobalAnalyse mk = new GlobalAnalyse();
 		analyseMap.put(mk.getName(), mk);
 	}
 
@@ -88,12 +88,12 @@ public class Starter {
 		s.setOutputPath("E:/data/pagevisit/testtunish");
 		s.setSiteDataPath("E:/data");
 		try {
-			String cmd = "basic analyse\t" + AnalyseType.NegCate + "\n"
-					+ "basic analyse\t" + AnalyseType.PageToCate + "\n"
-					+ "basic analyse\t" + AnalyseType.Original + "\n"
-					+ "global analyse\t" + AnalyseType.Original + "\n"
-					+ "global analyse\t" + AnalyseType.PageToCate + "\n"
-					+ "global analyse\t" + AnalyseType.NegCate;
+			String cmd = "StatAnalyse\t" + AnalyseType.NegCate + "\n"
+					+ "StatAnalyse\t" + AnalyseType.PageToCate + "\n"
+					+ "StatAnalyse\t" + AnalyseType.Original + "\n"
+					+ "GlobalAnalyse\t" + AnalyseType.Original + "\n"
+					+ "GlobalAnalyse\t" + AnalyseType.PageToCate + "\n"
+					+ "GlobalAnalyse\t" + AnalyseType.NegCate;
 			String cmd2 = "PathFinderClass	1@@@1@@@0@@@1@@@0@@@全国手机阅读首页###取消包月成功提示页面&&&女生首页###取消包月成功提示页面&&&原创首页###取消包月成功提示页面&&&畅销首页###取消包月成功提示页面&&&全国手机阅读首页###专区包月结果确认页&&&女生首页###专区包月结果确认页&&&原创首页###专区包月结果确认页&&& 畅销首页###专区包月结果确认页";
 			s.start(cmd2);
 		} catch (Exception e) {

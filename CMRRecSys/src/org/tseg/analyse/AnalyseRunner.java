@@ -152,11 +152,11 @@ public class AnalyseRunner {
 			b.setNegCate(true);
 			
 					
-			SeqLBA slba=new SeqLBA();	
+			StatAnalyse slba=new StatAnalyse();	
 			slba.setMaxCacheNum(1000);
 			b.addAnalyse(slba);
 		
-			SeqMKBuilder mk=new SeqMKBuilder();
+			GlobalAnalyse mk=new GlobalAnalyse();
 			b.addAnalyse(mk);
 			b.seqRun();
 			
