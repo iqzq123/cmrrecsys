@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="800" height="500" 
-	showCloseButton="true" close="closeHandle()"  >
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="914" height="500" 
+	showCloseButton="true" close="closeHandle()"  creationPolicy="all" >
 	<mx:Script>
 		<![CDATA[
 		import mx.collections.ArrayCollection;
@@ -13,6 +13,9 @@
         private var nameTitle:String;
         [Bindable]
         private var valueTitle:String;
+        [Bindable]
+        private var valueText:String;
+        
         import mx.controls.Alert;
         public function init(xmlData:XML = null):void {
         	var data:XML;
@@ -29,6 +32,10 @@
                 obj.Value = data.attribute("value");
 				dataAC.addItem(obj);
         	}
+            valueText  += "最小值：" + xmlData.elements("min")[0].attribute("value").toString() + "\t\t";
+        	valueText += "最大值：" + xmlData.elements("max")[0].attribute("value").toString() + "\t\t";
+        	valueText  += "平均值：" + xmlData.elements("aver")[0].attribute("value").toString() + "\t\t";
+        	valueText  += "众数：" + xmlData.elements("amount")[0].attribute("value").toString() ;
         }
    		private function closeHandle():void {
    			PopUpManager.removePopUp(this);
@@ -41,13 +48,14 @@
     <!-- Define custom Strokes for the columns. -->
     <mx:Stroke id="s" color="{Colour.GRAY}" weight="2"/>
   
-    <mx:HBox width="100%" height="100%">
+    <mx:VBox width="100%" height="100%" fontSize="12">
 	   <!-- <mx:Legend dataProvider="{column}"/>-->
 		<mx:ColumnChart id="column" 
             height="100%" 
             width="100%" 
-            paddingLeft="5" paddingBottom="10"
+            paddingLeft="5" 
             paddingRight="5" 
+            paddingTop="5" 
             showDataTips="true" 
             dataProvider="{dataAC}"
             columnWidthRatio="0.65"
@@ -69,5 +77,6 @@
 	            />
 	        </mx:series>
 	    </mx:ColumnChart>
- 	</mx:HBox>
+	    <mx:Text  id="valueDisplayText" paddingLeft="70" paddingBottom="5" text="{valueText}"/>
+ 	</mx:VBox>
 </mx:TitleWindow>
