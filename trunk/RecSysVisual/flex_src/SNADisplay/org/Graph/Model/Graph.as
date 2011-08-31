@@ -485,6 +485,7 @@ package SNADisplay.org.Graph.Model
 			var position:Point;
 			var s:String = "";
 			this.filterByGraphDataPart(this._graphParts[this._curPart]);
+			this.pageTip.text = (this._curPart + 1 )+ "/" + this._graphParts.length;
 			//this.filterByGraphDataPart(this._graphParts[1]);
 			_layout.root = _root;
 			var i:int = 0;
@@ -1660,7 +1661,7 @@ package SNADisplay.org.Graph.Model
 			
 			prePageBtn.label = "上一页";
 			nextPageBtn.label = "下一页";
-			pageTip.text = "1/" + this._graphParts.length;
+			//pageTip.text = "1/" + this._graphParts.length;
 			
 			prePageBtn.x = canvas.x;
 			prePageBtn.y = canvas.y + height;
@@ -1679,7 +1680,7 @@ package SNADisplay.org.Graph.Model
 			evt.stopImmediatePropagation();
 			if ( this._curPart > 0 ){
 				this._curPart --;
-				pageTip.text = (this._curPart+1) + "/" + this._graphParts.length;
+				//pageTip.text = (this._curPart+1) + "/" + this._graphParts.length;
 				this.draw();
 			}
 			
@@ -1689,7 +1690,7 @@ package SNADisplay.org.Graph.Model
 			var partsCnt:int = this._graphParts.length;
 			if ( this._curPart < partsCnt - 1 ){
 				this._curPart ++;
-				pageTip.text = (this._curPart+1) + "/" + this._graphParts.length;
+				//pageTip.text = (this._curPart+1) + "/" + this._graphParts.length;
 				this.draw();
 			}
 			
