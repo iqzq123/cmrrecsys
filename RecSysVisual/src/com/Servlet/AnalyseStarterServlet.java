@@ -1,7 +1,10 @@
 package com.Servlet;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.Properties;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -31,9 +34,14 @@ public class AnalyseStarterServlet extends HttpServlet {
 		System.out.println("new Starter()..............................");
 		//s.setInputPath("E:/data/pagevisit/test.txt");
 		s.setInputPath(inputPath);
-		//s.setOutputPath("E:/data/pagevisit/testout.txt");
+		//s.setOutputPath("E:/data/pagevisit/testout.txt"); 
 		s.setOutputPath(outputPath);
-		s.setSiteDataPath("E:/data");
+		InputStream in = new FileInputStream("../webapps/RecSysVisual/config/config.properties");
+		Properties properties = new Properties();
+		properties.load(in);
+		String fileDir = "";
+		fileDir = properties.getProperty("directory");
+		s.setSiteDataPath(fileDir);
 		System.out.println("s.setSiteDataPath..............................");
 		//s.setNegCate(true);
 		try{
