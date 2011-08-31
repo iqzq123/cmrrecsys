@@ -9,6 +9,7 @@ package SNADisplay.org.Graph.Model
 	public class Path extends Graph implements IGraph
 	{
 		private var mergeRoot:Boolean = false;	
+		private var filterPageName:String = "";
 		public function Path(id:String, directional:Boolean=false, isFastMode:Boolean=false, mergeRoot:Boolean = false)
 		{
 			super(id, directional, isFastMode);
@@ -54,13 +55,17 @@ package SNADisplay.org.Graph.Model
 				maxLength = int.MAX_VALUE;
 			var endPointsIndex:int = 0;
 			var pathIndex:int = 0;
+			var filteredPathArr:Array = new Array;
 			for each ( var endPointXML:XML in endPointsXMLList ){
 				pathIndex = 0;
 				pathXMLList = endPointXML.child("Path");
-				for each ( var pathXML:XML in pathXMLList ){
+				filteredPathArr = filterPathByNode(pathXMLList, this.filterPageName);
+				//遍历一对endpoint中的所有路径
+				for each ( var pathXML:XML in filteredPathArr ){
 					var userNum:Number =  new Number( pathXML.attribute("userNum") );
 					var pagesXMLList:XMLList = pathXML.descendants("Page");
 					var length:int = pagesXMLList.length() - 1;
+					//筛选满足条件的path
 					if ( userNum >= minUser && userNum <= maxUser && length >= minLength && length <= maxLength){
 						//便利一条路径
 						for ( var i:int = 0 ; i <pagesXMLList.length() ; i++ ){
@@ -138,13 +143,30 @@ package SNADisplay.org.Graph.Model
 			return graphFullData;
 		}
 		
+		private function filterPathByNode(pathXMLList:XMLList, filterNodeId:String):Array {
+			var filterPathArr:Array = new Array;
+			for each ( var pathXML:XML in pathXMLList ) {
+				var pagesXMLList:XMLList = pathXML.child("Page");
+				for each ( var pageXML:XML in pagesXMLList ) {
+					var pageName:String = pageXML.attribute("pageName");
+					if ( pageName == filterNodeId || filterNodeId == ""){
+						filterPathArr.push(pathXML);
+						break;
+					}
+				}
+			}
+			return filterPathArr;
+		}
+		
 		override public function filter(minUser:Number = -1,maxUser:Number = -1,minLength:Number = -1,maxLength:Number = -1):void {
 			_graphFullData = initFromXML(_xmlData,minUser,maxUser,minLength,maxLength);
-			//_graphFullData = initFromXML(_xmlData);
 			_graphData.nodes = _graphFullData.nodes.concat();
 			_graphData.edges = _graphFullData.edges.concat();
 			this.updateFilteredGraph();
 		}
 		
+		public function setFilterPageName(n:String):void {
+			this.filterPageName = n;
+		}
 	}
 }
