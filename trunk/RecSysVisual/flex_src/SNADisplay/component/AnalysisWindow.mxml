@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" title="分析面板"
-	width="616" height="540" fontSize="12" showCloseButton="true" close="closeHandle()">
+	width="616" height="540" fontSize="12" showCloseButton="true" close="closeHandle()" creationComplete="init()">
 	<mx:Script>
 		<![CDATA[
 			import mx.rpc.http.mxml.HTTPService;
@@ -21,6 +21,8 @@
 		    private const SEPARATOR2:String = "&&&"; //区分二级参数
 		    private const SEPARATOR3:String = "###"; //区分pageName
 		    private var _cmd:String = "";
+		    private const BASICE_ANALYSE_NAME:String = "basic analyse";
+		    private const GLOBAL_ANALYSE_NAME:String = "global analyse";
 		    
 			[Bindable]
 			private var dgDataPathFinder:ArrayCollection = new ArrayCollection;
@@ -28,6 +30,9 @@
 			private var dgDataTundishPath:ArrayCollection = new ArrayCollection;
 			[Bindable]
 			private var dgDataTundish:ArrayCollection = new ArrayCollection;
+			
+			public function init():void {
+			}
 			
 			private function closeHandle():void {
 	   			PopUpManager.removePopUp(this);
@@ -164,11 +169,21 @@
 		    private function cmdGen():String {
 		    	var cmd:String = "";
 		    	var tempStr:String = "";
+		    	
 		    	tempStr = pathFinderCMDGen();
 		    	if ( tempStr != "" )
 		    		cmd = pathFinderCMDGen() + SEPARATOR_FUNC;
+		    	
 		    	tempStr = tundishCMDGen();
 		    	if ( tempStr != "" )
+		    		cmd += tempStr + SEPARATOR_FUNC;
+		    	
+		    	tempStr = basicAnalyseCMDGen();
+		    	if ( tempStr != "" )
+		    		cmd += tempStr + SEPARATOR_FUNC;
+		    	
+		    	tempStr = golbalAnalyseCMDGen();
+		    	if( tempStr != "" )
 		    		cmd += tempStr + SEPARATOR_FUNC;
 		    	return cmd;
 		    }
@@ -300,6 +315,39 @@
 		    	return true;
 		    }
 		    
+		    private function basicAnalyseCMDGen():String {
+		    	var cmd:String = "";
+		    	var param:String = "";
+		    	if(addBasicAnalyse == null){
+		    		cmd = "";
+		    	}
+		    	else {
+		    		if(addBasicAnalyse.selected == true) {
+		    			cmd = genTypeCmd(BASICE_ANALYSE_NAME,param);
+		    		}
+		    		else cmd = "";
+		    	}
+		    			    	
+		    	return cmd;
+		    	
+		    }
+		    
+		    private function golbalAnalyseCMDGen():String {
+		    	var cmd:String = "";
+		    	var param:String = "";
+		    	if(addGlobalAnalyse == null) {
+		    		cmd = "";
+		    	}
+		    	else {
+		    		if(addGlobalAnalyse.selected == true){
+		    			cmd = genTypeCmd(GLOBAL_ANALYSE_NAME,param);
+		    		}
+		    		else cmd = "";	
+		    	}
+		    		   	
+		    	return cmd;
+		    }
+		    
 		    public function getCMD():String {
 		    	return _cmd;
 		    }
@@ -329,7 +377,7 @@
 
 		
 		<mx:TabNavigator x="0" y="0" width="100%" height="360">
-			<mx:Canvas label="路径发现 " width="100%" height="100%">
+			<mx:Canvas id="PAcanvas" label="路径发现 " width="100%" height="100%">
 				<mx:DataGrid id="dgPathFinder" x="71.5" y="10" textAlign="center" height="244" width="415"
 					 dataProvider="{dgDataPathFinder}" sortableColumns="false" draggableColumns="false">
 					<mx:columns>
@@ -353,7 +401,7 @@
 				<mx:TextInput id="pathMaxUser" text="0" x="492" y="262" width="54" restrict="0-9"/>
 				<mx:TextInput id="pathMinUser" text="1" x="492" y="291" width="54" restrict="0-9"/>
 			</mx:Canvas>
-			<mx:Canvas label="漏斗分析" width="100%" height="100%">
+			<mx:Canvas id="tundishCanvas" label="漏斗分析" width="100%" height="100%">
 				<mx:DataGrid id="dgTundishPath" x="57" y="10" height="239" textAlign="center" 
 					dataProvider="{dgDataTundishPath}" sortableColumns="false" draggableColumns="false">
 					<mx:columns>
@@ -378,6 +426,12 @@
 				<mx:CheckBox id="tundishIsDiscrete" x="343" y="287" label="路径不连续" selected="true"/>
 				<mx:CheckBox id="tundishIsContiuous" x="445" y="287" label="路径连续" selected="true"/>
 				<mx:Label x="345" y="259" text="提示：双击可查看漏斗完整路径"/>
+			</mx:Canvas>
+			<mx:Canvas id="BAcanvas" label="话单统计分析" width="100%" height="100%">
+			     <mx:CheckBox id="addBasicAnalyse" label="添加到启动列表" x="422" y="283"/>
+			</mx:Canvas>
+			<mx:Canvas id="GAcanvas" label="全局分析" width="100%" height="100%">
+				<mx:CheckBox id="addGlobalAnalyse" label="添加到启动列表" x="422" y="283"/>
 			</mx:Canvas>
 		</mx:TabNavigator>	
 	</mx:Box>	
