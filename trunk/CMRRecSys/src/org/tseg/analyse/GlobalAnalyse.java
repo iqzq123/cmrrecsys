@@ -21,12 +21,12 @@ import org.w3c.dom.Element;
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
-public class SeqMKBuilder extends Analyse {
+public class GlobalAnalyse extends Analyse {
 
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return "global analyse";
+		return "GlobalAnalyse";
 	}
 
 	@Override

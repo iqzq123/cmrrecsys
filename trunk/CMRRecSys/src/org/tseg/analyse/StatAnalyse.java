@@ -13,12 +13,12 @@ import org.tseg.Ulits.Ulits;
 import org.tseg.model.Histogram;
 import org.tseg.model.PVHistory;
 
-public class SeqLBA extends Analyse {
+public class StatAnalyse extends Analyse {
 
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return "basic analyse";
+		return "StatAnalyse";
 	}
 
 
@@ -48,7 +48,7 @@ public class SeqLBA extends Analyse {
 	private String fpPath = "";
 	private String statPath = "";
 
-	public SeqLBA() {
+	public StatAnalyse() {
 
 		super();
 		// TODO Auto-generated constructor stub
