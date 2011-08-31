@@ -102,6 +102,8 @@ package SNADisplay.org.Graph.Model
 		
 		private var _nodeWeightAtt:String = "";
 		private var _nodeLabelAtt:Array =  new Array;
+		
+		private const MAX_PAGE_NODE_NUMBER:int = 90;	//一页最多展示的节点个数
 		//初始化网络
 		public function Graph(id:String, directional:Boolean = false, isFastMode:Boolean = false)
 		{
@@ -2051,10 +2053,10 @@ package SNADisplay.org.Graph.Model
 		private function createGraphParts(treesNodes:Array):Array {
 			var graphParts:Array = new Array;
 			var part:Array = new Array;;
-			const MIN_SIZE:int = 150;
+			//const MIN_SIZE:int = 150;
 			for each ( var nodes:Array in treesNodes ){
 				part = part.concat(nodes);
-				if ( part.length > MIN_SIZE ) {
+				if ( part.length > this.MAX_PAGE_NODE_NUMBER ) {
 					graphParts.push(part);
 					part = new Array;
 				}
