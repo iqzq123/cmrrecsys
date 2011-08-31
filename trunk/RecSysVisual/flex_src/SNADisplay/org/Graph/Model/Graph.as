@@ -908,6 +908,7 @@ package SNADisplay.org.Graph.Model
 			//FastMode
 			var event:NodeClickEvent = new NodeClickEvent(NodeClickEvent.SINGLE_CLICK);
 			event.nodeId = _targetNode.id;
+			event.nodeName = _targetNode.label.text;
 			event.nodeData = _targetNode.dataObject as XML;
 			_graphCanvas.dispatchEvent(event);
 			if ( _multiSelectStyle == true ){	//多选模式下的选择操作

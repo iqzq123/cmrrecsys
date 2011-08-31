@@ -43,6 +43,7 @@
 			private function nodeSingleClick(evt:NodeClickEvent):void {
 			//	Alert.show("singleClick "+evt.nodeId);
 				searchNodeText.text = evt.nodeId;
+				filterPageName.text = evt.nodeName; 
 				trace("singleClick "+evt.nodeId);
 			}
 			private function nodeDoubleClick(evt:NodeClickEvent):void {
@@ -594,11 +595,41 @@
 				}
 				if ( lengthMax == 0 )
 					lengthMax = int.MAX_VALUE;
-				if ( this._mode == this.PATH_MODE )
+				if ( this._mode == this.PATH_MODE ){
+					(_curGraph as Path).setFilterPageName(filterPageName.text);
 					(_curGraph as Path).filter(userMin, userMax, lengthMin, lengthMax);
-				else if ( this._mode == this.FR_PATH_MODE )
+				}else if ( this._mode == this.FR_PATH_MODE ) {
+					(_curGraph as FRPath).setFilterPageName(filterPageName.text);
 					(_curGraph as FRPath).filter(userMin, userMax, lengthMin, lengthMax);
+				}
 					
+				setGraph(_curGraph);
+				_curGraph.draw();
+			}
+			
+			private function frPathFilter():void {
+				if ( this._mode != this.FR_PATH_MODE )
+					return ;
+				var userMin:int = new int(pathUserMin.text);
+				var userMax:int = new int(pathUserMax.text);
+				var lengthMin:int = new int(pathLengthMin.text);
+				var lengthMax:int = new int(pathLengthMax.text);
+				if ( userMax != 0 && ( userMax < userMin ) ) {
+					Alert.show("提示：用户数上限值必须大于下限值，或者为0表示无上限。");
+					return ;
+				}
+				if ( userMax == 0 )
+					userMax = int.MAX_VALUE;
+				if ( lengthMax != 0 && ( lengthMax < lengthMin ) ) {
+					Alert.show("提示：路径长度上限值必须大于下限值，或者为0表示无上限。");
+					return ;
+				}
+				//if ( this._mode == this.PATH_MODE )
+					//(_curGraph as Path).filter(userMin, userMax, lengthMin, lengthMax);
+				if ( this._mode == this.FR_PATH_MODE ) {
+					(_curGraph as FRPath).setFilterPageName(filterPageName.text);
+					(_curGraph as FRPath).filter(userMin, userMax, lengthMin, lengthMax);
+				}
 				setGraph(_curGraph);
 				_curGraph.draw();
 			}
@@ -918,11 +949,12 @@
 				<mx:Button label="直方图查看" click="showChart()"/>
 				<mx:Button label="折线查看" click="showLineChart()"/>
 				<mx:Button label="漏斗查看" click="showTundish()"/>
+				<mx:HRule width="181" height="1"/>
 				<mx:HBox>
 					<mx:Button label="路径查看" click="findPath()"/>
 					<mx:CheckBox id="mergeRootCheckBox" label="合并根节点" selected="false"/>
 				</mx:HBox>
-				
+				<mx:Button label="频繁路径查看" click="showFRPath()"/>
 				<mx:Label text="用户数："/>
 				<mx:HBox>
 					<mx:Label text="下限"/>
@@ -937,9 +969,13 @@
 					<mx:Label text="上限"/>
 					<mx:TextInput id="pathLengthMax" width="50" text="0" restrict="0-9"/>
 				</mx:HBox>
+				<mx:HBox>
+					<mx:Label text="筛选页面"/>
+					<mx:TextInput id="filterPageName" width="60"/>
+				</mx:HBox>
 				<mx:Button label="路径过滤" click="pathFilter()"/>
+				<mx:HRule width="181" height="1"/>
 				<mx:Button label="图数据查看" click="showGraphData()"/>
-				<mx:Button label="频繁路径查看" click="showFRPath()"/>
 				<mx:Button label="文件目录查看" click="fileDir()"/>
 				<mx:Button label="图书流失漏斗分析" click="bookTundish()"/>
 				<mx:Button label="图书流失漏斗展示" click="showBookTundish()"/>

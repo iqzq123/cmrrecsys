@@ -5,10 +5,9 @@ package SNADisplay.org.Graph.Model
 	import flash.utils.Dictionary;
 	
 	import mx.containers.Canvas;
-	
-	import mx.controls.Alert;
 	public class FRPath extends Graph implements IGraph
 	{
+		private var filterPageName:String = "";
 		public function FRPath(id:String, directional:Boolean=false, isFastMode:Boolean=false)
 		{
 			super(id, directional, isFastMode);
@@ -36,7 +35,7 @@ package SNADisplay.org.Graph.Model
 			var graphFullData:IGraphData = new GraphData;
 			var pathXMLList:XMLList = xmlData.descendants("Path");
 			var rootNodeMap:Dictionary = new Dictionary;
-			
+			var filteredPathArr:Array = new Array;
 			var newNode:INode;
 			var newEdge:IEdge;
 			
@@ -45,9 +44,9 @@ package SNADisplay.org.Graph.Model
 				maxUser = int.MAX_VALUE;
 			if ( maxLength <= 0 )
 				maxLength = int.MAX_VALUE;
-
+			filteredPathArr = filterPathByNode(pathXMLList, this.filterPageName);
 			//遍历所有路径
-			for each ( var pathXML:XML in pathXMLList ){
+			for each ( var pathXML:XML in filteredPathArr ){
 				var pagesXMLList:XMLList = pathXML.child("Page");
 				var rootPageId:String = "";
 				//遍历路径中的page
@@ -105,9 +104,30 @@ package SNADisplay.org.Graph.Model
 			return graphFullData;
 		}
 		
+		private function filterPathByNode(pathXMLList:XMLList, filterNodeId:String):Array {
+			var filterPathArr:Array = new Array;
+			for each ( var pathXML:XML in pathXMLList ) {
+				var pagesXMLList:XMLList = pathXML.child("Page");
+				for each ( var pageXML:XML in pagesXMLList ) {
+					var pageName:String = pageXML.attribute("pageName");
+					if ( pageName == filterNodeId || filterNodeId == ""){
+						filterPathArr.push(pathXML);
+						break;
+					}
+				}
+			}
+			return filterPathArr;
+		}
+		
 		override public function filter(minUser:Number = -1,maxUser:Number = -1,minLength:Number = -1,maxLength:Number = -1):void {
-			_graphData = initFromXML(_xmlData,minUser,maxUser,minLength,maxLength);
+			_graphFullData = initFromXML(_xmlData,minUser,maxUser,minLength,maxLength);
+			_graphData.nodes = _graphFullData.nodes.concat();
+			_graphData.edges = _graphFullData.edges.concat();
 			this.updateFilteredGraph();
+		}
+		
+		public function setFilterPageName(n:String):void {
+			this.filterPageName = n;
 		}
 	}
 }
