@@ -9,6 +9,8 @@
 			import mx.controls.Alert;
 			[Bindable]
 			private var dgData:ArrayCollection = new ArrayCollection;
+			private var xmlData:XML;
+			private var nameArr:Array = new Array;
 			
 			private function closeHandle():void {
 	   			PopUpManager.removePopUp(this);
@@ -16,35 +18,32 @@
 	   		public function init( xmlData:XML = null ):void {
 	   			var columnsArr:Array = new Array;
 	   			var column:DataGridColumn;
-	   			 var attribut:XML;
+	   			var attribut:XML;
 	   			var itemXML:XML;
-	   			
+	   			this.xmlData = xmlData;
 	   			dgData = new ArrayCollection;
-	   			
 	   			var itemsXMLList:XMLList = xmlData.children();
 	   			itemXML = itemsXMLList[0];
-				
 				this.title = xmlData.name();
 				//Alert.show(itemsXMLList.toString());
 				var s:String = "";
+				var tempArr:Array = new Array;
 				for each ( attribut in itemXML.attributes() ){
 			     	column = new DataGridColumn;
 		   			column.headerText = attribut.name();
 		   			column.dataField = attribut.name();
+		   			
 		   			if ( attribut.name() == xmlData.name() ){
-		   				var tempArr:Array = new Array;
+		   				
 		   				tempArr.push(column);
-		   				//columnsArr = temArr + columnsArr
 		   			}
 		   			else {
-		   				
-		   			}
-		   			columnsArr.push(column);
-		   			//columnsArr.
-		   			column.sortCompareFunction = sortFunc(attribut.name());
-		   			
+		   				columnsArr.push(column);
+		   			} 
+		   			//column.sortCompareFunction = sortFunc(attribut.name());
+		   			nameArr.push(attribut.name().toString());
 			    }
-			    
+			    columnsArr = tempArr.concat(columnsArr);
 			    dataGrid.columns = columnsArr;
 			    for each ( itemXML in itemsXMLList ){
 			    	var o:Object = new Object;
@@ -56,10 +55,9 @@
 	   		}
 	   		
 	   		private static function sortFunc(field:String):Function {                          
-
-                          return function(obj1:Object, obj2:Object):int {
-                                return sortcompare(obj1[field], obj2[field]);
-                         }
+                  return function(obj1:Object, obj2:Object):int {
+                        return sortcompare(obj1[field], obj2[field]);
+                 }
             }
 
 	   		
@@ -74,9 +72,53 @@
                             return 0;
                     }
             }
+            
+            private function serach(event:Event):void {
+            	var searchContent:String = searchTextInput.text;
+            	if ( searchContent == "" )
+            		return ;
+            	var find:Boolean = false;
+	   			var itemsXMLList:XMLList = this.xmlData.children();
+	   			var itemXML:XML;
+	   			var attribut:XML;
+	   			var targetRow:int = dataGrid.selectedIndex + 1;
+	   			itemXML = itemsXMLList[0];
+	   			for( var i:int = 0 ; i < dgData.length ; i ++, targetRow ++ ){
+	   				targetRow = targetRow % dgData.length;
+				     var o:Object = dgData.getItemAt(targetRow);
+				     for each ( var name:String in this.nameArr ){
+				     	if ( fullMatchCheckBox.selected ){
+				     		if ( (o[name] as String ) == searchContent ){
+					     		find = true;
+					     		break;
+					     	}
+				     	}
+				     	else {
+				     		if ( (o[name] as String ).indexOf(searchContent) != -1 ){
+					     		find = true;
+					     		break;
+					     	}
+				     	}
+				     }
+				     if ( find == true )
+				     	break;
+				}
+				if ( find == true ){
+					dataGrid.selectedIndex = targetRow;
+					dataGrid.scrollToIndex(targetRow);
+				}
+            }
 		]]>
 	</mx:Script>
-	<mx:DataGrid id="dataGrid" width="100%" height="100%" textAlign="center" 
-					dataProvider="{dgData}" sortableColumns="true" draggableColumns="false">
-	</mx:DataGrid>
+	<mx:VBox paddingTop="5" paddingLeft="10" width="100%" height="100%" paddingRight="10" paddingBottom="5">
+		<mx:HBox paddingLeft="20" fontSize="12">
+			<mx:TextInput id="searchTextInput" width="70" />
+			<mx:Button label="搜索" click="serach(event)"/>
+			<mx:CheckBox id="fullMatchCheckBox" label="完全匹配" selected="true" paddingLeft="10"/>
+		</mx:HBox>
+		<mx:DataGrid id="dataGrid" width="100%" height="100%" textAlign="center" 
+					dataProvider="{dgData}" sortableColumns="true" draggableColumns="false" >
+		</mx:DataGrid>
+	</mx:VBox>
+	
 </mx:TitleWindow>
