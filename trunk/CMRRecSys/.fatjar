@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Mon Aug 29 19:20:08 CST 2011
+onejar.license.required=false
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=C\:\\Users\\Administrator\\Desktop\\rec.jar
+manifest.mergeall=true
+manifest.mainclass=org.tseg.Starter
+manifest.file=<createnew>
+jarname.isextern=true
+onejar.expand=
+excludes=
+includes=

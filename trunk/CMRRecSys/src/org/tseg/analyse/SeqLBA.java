@@ -96,6 +96,7 @@ public class SeqLBA extends Analyse {
 		// TODO Auto-generated method stub
 		this.saveAndClean();
 		this.saveHistogram();
+		/////////////////////
 	}
 
 	@Override
