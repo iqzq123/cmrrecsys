@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="490" height="376"
+	 creationPolicy="all">
+	 <mx:Script>
+	 	<![CDATA[
+	 		import mx.rpc.events.FaultEvent;
+			import mx.rpc.http.mxml.HTTPService;
+			import mx.rpc.events.ResultEvent;
+			import mx.managers.PopUpManager;
+			import mx.controls.Alert;
+			
+			private var fileWindow:FileWindow;
+			private var selectedButton:String;
+			
+			private function openFileWindow(e:Event):void {
+				selectedButton = ((e.target) as Button).id;
+				fileWindow = new FileWindow;
+				PopUpManager.addPopUp(fileWindow,this,true);
+				PopUpManager.centerPopUp(fileWindow);
+				fileWindow.addEventListener(Event.SELECT, getPath);
+			}
+			
+			private function getPath(e:Event):void {
+				if(selectedButton == "bt1" ) {
+					textinput1.text = fileWindow.getFilePath();
+				}
+				else if(selectedButton == "bt2") {
+					textinput2.text = fileWindow.getFilePath();
+				}
+//				else if(selectedButton == "bt3") {
+//					textinput3.text = fileWindow.getFilePath();
+//				}
+//				else if(selectedButton == "bt4") {
+//					textinput4.text = fileWindow.getFilePath();
+//				}
+//				else if(selectedButton == "bt5") {
+//					textinput5.text = fileWindow.getFilePath();
+//				}
+//				else if(selectedButton == "bt6") {
+//					textinput6.text = fileWindow.getFilePath();
+//				}
+//				else if(selectedButton == "bt7") {
+//					textinput7.text = fileWindow.getFilePath();
+//				}
+			}
+			
+			private function checkTextInput():Boolean {
+				if(textinput1.text == "") {
+					Alert.show("输入路径不能为空");
+					return false;
+				}
+				else if (textinput2.text == "") {
+					Alert.show("输出路径不能为空");
+					return false;
+				}
+				else if (textinput3.text == "") {
+					Alert.show("分析类型不能为空");
+					return false;
+				}
+				else if (textinput4.text == "") {
+					Alert.show("是否求闭集不能为空");
+					return false;
+				}
+				else if (textinput5.text == "") {
+					Alert.show("最长频繁路径程度不能为空");
+					return false;
+				}
+				else if (textinput6.text == "") {
+					Alert.show("最小支持度不能为空");
+					return false;
+				}
+				else if (textinput7.text == "") {
+					Alert.show("支持度衰减比例不能为空");
+					return false;
+				}
+				return true;
+			}
+			
+			private function submit():void {
+				if(checkTextInput()) {
+					var FPAAnalyse:HTTPService = new HTTPService();
+					FPAAnalyse.resultFormat="e4x";
+					FPAAnalyse.url="FPAAnalyse";
+					var params:URLVariables = new URLVariables();
+					params.inputPath = textinput1.text;
+					params.outputPath = textinput2.text;
+					params.type = textinput3.text;
+					params.Closed = textinput4.text;
+					params.maxFPLenght = textinput5.text;
+					params.MinRatio = textinput6.text;
+					params.DecayRatio = textinput7.text;
+					
+					FPAAnalyse.send(params);
+					closeHandle();
+				}
+			}
+			
+			private function closeHandle():void {
+	   			PopUpManager.removePopUp(this);
+	   		}
+	 	]]>
+	 </mx:Script>
+
+	<mx:Label x="50" y="40" text="输入路径" fontSize="15"/>
+	<mx:Label x="50" y="70" text="输出路径" fontSize="15"/>
+	<mx:Label x="50" y="100" text="分析类型" fontSize="15"/>
+	<mx:Label x="50" y="130" text="是否求闭集" fontSize="15"/>
+	<mx:Label x="50" y="160" text="最长频繁路径程度" fontSize="15"/>
+	<mx:Label x="50" y="190" text="最小支持度" fontSize="15"/>
+	<mx:Label x="50" y="220" text="支持度衰减比例" fontSize="15"/>
+	<mx:TextInput id="textinput1" x="190" y="40" width="182"/>
+	<mx:TextInput id="textinput2" x="190" y="70" width="182"/>
+	<mx:TextInput id="textinput3" x="190" y="100" width="182"/>
+	<mx:TextInput id="textinput4" x="190" y="130" width="182"/>
+	<mx:TextInput id="textinput5" x="190" y="160" width="182"/>
+	<mx:TextInput id="textinput6" x="190" y="190" width="182"/>
+	<mx:TextInput id="textinput7" x="190" y="220" width="182"/>
+	<mx:Button id="bt1" x="379" y="40" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
+	<mx:Button id="bt2" x="379" y="70" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
+	<mx:Button x="281" y="280" label="确定" fontSize="12" click="submit()"/>
+	<mx:Button x="374" y="280" label="取消" fontSize="12" click="closeHandle()"/>
+	<!--<mx:Button id="bt3" x="379" y="100" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
+	<mx:Button id="bt4" x="379" y="130" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
+	<mx:Button id="bt5" x="379" y="160" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
+	<mx:Button id="bt6" x="379" y="190" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
+	<mx:Button id="bt7" x="379" y="220" label="浏览.." fontSize="12" click="openFileWindow(event)"/>-->
+</mx:TitleWindow>
