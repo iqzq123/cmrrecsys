@@ -16,7 +16,7 @@ public class FPAAnalyseServlet extends HttpServlet {
 	public String SEPARATOR = "@@@"; 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException {
-		System.out.println("------------------½øÈëFPAAnalyseServlet");
+		System.out.println("------------------ï¿½ï¿½ï¿½ï¿½FPAAnalyseServlet");
 		String inputPath = java.net.URLDecoder.decode(request.getParameter("inputPath"), "UTF-8");
 		String outputPath = java.net.URLDecoder.decode(request.getParameter("outputPath"), "UTF-8");
 		String type = java.net.URLDecoder.decode(request.getParameter("type"), "UTF-8");
@@ -25,8 +25,11 @@ public class FPAAnalyseServlet extends HttpServlet {
 		String MinRatio = java.net.URLDecoder.decode(request.getParameter("MinRatio"), "UTF-8");
 		String DecayRatio = java.net.URLDecoder.decode(request.getParameter("DecayRatio"), "UTF-8");
 		
+		
+		String webRootPath=getServletContext().getRealPath("/");
+		System.out.print("webRootPath"+webRootPath);
 		Properties properties = new Properties();
-		InputStream in = new FileInputStream("../webapps/RecSysVisual/config/config.properties");
+		InputStream in = new FileInputStream(webRootPath+"config/config.properties");
 		properties.load(in);
 		String fileDir = "";
 		fileDir = properties.getProperty("directory");		

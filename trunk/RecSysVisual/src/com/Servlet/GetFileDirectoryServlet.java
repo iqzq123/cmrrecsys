@@ -27,6 +27,8 @@ public class GetFileDirectoryServlet extends HttpServlet {
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException {
+		
+		
 		response.setContentType("text/xml;charset=utf-8");
 		response.setCharacterEncoding("utf-8");
 		PrintWriter out = response.getWriter();
@@ -34,8 +36,9 @@ public class GetFileDirectoryServlet extends HttpServlet {
 		FileDirectoryBuilder getFileDirectory = new FileDirectoryBuilder();
 		String str = "";
 		Properties properties = new Properties();
-		System.out.println("cur Directory:"+curDir.getCanonicalPath());
-		InputStream in = new FileInputStream("../webapps/RecSysVisual/config/config.properties");
+		String webRootPath=getServletContext().getRealPath("/");
+		System.out.print("webRootPath"+webRootPath);
+		InputStream in = new FileInputStream(webRootPath+"config/config.properties");
 		properties.load(in);
 		String fileDir = "";
 		fileDir = properties.getProperty("directory");

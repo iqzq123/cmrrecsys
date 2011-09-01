@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Properties;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +18,7 @@ import org.tseg.Starter;
 import com.XMLFileReader;
 
 
-public class AnalyseStarterServlet extends HttpServlet {
+  public class   AnalyseStarterServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException {
 		System.out.println("in start servlet1111111122222222222222222");
@@ -31,18 +32,17 @@ public class AnalyseStarterServlet extends HttpServlet {
 		System.out.println("servlet outputPath: \n"+outputPath);
 		
 		Starter s=new Starter();
-		System.out.println("new Starter()..............................");
-		//s.setInputPath("E:/data/pagevisit/test.txt");
 		s.setInputPath(inputPath);
-		//s.setOutputPath("E:/data/pagevisit/testout.txt"); 
 		s.setOutputPath(outputPath);
-		InputStream in = new FileInputStream("../webapps/RecSysVisual/config/config.properties");
+		String webRootPath=getServletContext().getRealPath("/");
+		System.out.print("webRootPath"+webRootPath);
+		InputStream in = new FileInputStream(webRootPath+"/config/config.properties");
 		Properties properties = new Properties();
 		properties.load(in);
 		String fileDir = "";
 		fileDir = properties.getProperty("directory");
 		s.setSiteDataPath(fileDir);
-		System.out.println("s.setSiteDataPath..............................");
+		
 		//s.setNegCate(true);
 		try{
 			s.start(cmd);//"PathFinderClass	2?	|?100?	|?login*;	|;������ʾҳ��");
