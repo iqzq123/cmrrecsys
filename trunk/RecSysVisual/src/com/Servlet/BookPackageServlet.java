@@ -1,5 +1,6 @@
 package com.Servlet;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -20,10 +21,12 @@ public class BookPackageServlet extends HttpServlet{
 		response.setCharacterEncoding("utf-8");
 		
 		String tundishPath = java.net.URLDecoder.decode(request.getParameter("tundishPath"), "UTF-8");
-		String packagePath = java.net.URLDecoder.decode(request.getParameter("packagePath"),"UTF-8");
+//		String packagePath = java.net.URLDecoder.decode(request.getParameter("packagePath"),"UTF-8");
 		String bookID = java.net.URLDecoder.decode(request.getParameter("bookID"),"UTF-8");
 		int n = Integer.parseInt(java.net.URLDecoder.decode(request.getParameter("n"), "UTF-8"));
 		
+		File file = new File(tundishPath);
+		String packagePath = file.getParent()+"/bookPackage.xml";
 		BookPackage bookPackage = new BookPackage();
 		
 		bookPackage.setInputPath(tundishPath);
