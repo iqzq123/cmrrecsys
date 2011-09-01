@@ -62,5 +62,14 @@
     <url-pattern>/getBookPackage</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+    <servlet-name>FPAAnalyse</servlet-name>
+    <servlet-class>com.Servlet.FPAAnalyseServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>FPAAnalyse</servlet-name>
+    <url-pattern>/FPAAnalyse</url-pattern>
+  </servlet-mapping>
+  
 </web-app>
 
