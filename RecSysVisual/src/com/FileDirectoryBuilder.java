@@ -123,14 +123,14 @@ public class FileDirectoryBuilder
         //���fΪĿ¼������ǰf������
         while(f.isDirectory() && i < list.length)
         {
-        	childFile = new File(f.getPath() + "\\" + list[i]);
+        	childFile = new File(f.getPath() + System.getProperty("file.separator") + list[i]);
         	//����������ļ�����ʱ���浽������
         	if ( childFile.isFile() ){
         		fileArr.add(childFile);
         	}
         	//���������Ŀ¼�����еݹ�
         	else {
-        		Element childNode = getFile(new File(f.getPath() + "\\" + list[i]));
+        		Element childNode = getFile(new File(f.getPath() + System.getProperty("file.separator") + list[i]));
                 node.appendChild(childNode);
         	}
         	i++;
