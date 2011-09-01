@@ -32,7 +32,7 @@ public class MarkovModel {
 	private HashMap pageMap = new HashMap();
 	private int clickAmout = 0;
 
-	public void saveRelatedPage(String fileName) {
+	public void saveRelatedPage(String fileName,int minLinkNum) {
 		
 		try {
 			
@@ -52,7 +52,7 @@ public class MarkovModel {
 				if (val2 != null) {
 					double min = Math.min(val, val2);
 					double ratio = 0.5 - (min / (val + val2));
-					if (ratio < 0.2&&min>10.0) {
+					if (ratio < 0.2&&min>minLinkNum) {
 						page[0]=Preprocessor.getPageName(page[0]);
 						page[1]=Preprocessor.getPageName(page[1]);
 						rawGraph.addEdge(page[0], page[1]);
@@ -84,7 +84,7 @@ public class MarkovModel {
 
 	}
 	
-	public void saveRelatedPageXML(String fileName){
+	public void saveRelatedPageXML(String fileName,int minLinkNum){
 		
 		try {
 			
@@ -113,7 +113,7 @@ public class MarkovModel {
 				if (val2 != null) {
 					double min = Math.min(val, val2);
 					double ratio = 0.5 - (min / (val + val2));
-					if (ratio < 0.2&&min>10.0) {
+					if (ratio < 0.2&&min>minLinkNum) {
 						page[0]=Preprocessor.getPageName(page[0]);
 						page[1]=Preprocessor.getPageName(page[1]);
 						rawGraph.addEdge(page[0], page[1]);

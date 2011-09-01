@@ -58,8 +58,8 @@ public class GlobalAnalyse extends Analyse {
 		// TODO Auto-generated method stub
 		this.globalModel.saveModelMXL(this.getOutputPath() + "/gModel"+this.getType()+".xml", minLinkNum,
 				false);
-		this.globalModel.saveRelatedPage(this.getOutputPath() + "/relPage"+this.getType()+".txt");
-		this.globalModel.saveRelatedPageXML(this.getOutputPath() + "/relPage"+this.getType()+".xml");
+		this.globalModel.saveRelatedPage(this.getOutputPath() + "/relPage"+this.getType()+".txt",minLinkNum);
+		this.globalModel.saveRelatedPageXML(this.getOutputPath() + "/relPage"+this.getType()+".xml",minLinkNum);
 		this.saveSortedPage(this.getOutputPath() + "/page_uv"+this.getType()+".xml", "userNum");
 		this.saveSortedPage(this.getOutputPath() + "/page_pv"+this.getType()+".xml", "clickNum");
 		this.saveSortedPage(this.getOutputPath() + "/page_duration"+this.getType()+".xml", "duration");
