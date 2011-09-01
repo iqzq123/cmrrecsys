@@ -191,7 +191,11 @@ public class StatAnalyse extends Analyse {
 			for(String page:pageArray){
 				set.add(page);
 			}
-			this.pageNumHis.getDataList().add(set.size()-2);
+			int num=set.size()-2;
+			if(num<0){
+				num=0;
+			}
+			this.pageNumHis.getDataList().add(num);
 			// System.out.println(s);
 		}
 
