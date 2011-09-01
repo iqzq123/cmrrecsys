@@ -3,6 +3,7 @@ package org.tseg;
 import java.util.HashMap;
 
 import org.tseg.Ulits.AnalyseType;
+import org.tseg.Ulits.Separator;
 import org.tseg.analyse.Analyse;
 import org.tseg.analyse.AnalyseRunner;
 import org.tseg.analyse.PathFinder;
@@ -12,12 +13,11 @@ import org.tseg.analyse.Tundish;
 
 public class Starter {
 
-	private String firstSplit = "\n";
-	private String secondSplit = "\t";
+	
 	private String inputPath = "";
 	private String outputPath = "";
 	private String siteDataPath = "";
-	private boolean isNegCate = false;
+	private String logSplit="\\|";
 	private HashMap<String, Analyse> analyseMap = new HashMap<String, Analyse>();
 
 	public Analyse getInstanceByName(String name) {
@@ -54,17 +54,19 @@ public class Starter {
 	public void start(String cmd) throws Exception {
 
 		AnalyseRunner b = new AnalyseRunner();
+	
 		b.setInputPath(this.inputPath);
 		b.setOutputPath(this.outputPath);
 		b.setSiteDataPath(this.siteDataPath);
-		b.setNegCate(this.isNegCate);
-		String[] cmdArray = cmd.split(this.firstSplit);
+		b.setLogSplit(this.logSplit);
+		
+		String[] cmdArray = cmd.split(Separator.cmdLineSeparator);
 		for (String cmdLine : cmdArray) {
-			String[] strArray = cmdLine.split(this.secondSplit);
+			String[] strArray = cmdLine.split(Separator.cmdSeparator);
 			String name = strArray[0];
 			String param = "";
 			for (int i = 1; i < strArray.length; i++) {
-				param += strArray[i] + this.secondSplit;
+				param += strArray[i] + Separator.cmdSeparator;
 			}
 			param = param.substring(0, param.length() - 1);
 			// Analyse analyse = this.analyseMap.get(name);
@@ -84,18 +86,19 @@ public class Starter {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Starter s = new Starter();
-		s.setInputPath("E:/data/pagevisit/pv6.txt");
-		s.setOutputPath("E:/data/pagevisit/testtunish");
+		s.setLogSplit("\\|");
+		s.setInputPath("E:/pvdata.txt");
+		s.setOutputPath("E:/data/pvData/pvdataout");
 		s.setSiteDataPath("E:/data");
 		try {
 			String cmd = "StatAnalyse\t" + AnalyseType.NegCate + "\n"
 					+ "StatAnalyse\t" + AnalyseType.PageToCate + "\n"
 					+ "StatAnalyse\t" + AnalyseType.Original + "\n"
-					+ "GlobalAnalyse\t" + AnalyseType.Original + "\n"
-					+ "GlobalAnalyse\t" + AnalyseType.PageToCate + "\n"
-					+ "GlobalAnalyse\t" + AnalyseType.NegCate;
+					+ "GlobalAnalyse\t" + AnalyseType.Original +Separator.PARAM_SEPARATOR1+1+ "\n"
+					+ "GlobalAnalyse\t" + AnalyseType.PageToCate + Separator.PARAM_SEPARATOR1+1+"\n"
+					+ "GlobalAnalyse\t" + AnalyseType.NegCate+Separator.PARAM_SEPARATOR1+1;
 			String cmd2 = "PathFinderClass	1@@@1@@@0@@@1@@@0@@@全国手机阅读首页###取消包月成功提示页面&&&女生首页###取消包月成功提示页面&&&原创首页###取消包月成功提示页面&&&畅销首页###取消包月成功提示页面&&&全国手机阅读首页###专区包月结果确认页&&&女生首页###专区包月结果确认页&&&原创首页###专区包月结果确认页&&& 畅销首页###专区包月结果确认页";
-			s.start(cmd2);
+			s.start(cmd);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -105,22 +108,6 @@ public class Starter {
 
 	public HashMap<String, Analyse> getAnalyseMap() {
 		return analyseMap;
-	}
-
-	public String getFirstSplit() {
-		return firstSplit;
-	}
-
-	public void setFirstSplit(String firstSplit) {
-		this.firstSplit = firstSplit;
-	}
-
-	public String getSecondSplit() {
-		return secondSplit;
-	}
-
-	public void setSecondSplit(String secondSplit) {
-		this.secondSplit = secondSplit;
 	}
 
 	public String getInputPath() {
@@ -147,12 +134,14 @@ public class Starter {
 		this.siteDataPath = siteDataPath;
 	}
 
-	public boolean isNegCate() {
-		return isNegCate;
+	public String getLogSplit() {
+		return logSplit;
 	}
 
-	public void setNegCate(boolean isNegCate) {
-		this.isNegCate = isNegCate;
+	public void setLogSplit(String logSplit) {
+		this.logSplit = logSplit;
 	}
+
+
 
 }

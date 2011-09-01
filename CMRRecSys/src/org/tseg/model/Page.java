@@ -18,6 +18,9 @@ public class Page {
 		if (property.equals("duration")) {
 			return this.duration;
 		}
+		if(property.equals("AverPerPv")){
+			return this.getAverPerPv();
+		}
 		return -1;
 	}
 	public boolean isMoreThan(Page p, String property) {
@@ -42,6 +45,13 @@ public class Page {
 				return true;
 			}
 		}
+		if(property.equals("AverPerPv")){
+			if(this.getAverPerPv()<p.getAverPerPv()){
+				return false;
+			}else{
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -62,6 +72,17 @@ public class Page {
 
 	}
 
+	public  int getAverPerPv(){
+		
+		int aver=0;
+		if(this.userNum!=0){
+			aver=this.clickNum/this.userNum;
+			return aver;
+		}else{
+			return -1;
+		}
+		
+	}
 	public void setPageName(String pageName) {
 		this.pageName = pageName;
 	}

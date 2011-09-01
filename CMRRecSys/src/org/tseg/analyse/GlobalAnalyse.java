@@ -34,6 +34,7 @@ public class GlobalAnalyse extends Analyse {
 		// TODO Auto-generated method stub
 		String[] paramArray = params.split(Separator.PARAM_SEPARATOR1);
 		this.setType(Byte.parseByte(paramArray[0]));
+		this.minLinkNum=Integer.parseInt(paramArray[1]);
 		
 	}
 
@@ -41,6 +42,7 @@ public class GlobalAnalyse extends Analyse {
 	private MarkovModel curPerModel = null;	
 	private String curPerID = "";
 	private String subFloder="";
+	private int minLinkNum=100;
 	private int maxPerModelNum=100;
 	private int curPerModelNum=0;
 	@Override
@@ -54,12 +56,14 @@ public class GlobalAnalyse extends Analyse {
 	@Override
 	public void onReadEnd() throws IOException {
 		// TODO Auto-generated method stub
-		this.globalModel.saveModelMXL(this.getOutputPath() + "/gModel"+this.getType()+".xml", 40,
+		this.globalModel.saveModelMXL(this.getOutputPath() + "/gModel"+this.getType()+".xml", minLinkNum,
 				false);
 		this.globalModel.saveRelatedPage(this.getOutputPath() + "/relPage"+this.getType()+".txt");
+		this.globalModel.saveRelatedPageXML(this.getOutputPath() + "/relPage"+this.getType()+".xml");
 		this.saveSortedPage(this.getOutputPath() + "/page_uv"+this.getType()+".xml", "userNum");
 		this.saveSortedPage(this.getOutputPath() + "/page_pv"+this.getType()+".xml", "clickNum");
 		this.saveSortedPage(this.getOutputPath() + "/page_duration"+this.getType()+".xml", "duration");
+		this.saveSortedPage(this.getOutputPath()+"/page_AverPerPv"+this.getType()+".xml", "AverPerPv");
 
 	}
 
@@ -151,6 +155,7 @@ public class GlobalAnalyse extends Analyse {
 			page.setAttribute("userNum",String.valueOf(p.getUserNum()));
 			page.setAttribute("clickNum",String.valueOf(p.getClickNum()));
 			page.setAttribute("duration",String.valueOf(p.getDuration()));
+			page.setAttribute("人均pv数", String.valueOf(p.getAverPerPv()));
 			root.appendChild(page);
 		}
 	
@@ -257,6 +262,14 @@ public class GlobalAnalyse extends Analyse {
 
 	public void setMaxPerModelNum(int maxPerModelNum) {
 		this.maxPerModelNum = maxPerModelNum;
+	}
+
+	public int getMinLinkNum() {
+		return minLinkNum;
+	}
+
+	public void setMinLinkNum(int minLinkNum) {
+		this.minLinkNum = minLinkNum;
 	}
 
 }

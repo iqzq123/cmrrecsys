@@ -16,80 +16,11 @@ public class AnalyseRunner {
 	private String outputPath;
 	private List<Analyse> analyseList=new ArrayList<Analyse>();	
 	private int progress = 0;	
+	private String logSplit="\\|";
 	
 	public void addAnalyse(Analyse analyse){
 		this.analyseList.add(analyse);
 	}
-
-	public void test() throws IOException {
-		
-		LogBasicAnalyse lba = new LogBasicAnalyse();
-		MarkovModelBuilder marbuilder = new MarkovModelBuilder();
-
-		Preprocessor.readMapFile(this.siteDataPath);
-
-		FileReader fr = new FileReader(this.inputPath);
-		BufferedReader reader = new BufferedReader(fr);
-		String str;
-		reader.readLine();
-		int cnt = 0;
-		while ((str = reader.readLine()) != null) {
-
-			String[] strArray = str.split(",");
-			Preprocessor.process(strArray);
-			
-			marbuilder.buildGlobalModel(strArray);
-			marbuilder.buildPersonModel(strArray);
-			lba.readLog(strArray);
-
-			cnt++;
-			if (cnt % 10000 == 0) {
-				this.progress++;
-				System.out.println(cnt);
-			}
-		}
-		
-		String outFloder = this.inputPath + ".out";
-		String subOutFloder1 = outFloder + "/pm.txt";
-		String subOutFloder2 = outFloder + "/gm.txt";
-		Ulits.newFolder(outFloder);
-		Ulits.newFolder(subOutFloder1);
-		Ulits.newFolder(subOutFloder2);
-
-		System.out.println(outFloder);
-
-		// //////////15277093617
-
-		long a=System.currentTimeMillis();
-		lba.savePerHis(outFloder + "/his.txt");
-		long b=System.currentTimeMillis();
-		String s=String.valueOf(a-b)+"mm";
-		System.out.println(s);
-		lba.getFrePath(outFloder + "/fp.txt");
-		lba.savePaths(outFloder + "/path.txt");
-
-		marbuilder.getGlobalModel().saveModel(outFloder + "/am.txt", 0,
-				false);
-		marbuilder.getGlobalModel().saveModelMXL(outFloder + "/am.xml",
-				400, false);
-		marbuilder.savePersonModels(subOutFloder1);
-
-		lba.saveSenNumHistogram(outFloder + "/logNum.xml");
-		lba.saveDurationHistogram(outFloder + "/duration.xml");
-
-//		Cluster c = new Cluster();
-//		c.setDataIter(this.marbuilder.getPersonModelMap());
-//		c.getSimGraph(outFloder + "/simGraph.txt");
-//		c.runFastGN(outFloder + "/simGraph.txt", outFloder + "/cluster.txt");
-//
-//		this.marbuilder.buildGroupModel(c.getCommunityList(), subOutFloder2);
-		System.out.println("success11111111112222");
-		
-
-	}
-
-
-	
 
 	public void seqRun()throws IOException{
 		
@@ -116,7 +47,10 @@ public class AnalyseRunner {
 		while ((str = reader.readLine()) != null) {
 			
 
-			String[] strArray = str.split(",");
+			String[] strArray = str.split(this.logSplit);
+			if(strArray.length<32){
+				continue;
+			}
 			//Preprocessor.process(strArray);
 			for(Analyse analyse:this.analyseList){
 				String[] proArray=Preprocessor.run(strArray, analyse.getType());
@@ -146,16 +80,10 @@ public class AnalyseRunner {
 
 		try {
 
-			b.setInputPath("E:/data/pagevisit/pv6.txt");
-			b.setOutputPath(b.getInputPath()+".out2");
+			b.setInputPath("E:/data/pagevisit/test.txt");
+			b.setOutputPath(b.getInputPath()+".out");
 			b.setSiteDataPath("E:/data");
-			b.setNegCate(true);
-			
-					
-			StatAnalyse slba=new StatAnalyse();	
-			slba.setMaxCacheNum(1000);
-			b.addAnalyse(slba);
-		
+				
 			GlobalAnalyse mk=new GlobalAnalyse();
 			b.addAnalyse(mk);
 			b.seqRun();
@@ -201,13 +129,14 @@ public class AnalyseRunner {
 		this.progress = progress;
 	}
 
-	public boolean isNegCate() {
-		return Preprocessor.isNegCate();
+
+
+	public String getLogSplit() {
+		return logSplit;
 	}
 
-	public void setNegCate(boolean isNegCate) {
-		//this.replacer.setNegCate(isNegCate);
-		Preprocessor.setNegCate(isNegCate);
+	public void setLogSplit(String logSplit) {
+		this.logSplit = logSplit;
 	}
 
 }
