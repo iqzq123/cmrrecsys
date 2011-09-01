@@ -36,7 +36,7 @@ import com.XMLFileReader;
 		s.setOutputPath(outputPath);
 		String webRootPath=getServletContext().getRealPath("/");
 		System.out.print("webRootPath"+webRootPath);
-		InputStream in = new FileInputStream(webRootPath+"/config/config.properties");
+		InputStream in = new FileInputStream(webRootPath+"config/config.properties");
 		Properties properties = new Properties();
 		properties.load(in);
 		String fileDir = "";
