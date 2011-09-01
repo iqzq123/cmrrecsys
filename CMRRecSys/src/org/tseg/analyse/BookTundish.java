@@ -124,7 +124,7 @@ public class BookTundish {
 			// 用xmlserializer把document的内容进行串化
 			FileOutputStream os = null;
 			OutputFormat outformat = new OutputFormat(doc);
-			os = new FileOutputStream(this.tundishPath + "/tundish.xml");
+			os = new FileOutputStream(this.tundishPath);
 			XMLSerializer xmlSerilizer = new XMLSerializer(os, outformat);
 			xmlSerilizer.serialize(doc);
 
