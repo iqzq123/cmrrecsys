@@ -15,8 +15,8 @@ public class Preprocessor {
 
 	static private HashMap pageMap = new HashMap();
 	static private HashMap categoryMap = new HashMap();
-	static private boolean isNegCate = false;
-
+	
+	
 	static public String getPageName(String key) {
 		
 
@@ -135,25 +135,7 @@ public class Preprocessor {
 		return retArray;
 	}
 
-	static public void process(String[] strArray) {
-		
-		if (isNegCate == true) {
 
-			strArray[6] = "$";
-			strArray[7] = "$";
-			strArray[8] = "$";
-			strArray[9] = "$";
-			strArray[13] = "$";
-			strArray[14] = "$";
-			strArray[15] = "$";
-			strArray[16] = "$";
-			strArray[18] = "$";
-			strArray[19] = "$";
-			strArray[20] = "$";
-			strArray[21] = "$";
-		}
-
-	}
 
 	static public void readMapFile(String fileName) throws IOException {
 
@@ -161,24 +143,22 @@ public class Preprocessor {
 				new File(fileName + "/iread_pagename.txt")), "UTF-8");
 		BufferedReader reader = new BufferedReader(read);
 
-		FileReader fr = new FileReader(fileName + "/iread_pagename.txt");
-		// BufferedReader reader = new BufferedReader(fr);
+
 		String str;
 		reader.readLine();
 		while ((str = reader.readLine()) != null) {
-			String[] strArray = str.split(",");
-			pageMap.put(strArray[0], strArray[1]);
+			String[] strArray = str.split(Separator.DATA_SEPARATOR);
+			pageMap.put(strArray[1], strArray[2]);
 		}
 
 		InputStreamReader read1 = new InputStreamReader(new FileInputStream(
 				new File(fileName + "/iread_sanode.txt")), "UTF-8");
 		BufferedReader reader1 = new BufferedReader(read1);
-		// FileReader fr1 = new FileReader(fileName + "/iread_sanode.txt");
-		// BufferedReader reader1 = new BufferedReader(fr1);
+
 		String str1;
 		reader1.readLine();
 		while ((str1 = reader1.readLine()) != null) {
-			String[] strArray = str1.split(",");
+			String[] strArray = str1.split(Separator.DATA_SEPARATOR);
 			for (int i = 0; i < strArray.length / 2; i++) {
 				categoryMap.put(strArray[i * 2 + 1], strArray[i * 2]);
 			}
@@ -196,13 +176,7 @@ public class Preprocessor {
 
 	}
 
-	static public boolean isNegCate() {
-		return isNegCate;
-	}
 
-	static public void setNegCate(boolean isNeg) {
-		isNegCate = isNeg;
-	}
 
 	static public HashMap getPageMap() {
 		return pageMap;
@@ -211,5 +185,7 @@ public class Preprocessor {
 	static public HashMap getCategoryMap() {
 		return categoryMap;
 	}
+
+	
 
 }
