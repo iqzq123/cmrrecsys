@@ -34,6 +34,7 @@ public class FPAnalyser {
 	private String inputPath;
 	private String outputPath;
 	private String siteDataPath;
+	private String logSplit="\\|";
 	private PVHistory curPVHis = null;
 	private FPAlgorithm fpAlgo = new FPAlgorithm();
 	private int maxFPLenght = 10;
@@ -79,7 +80,7 @@ public class FPAnalyser {
 			int cnt = 0;
 			while ((str = reader.readLine()) != null) {
 
-				String[] log = Preprocessor.run(str.split(","), analyseType);
+				String[] log = Preprocessor.run(str.split(logSplit), analyseType);
 				// Preprocessor.tranPageToCate(log);
 				this.onReadLog(log);
 				if (cnt % 10000 == 0) {
@@ -134,6 +135,7 @@ public class FPAnalyser {
 		 * 支持度衰减比例
 		 */
 		FPAnalyser fp = new FPAnalyser();
+		fp.setLogSplit("\\|");
 		String param="E:/data"+Separator.PARAM_SEPARATOR1+
 		"E:/data/pagevisit/pv6.txt"+Separator.PARAM_SEPARATOR1+
 		"E:/data/pagevisit/pv6_close1"+Separator.PARAM_SEPARATOR1+
@@ -464,6 +466,14 @@ public class FPAnalyser {
 
 	public void setSiteDataPath(String siteDataPath) {
 		this.siteDataPath = siteDataPath;
+	}
+
+	public String getLogSplit() {
+		return logSplit;
+	}
+
+	public void setLogSplit(String logSplit) {
+		this.logSplit = logSplit;
 	}
 
 }
