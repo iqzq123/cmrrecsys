@@ -10,4 +10,5 @@ public class Separator {
 	static public final String PARAM_SEPARATOR2 = "&&&";
 	static public final String PARAM_SEPARATOR3 = "###";
 	static public final String CATE_SEPARATOR="/";
+	static public final String DATA_SEPARATOR="\\|";
 }
