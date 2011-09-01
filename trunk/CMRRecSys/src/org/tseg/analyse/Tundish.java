@@ -612,7 +612,7 @@ public class Tundish extends Analyse {
 		s.setInputPath("E:/data/pagevisit/test.txt");
 		s.setOutputPath("E:/data/pagevisit/testout.txt");
 		s.setSiteDataPath("E:/data");
-		s.setNegCate(true);
+		
 		try {
 			// s.start("TundishClass 1? |?1? |?1? |?login*; |;手机阅读阅读页; |;我的书架");
 			s.start("TundishClass" + Separator.cmdSeparator

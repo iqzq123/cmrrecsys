@@ -83,6 +83,72 @@ public class MarkovModel {
 		}
 
 	}
+	
+	public void saveRelatedPageXML(String fileName){
+		
+		try {
+			
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = null;
+			try {
+				db = dbf.newDocumentBuilder();
+			} catch (Exception pce) {
+				System.err.println(pce);
+			}
+			Document doc = db.newDocument();
+			// 在doc中创建"学生花名册"tag作为根节点
+			Element root = doc.createElement("RelatedPage");
+			doc.appendChild(root);
+
+			UndigraphImpl rawGraph = new UndigraphImpl();
+			Iterator iter = this.linkMap.entrySet().iterator();
+			while (iter.hasNext()) {
+				Map.Entry entry = (Map.Entry) iter.next();
+				String edge = (String) entry.getKey();
+				String[] page = edge.split(Separator.edgeSeparator);
+				String reverseEdge = page[1] + Separator.edgeSeparator
+						+ page[0];
+				Double val2 = (Double) linkMap.get(reverseEdge);
+				Double val = (Double) entry.getValue();
+				if (val2 != null) {
+					double min = Math.min(val, val2);
+					double ratio = 0.5 - (min / (val + val2));
+					if (ratio < 0.2&&min>10.0) {
+						page[0]=Preprocessor.getPageName(page[0]);
+						page[1]=Preprocessor.getPageName(page[1]);
+						rawGraph.addEdge(page[0], page[1]);
+					}
+				}
+			}
+			
+			MaximalCliques cliques = new YeQiMaximalCliques(rawGraph);
+			cliques.setMinimalCliqueSize(3);
+			List<HashSet> clusterList =(cliques.findCommunityNodeSetList());
+			System.out.println("Got all the cliques, there are " + clusterList.size() + "cliques");
+			
+			
+			
+			for(HashSet cluster:clusterList){
+				Element c = doc.createElement("cluster");
+				c.setAttribute("menber", cluster.toString());
+				root.appendChild(c);
+				System.out.println(cluster.toString()+"\n");
+			}
+			
+			
+			// 用xmlserializer把document的内容进行串化
+			FileOutputStream os = null;
+			OutputFormat outformat = new OutputFormat(doc);
+			os = new FileOutputStream(fileName);
+			XMLSerializer xmlSerilizer = new XMLSerializer(os, outformat);
+			xmlSerilizer.serialize(doc);
+			
+		
+		} catch (IOException ioexp) {
+			ioexp.printStackTrace();
+		}
+		
+	}
 
 	public MarkovModel mergeWith(MarkovModel model) {
 
