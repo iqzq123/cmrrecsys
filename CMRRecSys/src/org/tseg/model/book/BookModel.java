@@ -172,7 +172,13 @@ public class BookModel {
 		System.out.println("savaBookXML");
 		try{
 			File f = new File(outputPath);
-			f.mkdir();
+			if(!f.exists()){
+				f.mkdir();
+			}
+			else if(f.isFile()){
+				f.mkdir();
+			}
+			
 			
 			String str = "";
 			for ( Book book : this.targetBooksAL ){
