@@ -14,6 +14,8 @@ import org.tseg.analyse.BookPackage;
 import com.XMLFileReader;
 
 public class BookPackageServlet extends HttpServlet{
+	private String tundishSuffix = "/图书漏斗文件.xml";
+	private String packageSuffix = "/图书打包文件.xml";
 	public void doGet(HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException {
 		System.out.println("-------------------\n进入bookPackageServlet!!!!!!");
@@ -25,8 +27,8 @@ public class BookPackageServlet extends HttpServlet{
 		String bookID = java.net.URLDecoder.decode(request.getParameter("bookID"),"UTF-8");
 		int n = Integer.parseInt(java.net.URLDecoder.decode(request.getParameter("n"), "UTF-8"));
 		
-		File file = new File(tundishPath);
-		String packagePath = file.getParent()+"/bookPackage.xml";
+		String packagePath = tundishPath + packageSuffix;
+		tundishPath = tundishPath + tundishSuffix;
 		BookPackage bookPackage = new BookPackage();
 		
 		bookPackage.setInputPath(tundishPath);
