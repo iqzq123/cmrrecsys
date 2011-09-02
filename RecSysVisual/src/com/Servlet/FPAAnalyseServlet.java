@@ -48,7 +48,6 @@ public class FPAAnalyseServlet extends HttpServlet {
 		DecayRatio+this.SEPARATOR;
 		
 		System.out.println(params);
-		
 		fp.readParam(params);
 		
 		try {
