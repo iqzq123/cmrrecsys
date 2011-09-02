@@ -871,6 +871,12 @@
 				graphDataGridWindow.init(xmlData);
 			}
 			
+			private function showFPAParams():void {
+				var fpaParams:FPAParamsWindow = new FPAParamsWindow();
+				PopUpManager.addPopUp(fpaParams,this,true);
+				PopUpManager.centerPopUp(fpaParams);
+			}
+			
 			private function showFRPath():void {
 				fileWindow = new FileWindow;
 				PopUpManager.addPopUp(fileWindow,this,true);
@@ -954,6 +960,7 @@
 					<mx:Button label="路径查看" click="findPath()"/>
 					<mx:CheckBox id="mergeRootCheckBox" label="合并根节点" selected="false"/>
 				</mx:HBox>
+				<mx:Button label="频繁路径分析" click="showFPAParams()" />
 				<mx:Button label="频繁路径查看" click="showFRPath()"/>
 				<mx:Label text="用户数："/>
 				<mx:HBox>
@@ -975,7 +982,7 @@
 				</mx:HBox>
 				<mx:Button label="路径过滤" click="pathFilter()"/>
 				<mx:HRule width="181" height="1"/>
-				<mx:Button label="图数据查看" click="showGraphData()"/>
+				<mx:Button label="表格查看" click="showGraphData()"/>
 				<mx:Button label="文件目录查看" click="fileDir()"/>
 				<mx:Button label="图书流失漏斗分析" click="bookTundish()"/>
 				<mx:Button label="图书流失漏斗展示" click="showBookTundish()"/>
