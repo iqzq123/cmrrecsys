@@ -950,8 +950,14 @@
     	
     	<mx:Accordion id="acc" x="0" y="0" width="100%" height="100%" 
     		selectedIndex="0" creationPolicy="all" >
-    		<mx:VBox label="算法处理" width="100%" height="100%" horizontalAlign="left" paddingTop="10" paddingLeft="15">
-				<mx:Button label="启动分析" click="start()"/>
+    		<mx:VBox label="启动分析" width="100%" height="100%" horizontalAlign="left" paddingTop="10" paddingLeft="15">
+				<mx:Button label="页面分析" click="start()"/>
+				<mx:Button label="频繁路径分析" click="showFPAParams()" />
+				<mx:Button label="图书流失漏斗分析" click="bookTundish()"/>
+			</mx:VBox>
+			<mx:VBox label="分类查看" width="100%" height="100%" 
+					paddingTop="5" paddingBottom="5" paddingLeft="5" paddingRight="5" >
+				
 				<mx:Button label="直方图查看" click="showChart()"/>
 				<mx:Button label="折线查看" click="showLineChart()"/>
 				<mx:Button label="漏斗查看" click="showTundish()"/>
@@ -960,7 +966,7 @@
 					<mx:Button label="路径查看" click="findPath()"/>
 					<mx:CheckBox id="mergeRootCheckBox" label="合并根节点" selected="false"/>
 				</mx:HBox>
-				<mx:Button label="频繁路径分析" click="showFPAParams()" />
+				
 				<mx:Button label="频繁路径查看" click="showFRPath()"/>
 				<mx:Label text="用户数："/>
 				<mx:HBox>
@@ -984,10 +990,10 @@
 				<mx:HRule width="181" height="1"/>
 				<mx:Button label="表格查看" click="showGraphData()"/>
 				<mx:Button label="文件目录查看" click="fileDir()"/>
-				<mx:Button label="图书流失漏斗分析" click="bookTundish()"/>
+				
 				<mx:Button label="图书流失漏斗展示" click="showBookTundish()"/>
 			</mx:VBox>
-    		<mx:VBox id="contralPad" label="控制面板" width="100%" height="100%" 
+    		<mx:VBox id="contralPad" label="全局查看" width="100%" height="100%" 
     			paddingTop="5" paddingBottom="5" paddingLeft="5" paddingRight="5"  >
     			<mx:HBox>
     				<mx:Button id="openFileBtn" label="打开文件" click="openFile()"/>
