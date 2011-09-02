@@ -14,6 +14,7 @@ import org.tseg.analyse.*;
 import com.XMLFileReader;
 
 public class GetBookTundishServlet extends HttpServlet{
+	private String tundishSuffix = "/图书漏斗文件.xml";
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException {
 		response.setContentType("text/xml;charset=utf-8");
@@ -24,6 +25,7 @@ public class GetBookTundishServlet extends HttpServlet{
 		String chapterInfoPath = java.net.URLDecoder.decode(request.getParameter("chapterInfoPath"),"UTF-8");
 		String readingInfoPath = java.net.URLDecoder.decode(request.getParameter("readingInfoPath"),"UTF-8");
 		String tundishPath = java.net.URLDecoder.decode(request.getParameter("tundishPath"),"UTF-8");
+		tundishPath = tundishPath + tundishSuffix;
 		
 		System.out.println("进入servlet"+"\n"+bookInfoPath+"\n"+chapterInfoPath+"\n"+readingInfoPath);
 		
