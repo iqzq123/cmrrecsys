@@ -14,7 +14,7 @@
 			
 			private var fileWindow:FileWindow;
 			private var selectedButton:String;
-			private var tundishSuffix:String = "/bookTundish.xml";
+			private var tundishSuffix:String = "/图书漏斗.xml";
 			
 			private function openFileWindow(e:Event):void {
 				selectedButton = ((e.target) as Button).id;
@@ -47,7 +47,7 @@
 				params.bookInfoPath = textinput1.text;
 				params.chapterInfoPath = textinput2.text;
 				params.readingInfoPath = textinput3.text;
-				params.tundishPath = textinput4.text+tundishSuffix;
+				params.tundishPath = textinput4.text;
 				
 				getBookTundish.addEventListener(ResultEvent.RESULT,genTundish);
 				getBookTundish.addEventListener(FaultEvent.FAULT,faultHandler);
@@ -64,7 +64,7 @@
 				PopUpManager.addPopUp(bookTundish,this,false);
 				PopUpManager.centerPopUp(bookTundish);
 				bookTundish.init(xmlData);
-				bookTundish.setTundishPath(textinput4.text+tundishSuffix);
+				bookTundish.setTundishPath(textinput4.text);
 			}
 			
 			private function faultHandler(e:FaultEvent):void {
