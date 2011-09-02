@@ -39,13 +39,8 @@ public class StatAnalyse extends Analyse {
 	private Histogram pageNumHis= new Histogram();
 
 
-	private List<PVHistory> cachePVHis = new ArrayList<PVHistory>();
-	private int index = 0;
-	private int saveIndex = 0;
-	private int maxCacheNum = 10000;
 
-	private String pvHisPath ="";
-	private String fpPath = "";
+	
 	private String statPath = "";
 
 	public StatAnalyse() {
@@ -83,20 +78,16 @@ public class StatAnalyse extends Analyse {
 	public void onInitial() {
 		// TODO Auto-generated method stub
 
-		pvHisPath = this.getOutputPath() + "/pvHis_" + this.getType();
-		fpPath = this.getOutputPath() + "/fp_" + this.getType();
-		statPath = this.getOutputPath() + "/stat_" + this.getType();
-		Ulits.newFolder(this.pvHisPath);
-		Ulits.newFolder(this.fpPath);
-		Ulits.newFolder(this.statPath);
+
+		statPath = this.getOutputPath() + "/统计直方图/stat_" + this.getType();
+		Ulits.newFolder(this.getOutputPath() + "/统计直方图");
+		Ulits.newFolder(this.getOutputPath() + "/统计直方图/stat_" + this.getType());
 	}
 
 	@Override
 	public void onReadEnd() throws IOException {
 		// TODO Auto-generated method stub
-		this.saveAndClean();
 		this.saveHistogram();
-		/////////////////////
 	}
 
 	@Override
@@ -115,18 +106,7 @@ public class StatAnalyse extends Analyse {
 
 			} else {
 				// ////////////////////////////////////////////////////
-				//this.cachePVHis.add(index, this.curPVHis);
-				this.updateHistogram(this.curPVHis);
-				
-
-				this.index++;
-
-				if (this.index > this.maxCacheNum) {
-					//System.out.println("save and clean");
-					//this.saveAndClean();
-					this.saveIndex++;
-					index = 0;
-				}
+				this.updateHistogram(this.curPVHis);		
 				this.curPVHis = new PVHistory();
 				this.curPVHis.setId(id);
 				this.curPVHis.addLog(strArray);
@@ -139,42 +119,18 @@ public class StatAnalyse extends Analyse {
 	public void saveHistogram() {
 
 		this.senNumHis.build();
-		this.senNumHis.saveXML(statPath + "/senNumHis.xml");
+		this.senNumHis.saveXML(statPath + "/登录次数直方图.xml");
 		this.durationHis.build();
-		this.durationHis.saveXML(statPath + "/durationHis.xml");
+		this.durationHis.saveXML(statPath + "/在线时长图.xml");
 		this.pathLenghtHis.build();
-		this.pathLenghtHis.saveXML(statPath + "/pathHis.xml");
+		this.pathLenghtHis.saveXML(statPath + "/路径长度直方图.xml");
 		this.pvNumHis.build();
-		this.pvNumHis.saveXML(statPath + "/pvNumHis.xml");
+		this.pvNumHis.saveXML(statPath + "/pv数直方图.xml");
 		this.pageNumHis.build();
-		this.pageNumHis.saveXML(statPath+"/pageNumHis.xml");
+		this.pageNumHis.saveXML(statPath+"/页面数直方图.xml");
 	}
 
-	public void saveAndClean() throws IOException {
 
-	
-//		FileWriter fw = new FileWriter(this.pvHisPath + "/" + this.saveIndex
-//				+ ".txt");
-//		BufferedWriter writer = new BufferedWriter(fw);
-//		for (PVHistory s : this.cachePVHis) {
-//			writer.write(s.toString());
-//		}
-//		writer.flush();
-//		writer.close();
-//
-//		FileWriter fw1 = new FileWriter(this.fpPath + "/" + this.saveIndex
-//				+ ".txt");
-//		BufferedWriter writer1 = new BufferedWriter(fw1);
-//		for (String s : this.cacheFrePathList) {
-//			writer1.write(s);
-//		}
-//		writer1.flush();
-//		writer1.close();
-//
-//		this.cacheFrePathList.clear();
-//		this.cachePVHis.clear();
-
-	}
 
 	public void updateHistogram(PVHistory his) {
 
@@ -239,12 +195,6 @@ public class StatAnalyse extends Analyse {
 
 	}
 
-	public int getMaxCacheNum() {
-		return maxCacheNum;
-	}
 
-	public void setMaxCacheNum(int maxCacheNum) {
-		this.maxCacheNum = maxCacheNum;
-	}
 
 }

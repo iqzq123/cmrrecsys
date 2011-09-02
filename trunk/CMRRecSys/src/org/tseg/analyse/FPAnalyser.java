@@ -137,8 +137,8 @@ public class FPAnalyser {
 		FPAnalyser fp = new FPAnalyser();
 		fp.setLogSplit("\\|");
 		String param="E:/data"+Separator.PARAM_SEPARATOR1+
-		"E:/data/pagevisit/pv6.txt"+Separator.PARAM_SEPARATOR1+
-		"E:/data/pagevisit/pv6_close1"+Separator.PARAM_SEPARATOR1+
+		"E:/data/pvdata/pvdata2.txt"+Separator.PARAM_SEPARATOR1+
+		"E:/data/pvdata/fpclose"+Separator.PARAM_SEPARATOR1+
 		AnalyseType.NegCate+Separator.PARAM_SEPARATOR1+
 		true+Separator.PARAM_SEPARATOR1+
 		10+Separator.PARAM_SEPARATOR1+
@@ -269,7 +269,7 @@ public class FPAnalyser {
 			// 用xmlserializer把document的内容进行串化
 			FileOutputStream os = null;
 			OutputFormat outformat = new OutputFormat(doc);
-			os = new FileOutputStream(this.outputPath+"/fp_"+this.analyseType+".xml");
+			os = new FileOutputStream(this.outputPath+"/频繁路径"+this.analyseType+".xml");
 			XMLSerializer xmlSerilizer = new XMLSerializer(os, outformat);
 			xmlSerilizer.serialize(doc);
 
@@ -282,7 +282,7 @@ public class FPAnalyser {
 	public void saveResult() {
 
 		try {
-			FileWriter fw = new FileWriter(this.outputPath+"/fp_"+this.analyseType+".txt");
+			FileWriter fw = new FileWriter(this.outputPath+"/频繁路径"+this.analyseType+".txt");
 			BufferedWriter writer = new BufferedWriter(fw);
 			int len = 0;			
 			for (HashMap<String, Integer> map : this.fpAlgo.getFpMapList()) {

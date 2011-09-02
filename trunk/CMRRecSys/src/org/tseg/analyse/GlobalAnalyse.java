@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.tseg.Ulits.AnalyseType;
 import org.tseg.Ulits.Separator;
 import org.tseg.Ulits.Ulits;
 import org.tseg.model.MarkovModel;
@@ -41,29 +42,33 @@ public class GlobalAnalyse extends Analyse {
 	private MarkovModel globalModel = new MarkovModel();
 	private MarkovModel curPerModel = null;	
 	private String curPerID = "";
-	private String subFloder="";
+	private String outFloder="";
 	private int minLinkNum=100;
 	private int maxPerModelNum=100;
 	private int curPerModelNum=0;
 	@Override
 	public void onInitial() {
 		// TODO Auto-generated method stub
-		this.subFloder = this.getOutputPath() + "/perModel";
-		Ulits.newFolder(this.subFloder);
+		this.outFloder = this.getOutputPath() + "/全局分析";
+		Ulits.newFolder(this.outFloder);
 
 	}
 
 	@Override
 	public void onReadEnd() throws IOException {
 		// TODO Auto-generated method stub
-		this.globalModel.saveModelMXL(this.getOutputPath() + "/gModel"+this.getType()+".xml", minLinkNum,
+		this.globalModel.saveModelMXL(this.outFloder+"/全局跳转图"+this.getType()+".xml", minLinkNum,
 				false);
-		this.globalModel.saveRelatedPage(this.getOutputPath() + "/relPage"+this.getType()+".txt",minLinkNum);
-		this.globalModel.saveRelatedPageXML(this.getOutputPath() + "/relPage"+this.getType()+".xml",minLinkNum);
-		this.saveSortedPage(this.getOutputPath() + "/page_uv"+this.getType()+".xml", "userNum");
-		this.saveSortedPage(this.getOutputPath() + "/page_pv"+this.getType()+".xml", "clickNum");
-		this.saveSortedPage(this.getOutputPath() + "/page_duration"+this.getType()+".xml", "duration");
-		this.saveSortedPage(this.getOutputPath()+"/page_AverPerPv"+this.getType()+".xml", "AverPerPv");
+		String relPath=this.outFloder + "/相关页面"+this.getType();
+		if(this.getType()==AnalyseType.PageToCate){
+			relPath=this.outFloder + "/相关板块";
+		}
+		this.globalModel.saveRelatedPage(relPath+".txt",minLinkNum);
+		this.globalModel.saveRelatedPageXML(relPath+".xml",minLinkNum);
+		this.saveSortedPage(this.outFloder + "/页面uv"+this.getType()+".xml", "userNum");
+		this.saveSortedPage(this.outFloder + "/页面pv"+this.getType()+".xml", "clickNum");
+		this.saveSortedPage(this.outFloder + "/页面时长"+this.getType()+".xml", "duration");
+		this.saveSortedPage(this.outFloder+"/页面人均pv"+this.getType()+".xml", "AverPerPv");
 
 	}
 
