@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="416" height="360"
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="462" height="352"
 	showCloseButton="true" close="closeHandle()" creationPolicy="all">
 	<mx:Metadata>
 		[Event(name="mouseClick")]
@@ -81,16 +81,16 @@
 	<mx:Label id="label1" x="36" y="58" text="图书信息路径" width="104" height="27" fontSize="15"/>
 	<mx:Label id="label2" x="36" y="108" text="章节信息路径" width="104" height="27" fontSize="15"/>
 	<mx:Label id="label3" x="36" y="158" text="数据路径" width="104" height="27" fontSize="15" />
-	<mx:Label id="label4" x="36" y="208" text="漏斗文件保存目录" width="104" height="27" fontSize="15" />
-	<mx:TextInput id="textinput1" x="139" y="58"/>
-	<mx:TextInput id="textinput2" x="139" y="108"/>
-	<mx:TextInput id="textinput3" x="139" y="158"/>
-	<mx:TextInput id="textinput4" x="139" y="208"/>
-	<mx:Button id="bt1" x="305" y="58" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
-	<mx:Button id="bt2" x="305" y="108" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
-	<mx:Button id="bt3" x="305" y="158" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
-	<mx:Button id="bt4" x="305" y="208" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
-	<mx:Button id="bt5" x="235" y="251" label="确定" fontSize="12" click="confirm()"/>
-	<mx:Button id="bt6" x="305" y="251" label="取消" fontSize="12" click="closeHandle()"/>
+	<mx:Label id="label4" x="36" y="208" text="漏斗文件保存目录" width="135" height="27" fontSize="15" />
+	<mx:TextInput id="textinput1" x="175" y="58"/>
+	<mx:TextInput id="textinput2" x="175" y="108"/>
+	<mx:TextInput id="textinput3" x="175" y="158"/>
+	<mx:TextInput id="textinput4" x="175" y="208"/>
+	<mx:Button id="bt1" x="345" y="58" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
+	<mx:Button id="bt2" x="345" y="108" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
+	<mx:Button id="bt3" x="345" y="158" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
+	<mx:Button id="bt4" x="345" y="208" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
+	<mx:Button id="bt5" x="275" y="251" label="确定" fontSize="12" click="confirm()"/>
+	<mx:Button id="bt6" x="345" y="251" label="取消" fontSize="12" click="closeHandle()"/>
 	
 </mx:TitleWindow>
