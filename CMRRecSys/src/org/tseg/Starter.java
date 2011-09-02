@@ -87,8 +87,8 @@ public class Starter {
 		// TODO Auto-generated method stub
 		Starter s = new Starter();
 		s.setLogSplit("\\|");
-		s.setInputPath("E:/pvdata2.txt");
-		s.setOutputPath("E:/data/pvData/test");
+		s.setInputPath("E:/data/pvData/pvdata2.txt");
+		s.setOutputPath("E:/data/pvData/test_out");
 		s.setSiteDataPath("E:/data");
 		try {
 			String cmd = "StatAnalyse\t" + AnalyseType.NegCate + "\n"
