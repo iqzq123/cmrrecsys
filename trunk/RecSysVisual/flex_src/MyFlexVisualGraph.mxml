@@ -923,7 +923,7 @@
 						_graph.destroy();
 				
 					this._mode = this.FR_PATH_MODE;
-					_graph = new FRPath("MyGraph",false,true);
+					_graph = new FRPath("MyGraph",false,true,closedPathCheckBox.selected);
 					_graph.initGraphData(xmlData,_graphCanvas);
 					communitiesCheckBox.selected = false;
  					setGraph(_graph);
@@ -966,8 +966,11 @@
 					<mx:Button label="路径查看" click="findPath()"/>
 					<mx:CheckBox id="mergeRootCheckBox" label="合并根节点" selected="false"/>
 				</mx:HBox>
+				<mx:HBox>
+					<mx:Button label="频繁路径查看" click="showFRPath()"/>
+					<mx:CheckBox id="closedPathCheckBox" label="路径闭包模式" selected="false"/>
+				</mx:HBox>
 				
-				<mx:Button label="频繁路径查看" click="showFRPath()"/>
 				<mx:Label text="用户数："/>
 				<mx:HBox>
 					<mx:Label text="下限"/>
