@@ -27,8 +27,9 @@ public class BookPackageServlet extends HttpServlet{
 		String bookID = java.net.URLDecoder.decode(request.getParameter("bookID"),"UTF-8");
 		int n = Integer.parseInt(java.net.URLDecoder.decode(request.getParameter("n"), "UTF-8"));
 		
-		String packagePath = tundishPath + packageSuffix;
-		tundishPath = tundishPath + tundishSuffix;
+		File temp = new File(tundishPath);
+		String packagePath = temp.getParent()+packageSuffix;
+//		tundishPath = tundishPath + tundishSuffix;
 		BookPackage bookPackage = new BookPackage();
 		
 		bookPackage.setInputPath(tundishPath);
