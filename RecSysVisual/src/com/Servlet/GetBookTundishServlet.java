@@ -20,11 +20,12 @@ public class GetBookTundishServlet extends HttpServlet{
 		response.setContentType("text/xml;charset=utf-8");
 		response.setCharacterEncoding("utf-8");
 		System.out.println("get book tundish servlet!");
-		
+		request.setCharacterEncoding("UTF-8");
 		String bookInfoPath = java.net.URLDecoder.decode(request.getParameter("bookInfoPath"),"UTF-8");
 		String chapterInfoPath = java.net.URLDecoder.decode(request.getParameter("chapterInfoPath"),"UTF-8");
 		String readingInfoPath = java.net.URLDecoder.decode(request.getParameter("readingInfoPath"),"UTF-8");
 		String tundishPath = java.net.URLDecoder.decode(request.getParameter("tundishPath"),"UTF-8");
+
 		tundishPath = tundishPath + tundishSuffix;
 		
 		System.out.println("½øÈëservlet"+"\n"+bookInfoPath+"\n"+chapterInfoPath+"\n"+readingInfoPath);
