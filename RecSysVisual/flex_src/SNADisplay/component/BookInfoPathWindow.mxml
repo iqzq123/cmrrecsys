@@ -6,6 +6,7 @@
 	</mx:Metadata>
 	<mx:Script>
 		<![CDATA[
+			import mx.messaging.messages.HTTPRequestMessage;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.http.mxml.HTTPService;
 			import mx.rpc.events.ResultEvent;
@@ -43,29 +44,31 @@
 				var getBookTundish:HTTPService = new HTTPService();
 				getBookTundish.resultFormat="e4x";
 				getBookTundish.url="getBookTundish";
+				getBookTundish.contentType
 				var params:URLVariables = new URLVariables();
-				params.bookInfoPath = textinput1.text;
-				params.chapterInfoPath = textinput2.text;
-				params.readingInfoPath = textinput3.text;
-				params.tundishPath = textinput4.text;
-				
-				getBookTundish.addEventListener(ResultEvent.RESULT,genTundish);
+				params.bookInfoPath = encodeURIComponent(textinput1.text);
+				params.chapterInfoPath = encodeURIComponent(textinput2.text);
+				params.readingInfoPath = encodeURIComponent(textinput3.text);
+				params.tundishPath = encodeURIComponent(textinput4.text);
+								
+//				getBookTundish.addEventListener(ResultEvent.RESULT,genTundish);
 				getBookTundish.addEventListener(FaultEvent.FAULT,faultHandler);
-				
+
 				getBookTundish.send(params);
 				closeHandle();
 			}
 			
-			private var bookTundish:BookTundishWindow;
-			private function genTundish(e:ResultEvent):void {
-				bookTundish = new BookTundishWindow;
-				
-				var xmlData:XML = XML(e.message.body);
-				PopUpManager.addPopUp(bookTundish,this,false);
-				PopUpManager.centerPopUp(bookTundish);
-				bookTundish.init(xmlData);
-				bookTundish.setTundishPath(textinput4.text);
-			}
+//			private var bookTundish:BookTundishWindow;
+//			private function genTundish(e:ResultEvent):void {
+//				bookTundish = new BookTundishWindow;
+//				
+//				var xmlData:XML = XML(e.message.body);
+//				PopUpManager.addPopUp(bookTundish,this,false);
+//				PopUpManager.centerPopUp(bookTundish);
+//				bookTundish.init(xmlData);
+//				bookTundish.setTundishPath(textinput4.text);
+//				Alert.show("success!");
+//			}
 			
 			private function faultHandler(e:FaultEvent):void {
 				Alert.show("Something wrong!");
@@ -82,10 +85,10 @@
 	<mx:Label id="label2" x="36" y="108" text="章节信息路径" width="104" height="27" fontSize="15"/>
 	<mx:Label id="label3" x="36" y="158" text="数据路径" width="104" height="27" fontSize="15" />
 	<mx:Label id="label4" x="36" y="208" text="漏斗文件保存目录" width="135" height="27" fontSize="15" />
-	<mx:TextInput id="textinput1" x="175" y="58"/>
-	<mx:TextInput id="textinput2" x="175" y="108"/>
-	<mx:TextInput id="textinput3" x="175" y="158"/>
-	<mx:TextInput id="textinput4" x="175" y="208"/>
+	<mx:TextInput id="textinput1" x="175" y="58" width="160"/>
+	<mx:TextInput id="textinput2" x="175" y="108" width="160"/>
+	<mx:TextInput id="textinput3" x="175" y="158" width="160"/>
+	<mx:TextInput id="textinput4" x="175" y="208" width="160"/>
 	<mx:Button id="bt1" x="345" y="58" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
 	<mx:Button id="bt2" x="345" y="108" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
 	<mx:Button id="bt3" x="345" y="158" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
