@@ -84,16 +84,14 @@ public class FPAnalyser {
 				// Preprocessor.tranPageToCate(log);
 				this.onReadLog(log);
 				if (cnt % 10000 == 0) {
-					System.out.println(cnt);
-				}
-				if (cnt > 2700000) {
-					if (cnt % 1000 == 0) {
-						System.out.println(cnt);
-					}
+					System.out.println(cnt+"\n");
+					System.out.println(this.curFPLenght+"\n");
+					
 				}
 				cnt++;
 			}
 			System.out.println(cnt);
+			
 			this.onReadEnd();
 			System.out.println("curFPLenght:" + this.curFPLenght + "	pathNum:"
 					+ this.fpAlgo.getPathNum() + "\n");
@@ -106,8 +104,10 @@ public class FPAnalyser {
 			}
 		}
 
+		
 		this.fpAlgo.getFpMapList().remove(0);
 		if(this.isClosed==true){
+			System.out.println("start close\n");
 			closeFP(this.fpAlgo.getFpMapList());
 		}
 		saveResult();
@@ -137,8 +137,8 @@ public class FPAnalyser {
 		FPAnalyser fp = new FPAnalyser();
 		fp.setLogSplit("\\|");
 		String param="E:/data"+Separator.PARAM_SEPARATOR1+
-		"E:/data/pvdata/pvdata2.txt"+Separator.PARAM_SEPARATOR1+
-		"E:/data/pvdata/fpclose"+Separator.PARAM_SEPARATOR1+
+		"E:/data/pvdata/cuixr_pagevisit"+Separator.PARAM_SEPARATOR1+
+		"E:/data/pvdata/cuifp2"+Separator.PARAM_SEPARATOR1+
 		AnalyseType.NegCate+Separator.PARAM_SEPARATOR1+
 		true+Separator.PARAM_SEPARATOR1+
 		10+Separator.PARAM_SEPARATOR1+
@@ -366,10 +366,6 @@ public class FPAnalyser {
 
 	public void onReadPath(String path) {
 		
-	
-		
-		
-
 		List<String> pList = new ArrayList<String>();
 		String[] nodeArray = path.split(",");
 		if (nodeArray.length > 20) {
