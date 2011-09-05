@@ -87,16 +87,16 @@ public class Starter {
 		// TODO Auto-generated method stub
 		Starter s = new Starter();
 		s.setLogSplit("\\|");
-		s.setInputPath("E:/data/pvData/pvdata2.txt");
-		s.setOutputPath("E:/data/pvData/test_out");
+		s.setInputPath("E:/data/pvData/cuixr_pagevisit");
+		s.setOutputPath("E:/data/pvData/cui_out");
 		s.setSiteDataPath("E:/data");
 		try {
 			String cmd = "StatAnalyse\t" + AnalyseType.NegCate + "\n"
 					+ "StatAnalyse\t" + AnalyseType.PageToCate + "\n"
-					+ "StatAnalyse\t" + AnalyseType.Original + "\n"
-					+ "GlobalAnalyse\t" + AnalyseType.Original +Separator.PARAM_SEPARATOR1+100+ "\n"
-					+ "GlobalAnalyse\t" + AnalyseType.PageToCate + Separator.PARAM_SEPARATOR1+100+"\n"
-					+ "GlobalAnalyse\t" + AnalyseType.NegCate+Separator.PARAM_SEPARATOR1+100;
+					+ "StatAnalyse\t" + AnalyseType.Original + "\n";
+//					+ "GlobalAnalyse\t" + AnalyseType.Original +Separator.PARAM_SEPARATOR1+100+ "\n"
+//					+ "GlobalAnalyse\t" + AnalyseType.PageToCate + Separator.PARAM_SEPARATOR1+100+"\n"
+//					+ "GlobalAnalyse\t" + AnalyseType.NegCate+Separator.PARAM_SEPARATOR1+100;
 			String cmd2 = "PathFinderClass	1@@@1@@@0@@@1@@@0@@@全国手机阅读首页###取消包月成功提示页面&&&女生首页###取消包月成功提示页面&&&原创首页###取消包月成功提示页面&&&畅销首页###取消包月成功提示页面&&&全国手机阅读首页###专区包月结果确认页&&&女生首页###专区包月结果确认页&&&原创首页###专区包月结果确认页&&& 畅销首页###专区包月结果确认页";
 			s.start(cmd);
 		} catch (Exception e) {

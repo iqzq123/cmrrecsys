@@ -139,21 +139,21 @@ public class StatAnalyse extends Analyse {
 		int duration = his.getDuration();
 		this.durationHis.getDataList().add(duration);
 		this.pvNumHis.getDataList().add(his.getPvNum());
-		
+		Set<String> set=new HashSet<String>();
 		for (String s : his.getPathString()) {
 			String []pageArray=s.split(",");
 			this.pathLenghtHis.getDataList().add(pageArray.length);
-			Set<String> set=new HashSet<String>();
+			
 			for(String page:pageArray){
 				set.add(page);
-			}
-			int num=set.size()-2;
-			if(num<0){
-				num=0;
-			}
-			this.pageNumHis.getDataList().add(num);
+			}	
 			// System.out.println(s);
 		}
+		int num=set.size()-2;
+		if(num<0){
+			num=0;
+		}
+		this.pageNumHis.getDataList().add(num);
 
 	}
 
