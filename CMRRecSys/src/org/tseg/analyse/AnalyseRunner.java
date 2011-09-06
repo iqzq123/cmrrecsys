@@ -57,9 +57,9 @@ public class AnalyseRunner {
 				analyse.onReadLog(proArray);
 			}
 			
+			this.progress++;
 			cnt++;
-			if (cnt % 10000 == 0) {
-				this.progress++;
+			if (cnt % 10000 == 0) {		
 				System.out.println(cnt);
 			}
 		}

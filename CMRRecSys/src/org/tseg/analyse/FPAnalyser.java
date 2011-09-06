@@ -137,8 +137,8 @@ public class FPAnalyser {
 		FPAnalyser fp = new FPAnalyser();
 		fp.setLogSplit("\\|");
 		String param="E:/data"+Separator.PARAM_SEPARATOR1+
-		"E:/data/pvdata/cuixr_pagevisit"+Separator.PARAM_SEPARATOR1+
-		"E:/data/pvdata/cuifp2"+Separator.PARAM_SEPARATOR1+
+		"E:/data/pvdata/only_pv20110902.txt"+Separator.PARAM_SEPARATOR1+
+		"E:/data/pvdata/onlyfp"+Separator.PARAM_SEPARATOR1+
 		AnalyseType.NegCate+Separator.PARAM_SEPARATOR1+
 		true+Separator.PARAM_SEPARATOR1+
 		10+Separator.PARAM_SEPARATOR1+
