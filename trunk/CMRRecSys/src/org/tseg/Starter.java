@@ -19,6 +19,8 @@ public class Starter {
 	private String siteDataPath = "";
 	private String logSplit="\\|";
 	private HashMap<String, Analyse> analyseMap = new HashMap<String, Analyse>();
+	private AnalyseRunner runner = new AnalyseRunner();
+	
 
 	public Analyse getInstanceByName(String name) {
 
@@ -35,6 +37,9 @@ public class Starter {
 		return obj;
 	}
 
+	public int getProgress(){
+		return this.runner.getProgress();
+	}
 	public Starter() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -53,12 +58,12 @@ public class Starter {
 
 	public void start(String cmd) throws Exception {
 
-		AnalyseRunner b = new AnalyseRunner();
+		
 	
-		b.setInputPath(this.inputPath);
-		b.setOutputPath(this.outputPath);
-		b.setSiteDataPath(this.siteDataPath);
-		b.setLogSplit(this.logSplit);
+		runner.setInputPath(this.inputPath);
+		runner.setOutputPath(this.outputPath);
+		runner.setSiteDataPath(this.siteDataPath);
+		runner.setLogSplit(this.logSplit);
 		
 		String[] cmdArray = cmd.split(Separator.cmdLineSeparator);
 		for (String cmdLine : cmdArray) {
@@ -73,11 +78,11 @@ public class Starter {
 			Analyse analyse = getInstanceByName(name);
 			if (analyse != null) {
 				analyse.readParam(param);
-				b.addAnalyse(analyse);
+				runner.addAnalyse(analyse);
 			}
 
 		}
-		b.seqRun();
+		runner.seqRun();
 	}
 
 	/**
@@ -88,7 +93,7 @@ public class Starter {
 		Starter s = new Starter();
 		s.setLogSplit("\\|");
 		s.setInputPath("E:/data/pvData/cuixr_pagevisit");
-		s.setOutputPath("E:/data/pvData/cui_out");
+		s.setOutputPath("E:/data/pvData/cui4");
 		s.setSiteDataPath("E:/data");
 		try {
 			String cmd = "StatAnalyse\t" + AnalyseType.NegCate + "\n"
@@ -97,8 +102,8 @@ public class Starter {
 //					+ "GlobalAnalyse\t" + AnalyseType.Original +Separator.PARAM_SEPARATOR1+100+ "\n"
 //					+ "GlobalAnalyse\t" + AnalyseType.PageToCate + Separator.PARAM_SEPARATOR1+100+"\n"
 //					+ "GlobalAnalyse\t" + AnalyseType.NegCate+Separator.PARAM_SEPARATOR1+100;
-			String cmd2 = "PathFinderClass	1@@@1@@@0@@@1@@@0@@@全国手机阅读首页###取消包月成功提示页面&&&女生首页###取消包月成功提示页面&&&原创首页###取消包月成功提示页面&&&畅销首页###取消包月成功提示页面&&&全国手机阅读首页###专区包月结果确认页&&&女生首页###专区包月结果确认页&&&原创首页###专区包月结果确认页&&& 畅销首页###专区包月结果确认页";
-			s.start(cmd);
+			String cmd2 = "PathFinderClass	1@@@1@@@0@@@30@@@0@@@直接进入###手机阅读贴身书童&&&手机阅读贴身书童###手机阅读阅读页&&&直接进入###手机阅读阅读页&&&直接进入###bmsuc.jsp";
+			s.start(cmd2);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -129,7 +134,7 @@ public class Starter {
 	public String getSiteDataPath() {
 		return siteDataPath;
 	}
-
+ 
 	public void setSiteDataPath(String siteDataPath) {
 		this.siteDataPath = siteDataPath;
 	}
