@@ -37,8 +37,8 @@ public class Starter {
 		return obj;
 	}
 
-	public int getProgress(){
-		return this.runner.getProgress();
+	public void getProgress(Integer progress){
+		this.runner.getProgress(progress);
 	}
 	public Starter() {
 		super();
