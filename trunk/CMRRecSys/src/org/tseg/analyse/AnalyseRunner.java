@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.tseg.Ulits.Ulits;
 import org.tseg.preprocess.Preprocessor;
@@ -15,7 +16,9 @@ public class AnalyseRunner {
 	private String siteDataPath;
 	private String outputPath;
 	private List<Analyse> analyseList=new ArrayList<Analyse>();	
-	private Integer progress = null;	
+
+	private AtomicInteger progress = null;	
+
 	private String logSplit="\\|";
 	
 	public void addAnalyse(Analyse analyse){
@@ -56,11 +59,10 @@ public class AnalyseRunner {
 				String[] proArray=Preprocessor.run(strArray, analyse.getType());
 				analyse.onReadLog(proArray);
 			}
-			
-			this.progress++;
 			cnt++;
+			this.progress.set(cnt);			
 			if (cnt % 10000 == 0) {		
-				System.out.println(cnt);
+				System.out.println(this.progress);
 			}
 		}
 		System.out.println("pv总数为："+cnt);
@@ -123,7 +125,8 @@ public class AnalyseRunner {
 
 
 
-	public void getProgress(Integer progress) {
+
+	public void getProgress(AtomicInteger progress) {
 		this.progress = progress;
 	}
 
