@@ -1,6 +1,7 @@
 package org.tseg;
 
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.tseg.Ulits.AnalyseType;
 import org.tseg.Ulits.Separator;
@@ -37,8 +38,10 @@ public class Starter {
 		return obj;
 	}
 
-	public void getProgress(Integer progress){
+
+	public void getProgress(AtomicInteger progress){
 		this.runner.getProgress(progress);
+
 	}
 	public Starter() {
 		super();
@@ -92,8 +95,20 @@ public class Starter {
 		// TODO Auto-generated method stub
 		Starter s = new Starter();
 		s.setLogSplit("\\|");
+
+
+
+	
+
+
+
+
+
+
+
 		s.setInputPath("E:/data/pvData/cuixr_pagevisit");
 		s.setOutputPath("E:/data/pvData/cui4");
+
 		s.setSiteDataPath("E:/data");
 		try {
 			String cmd = "StatAnalyse\t" + AnalyseType.NegCate + "\n"
@@ -102,8 +117,11 @@ public class Starter {
 //					+ "GlobalAnalyse\t" + AnalyseType.Original +Separator.PARAM_SEPARATOR1+100+ "\n"
 //					+ "GlobalAnalyse\t" + AnalyseType.PageToCate + Separator.PARAM_SEPARATOR1+100+"\n"
 //					+ "GlobalAnalyse\t" + AnalyseType.NegCate+Separator.PARAM_SEPARATOR1+100;
+
+
 			String cmd2 = "PathFinderClass	1@@@1@@@0@@@30@@@0@@@直接进入###手机阅读贴身书童&&&手机阅读贴身书童###手机阅读阅读页&&&直接进入###手机阅读阅读页&&&直接进入###bmsuc.jsp";
 			s.start(cmd2);
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
