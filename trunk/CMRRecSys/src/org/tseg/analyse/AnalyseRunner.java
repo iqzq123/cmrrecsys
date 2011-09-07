@@ -15,7 +15,7 @@ public class AnalyseRunner {
 	private String siteDataPath;
 	private String outputPath;
 	private List<Analyse> analyseList=new ArrayList<Analyse>();	
-	private int progress = 0;	
+	private Integer progress = null;	
 	private String logSplit="\\|";
 	
 	public void addAnalyse(Analyse analyse){
@@ -121,11 +121,9 @@ public class AnalyseRunner {
 		this.outputPath = outputPath;
 	}
 
-	public int getProgress() {
-		return progress;
-	}
 
-	public void setProgress(int progress) {
+
+	public void getProgress(Integer progress) {
 		this.progress = progress;
 	}
 
