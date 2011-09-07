@@ -108,9 +108,9 @@ public class PathFinder extends Analyse {
 
 	public void savePathList() {
 		try {
-			System.out.println(this.NAME + ":savePath:" + this.localOutputPath + "/findPath.txt");
+			System.out.println(this.NAME + ":savePath:" + this.localOutputPath + "/路径发现.txt");
 			FileWriter fw = new FileWriter(this.localOutputPath
-					+ "/findPath.txt");
+					+ "/路径发现.txt");
 			BufferedWriter writer = new BufferedWriter(fw);
 			//Iterator<EndPoint> iter = this.endPoints.iterator();
 			//while (iter.hasNext()) {
@@ -170,7 +170,7 @@ public class PathFinder extends Analyse {
 			// 用xmlserializer把document的内容进行串化
 			FileOutputStream os = null;
 			OutputFormat outformat = new OutputFormat(doc);
-			os = new FileOutputStream(this.localOutputPath + "/findPath.xml");
+			os = new FileOutputStream(this.localOutputPath + "/路径发现.xml");
 			XMLSerializer xmlSerilizer = new XMLSerializer(os, outformat);
 			xmlSerilizer.serialize(doc);
 
@@ -184,16 +184,16 @@ public class PathFinder extends Analyse {
 	public void onInitial() {
 		// TODO Auto-generated method stub
 		Byte type = this.getType();
-		Ulits.newFolder(this.getOutputPath() + "/PathFinder");
+		Ulits.newFolder(this.getOutputPath() + "/路径发现");
 		if (type.equals(AnalyseType.Original)) {
 			this.localOutputPath = this.getOutputPath()
-					+ "/PathFinder/FullName";
+					+ "/路径发现/完整网页";
 		} else if (type.equals(AnalyseType.NegCate)) {
 			this.localOutputPath = this.getOutputPath()
-					+ "/PathFinder/ShortName";
+					+ "/路径发现/仅网页名";
 		} else if (type.equals(AnalyseType.PageToCate)) {
 			this.localOutputPath = this.getOutputPath()
-					+ "/PathFinder/Category";
+					+ "/路径发现/类别";
 		}
 		Ulits.newFolder(this.localOutputPath);
 		System.out.println(this.localOutputPath);

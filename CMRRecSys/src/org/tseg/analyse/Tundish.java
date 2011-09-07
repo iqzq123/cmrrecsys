@@ -96,7 +96,7 @@ public class Tundish extends Analyse {
 	public void saveTundishList() {
 		try {
 			FileWriter fw = new FileWriter(this.localOutputPath
-					+ "/tundish.txt");
+					+ "/漏斗.txt");
 			BufferedWriter writer = new BufferedWriter(fw);
 			for (ArrayList<Level> vector : this.tundishResults) {
 				Iterator<Level> iter2 = vector.iterator();
@@ -179,7 +179,7 @@ public class Tundish extends Analyse {
 			// 用xmlserializer把document的内容进行串化
 			FileOutputStream os = null;
 			OutputFormat outformat = new OutputFormat(doc);
-			os = new FileOutputStream(this.localOutputPath + "/tundish.xml");
+			os = new FileOutputStream(this.localOutputPath + "/漏斗.xml");
 			XMLSerializer xmlSerilizer = new XMLSerializer(os, outformat);
 			xmlSerilizer.serialize(doc);
 
@@ -193,7 +193,7 @@ public class Tundish extends Analyse {
 		try {
 			System.out.println("Continuous");
 			FileWriter fw = new FileWriter(this.localOutputPath
-					+ "/tundishContinuous.txt");
+					+ "/连续漏斗.txt");
 			BufferedWriter writer = new BufferedWriter(fw);
 			for (ArrayList<Level> vector : this.tundishResultsContinuous) {
 				int total = vector.get(0).cnt;
@@ -276,7 +276,7 @@ public class Tundish extends Analyse {
 			FileOutputStream os = null;
 			OutputFormat outformat = new OutputFormat(doc);
 			os = new FileOutputStream(this.localOutputPath
-					+ "/tundishContinuous.xml");
+					+ "/连续漏斗.xml");
 			XMLSerializer xmlSerilizer = new XMLSerializer(os, outformat);
 			xmlSerilizer.serialize(doc);
 
@@ -313,13 +313,13 @@ public class Tundish extends Analyse {
 		// TODO Auto-generated method stub
 		Byte type = this.getType();
 		System.out.println("type " + type);
-		Ulits.newFolder(this.getOutputPath() + "/Tundish");
+		Ulits.newFolder(this.getOutputPath() + "/漏斗分析");
 		if (type.equals(AnalyseType.Original)) {
-			this.localOutputPath = this.getOutputPath() + "/Tundish/FullName";
+			this.localOutputPath = this.getOutputPath() + "/漏斗分析/完整网页";
 		} else if (type.equals(AnalyseType.NegCate)) {
-			this.localOutputPath = this.getOutputPath() + "/Tundish/ShortName";
+			this.localOutputPath = this.getOutputPath() + "/漏斗分析/仅网页名";
 		} else if (type.equals(AnalyseType.PageToCate)) {
-			this.localOutputPath = this.getOutputPath() + "/Tundish/Category";
+			this.localOutputPath = this.getOutputPath() + "/漏斗分析/类别";
 		}
 		Ulits.newFolder(this.localOutputPath);
 		System.out.println("hi" + this.localOutputPath);
