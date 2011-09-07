@@ -315,11 +315,11 @@ public class Tundish extends Analyse {
 		System.out.println("type " + type);
 		Ulits.newFolder(this.getOutputPath() + "/漏斗分析");
 		if (type.equals(AnalyseType.Original)) {
-			this.localOutputPath = this.getOutputPath() + "/漏斗分析/完整网页";
+			this.localOutputPath = this.getOutputPath() + "/漏斗分析/网页名+目录";
 		} else if (type.equals(AnalyseType.NegCate)) {
 			this.localOutputPath = this.getOutputPath() + "/漏斗分析/仅网页名";
 		} else if (type.equals(AnalyseType.PageToCate)) {
-			this.localOutputPath = this.getOutputPath() + "/漏斗分析/类别";
+			this.localOutputPath = this.getOutputPath() + "/漏斗分析/板块分析（一级目录）";
 		}
 		Ulits.newFolder(this.localOutputPath);
 		System.out.println("hi" + this.localOutputPath);

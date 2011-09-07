@@ -187,13 +187,13 @@ public class PathFinder extends Analyse {
 		Ulits.newFolder(this.getOutputPath() + "/路径发现");
 		if (type.equals(AnalyseType.Original)) {
 			this.localOutputPath = this.getOutputPath()
-					+ "/路径发现/完整网页";
+					+ "/路径发现/网页名+目录";
 		} else if (type.equals(AnalyseType.NegCate)) {
 			this.localOutputPath = this.getOutputPath()
 					+ "/路径发现/仅网页名";
 		} else if (type.equals(AnalyseType.PageToCate)) {
 			this.localOutputPath = this.getOutputPath()
-					+ "/路径发现/类别";
+					+ "/路径发现/板块分析（一级目录）";
 		}
 		Ulits.newFolder(this.localOutputPath);
 		System.out.println(this.localOutputPath);
@@ -343,7 +343,7 @@ public class PathFinder extends Analyse {
 		s.setSiteDataPath("E:/data");
 		try {
 			s.start("PathFinderClass" + Separator.cmdSeparator
-					+ AnalyseType.NegCate + Separator.PARAM_SEPARATOR1 + 2
+					+ AnalyseType.Original + Separator.PARAM_SEPARATOR1 + 2
 					+ Separator.PARAM_SEPARATOR1 + 100
 					+ Separator.PARAM_SEPARATOR1 + 1
 					+ Separator.PARAM_SEPARATOR1 + 0
