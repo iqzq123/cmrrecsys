@@ -1038,7 +1038,7 @@
 				</mx:HBox>
 				<mx:HBox>
 					<mx:CheckBox includeInLayout="false" visible="false" id="communitiesCheckBox" x="20" y="280" label="显示社团" change="showCommunitiesChange()"/>
-					<mx:Button label="属性展示" click="propertyDisplay()"/>
+					<mx:Button label="节点属性展示" click="propertyDisplay()"/>
 				</mx:HBox>
 				<mx:Label id="nodePropertyLabel"/>
 				<mx:HBox includeInLayout="false" visible="false">
@@ -1069,13 +1069,13 @@
 				</mx:HBox>
 				
 				<mx:HRule width="181" height="1"/>
-				<mx:HBox>
+				<mx:HBox visible="false" includeInLayout="false">
 					<mx:RadioButtonGroup id="pathRadiogroup" change="pathStyleChange()"/>	
 					<mx:RadioButton id="pathRadioBtn" label="直接显示" groupName="pathRadiogroup" selected="true"/>
 					<mx:RadioButton id="pathAnimationRadioBtn" label="动态显示" groupName="pathRadiogroup"/>
 				</mx:HBox>
 				<mx:Button id="pathBtn" label="显示路径" click="showPath()"/>	
-				<mx:HRule width="181" height="1"/>
+				<mx:HRule width="181" height="1" visible="false" includeInLayout="false"/>
 				<mx:Label text="点权值："/>
 				<mx:HBox>
 					<mx:Label text="下限"/>
@@ -1090,7 +1090,7 @@
 					<mx:Label text="上限"/>
 					<mx:TextInput id="edgeMaxW" width="50" text="-1" restrict="-\0-9"/>
 				</mx:HBox>
-				<mx:Button label="过滤" click="filter()"/>
+				<mx:Button label="展示原图" click="filter()"/>
 				<mx:HBox>
 					<mx:Button label="刷新" click="refresh()" />
 					<mx:Button id="fishEyeBtn" label="局部放大" click="localMagnify()"/>
