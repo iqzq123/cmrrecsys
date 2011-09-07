@@ -149,8 +149,9 @@ package SNADisplay.org.Graph.Model
 		
 		public function initGraphData(xmlData:XML, canvas:Canvas = null):void {
 			_xmlData = xmlData;	
+			var minEdgeWeight:int = adjustEdgeFilterWeight(xmlData);
 			if(_xmlData != null) {
-				_graphFullData = initFromXML(_xmlData);
+				_graphFullData = initFromXML(_xmlData,-1,-1,minEdgeWeight);
 				_graphData.nodes = _graphFullData.nodes.concat();
 				_graphData.edges = _graphFullData.edges.concat();
 			}
@@ -2128,6 +2129,31 @@ package SNADisplay.org.Graph.Model
 			_mapNodeColor = setNodeColor(_graphFullData.nodes);
 			_mapEdgeColor = setEdgeColor(_graphFullData.edges);
 			return true;
+		}
+		
+		//返回值，调整后的过滤边权值下界
+		private function adjustEdgeFilterWeight(xmlData:XML):int {
+			var minEdgeWeight:int;
+			var nodesXMLList:XMLList = xmlData.descendants("Node");
+			var edgesXMLList:XMLList = xmlData.descendants("Edge");
+			var nodeNum:int = nodesXMLList.length();
+			var edgeNum:int = edgesXMLList.length();
+			var edgeWeight:Number;
+			var edgeWArr:Array = new Array;
+			const DELTA:Number = 1.5;
+			for each ( var edgeXML:XML in edgesXMLList ) {
+				edgeWeight = new Number(edgeXML.attribute("weight").toString());
+				edgeWArr.push(edgeWeight);
+			}
+			edgeWArr.sort(Array.NUMERIC);
+			edgeWArr = edgeWArr.reverse();
+			if ( edgeNum > nodeNum*DELTA ){
+				//Alert.show("nodeNum="+nodeNum+"\nedgeNum="+edgeNum+"\nedgeW="+edgeWArr[nodeNum]);
+				var n:int = nodeNum*1.5;
+				return edgeWArr[n];
+			}
+			else 
+				return -1;
 		}
 	}
 }
