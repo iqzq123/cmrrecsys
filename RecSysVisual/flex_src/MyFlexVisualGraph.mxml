@@ -278,6 +278,7 @@
 					_graph.initGraphData(xmlData,_graphCanvas);
 					
 					communitiesCheckBox.selected = false;
+					this.arrowCheckBox.selected = true;
  					setGraph(_graph);
 					_graph.draw(); 
 					if ( _graph2 == null )
@@ -926,6 +927,7 @@
 					_graph = new FRPath("MyGraph",false,true,closedPathCheckBox.selected);
 					_graph.initGraphData(xmlData,_graphCanvas);
 					communitiesCheckBox.selected = false;
+					this.arrowCheckBox.selected = true;
  					setGraph(_graph);
 					_graph.draw(); 
 					if ( _graph2 == null )
