@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" title="分析面板"
-	width="640" height="540" fontSize="12" showCloseButton="true" close="closeHandle()" creationComplete="init()">
+	width="616" height="540" fontSize="12" showCloseButton="true" close="closeHandle()" creationComplete="init()">
 	<mx:Script>
 		<![CDATA[
 			import mx.rpc.http.mxml.HTTPService;
@@ -23,6 +23,7 @@
 		    private var _cmd:String = "";
 		    private const BASICE_ANALYSE_NAME:String = "StatAnalyse";
 		    private const GLOBAL_ANALYSE_NAME:String = "GlobalAnalyse";
+		    private static const MINISECENDS:int=1000;
 		    
 			[Bindable]
 			private var dgDataPathFinder:ArrayCollection = new ArrayCollection;
@@ -145,6 +146,7 @@
 		    	Alert.show("漏斗路径:\n"+newStr);
 		    }
 		    
+		    private var intervalID:uint;
 		    private function start():void {
 		    	if ( !checkParameters() ){
 		    		return ;
@@ -160,10 +162,13 @@
                 params.inputPath = encodeURIComponent(filePath.text);
                 params.outputPath = encodeURIComponent(resultPath.text);
                 params.cmd = encodeURIComponent(_cmd);
-                		
+                params.action = "start";
+//                sendCMD.addEventListener(ResultEvent.RESULT,setProgressBar);		
 				sendCMD.send(params); 
 				dispatchEvent(new Event(Event.SELECT,true));
-				closeHandle();
+				intervalID = setInterval(togetProgress,MINISECENDS);
+//				togetProgress();
+//				closeHandle();
 		    }
 
 		    private function cmdGen():String {
@@ -360,26 +365,55 @@
 		    public function getCMD():String {
 		    	return _cmd;
 		    }
+		    
+		    private var preNum:int = 0;
+		    private var num:int;
+		    private var i:int = 0;
+		    public function togetProgress():void {
+		    	var getProgressService:HTTPService = new HTTPService();
+		    	getProgressService.url = "anlayseStarterServlet";
+		    	var params:URLVariables = new URLVariables();
+		    	params.action = "get";
+//		    	getProgressService.method = "POST";
+		    	getProgressService.addEventListener(ResultEvent.RESULT,setProgressBar);
+		    	getProgressService.send(params);
+		    }
+		    private function setProgressBar(e:ResultEvent):void {
+		    	var progress:String = String(e.result);
+		    	num = new int(progress);
+		    	if(preNum == num) {
+		    		clearInterval(intervalID);
+		    		progressBar.setProgress(100,100);
+		    		progressBar.label = "执行结束";
+		    	}
+		    	else {
+		    		i+=5;
+		    		preNum = num;
+		    		if(i>100) i=0;
+		    		progressBar.setProgress(i,100);
+		    		progressBar.label = "正在执行中..";
+		    	}
+		    }
 		]]>
 	</mx:Script>
 	<mx:Box width="100%" height="464" paddingTop="20" paddingLeft="10" paddingRight="10" >
 		<mx:HBox verticalAlign="middle">
 			<mx:VBox >
-				<mx:HBox width="450" paddingLeft="10">
+				<mx:HBox width="458" paddingLeft="20">
 					<mx:Label text="目标文件"/>
 					<mx:TextInput id="filePath" text="E:\data\pagevisit\test.txt" width="305"/>
 					<mx:Button label="选择" click="showFileWindow()"/>
 				</mx:HBox>
-				<mx:HBox width="450" paddingLeft="10">
+				<mx:HBox width="458" paddingLeft="20">
 					<mx:Label text="结果路径"/>
 					<mx:TextInput id="resultPath" text="E:\data\pagevisit\testout.txt" width="305"/>
 					<mx:Button label="选择" click="showResultWindow()"/>
 				</mx:HBox>
 			</mx:VBox>
-			<mx:VBox fontSize="10" paddingLeft="5">
+			<mx:VBox fontSize="10" paddingLeft="20">
 				<mx:CheckBox id="shortPageNameCheckBox" label="仅网页名" selected="true"/>
-				<mx:CheckBox id="fullPageNameCheckBox" label="网页名+目录"/>
-				<mx:CheckBox id="cateNameCheckBox" label="板块分析（一级目录）"/>
+				<mx:CheckBox id="fullPageNameCheckBox" label="完整网页"/>
+				<mx:CheckBox id="cateNameCheckBox" label="仅类别"/>
 			</mx:VBox>
 		</mx:HBox>
 		
@@ -387,7 +421,7 @@
 		
 		<mx:TabNavigator x="0" y="0" width="100%" height="360">
 			<mx:Canvas id="PAcanvas" label="路径发现 " width="100%" height="100%">
-				<mx:DataGrid id="dgPathFinder" x="89.5" y="10" textAlign="center" height="244" width="415"
+				<mx:DataGrid id="dgPathFinder" x="71.5" y="10" textAlign="center" height="244" width="415"
 					 dataProvider="{dgDataPathFinder}" sortableColumns="false" draggableColumns="false">
 					<mx:columns>
 						<mx:DataGridColumn headerText="序号" dataField="orderId" width="50" labelFunction="rowNumPathFinder"/>
@@ -447,7 +481,8 @@
 			</mx:Canvas>
 		</mx:TabNavigator>	
 	</mx:Box>	
-	
-	<mx:Button label="启动" x="441" y="464" click="start()"/>
-	<mx:Button label="取消" x="514" y="464" click="closeHandle()"/>
+	<mx:ProgressBar id="progressBar" x="30" y="464" width="300" visible="true"
+		 mode="manual" label=""/>
+	<mx:Button label="启动" x="415" y="464" click="start()"/>
+	<mx:Button label="取消" x="488" y="464" click="closeHandle()"/>
 </mx:TitleWindow>
