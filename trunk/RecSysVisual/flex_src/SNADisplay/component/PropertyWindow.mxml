@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="238" height="326"
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="238" height="352"
 	 showCloseButton="true" borderAlpha="0.9" title="属性展示选择" close="closeHandler()" fontSize="13">
 	<mx:Script>
 		<![CDATA[
@@ -73,11 +73,12 @@
 	   		}
 		]]>
 	</mx:Script>
-	<mx:VBox id="vBox" width="100%" height="205" paddingLeft="20" horizontalAlign="left" borderStyle="solid">
-		<mx:Label text="请勾选要展示的属性:"/>
+	
+	<mx:VBox id="vBox" width="100%" height="205" paddingLeft="5" horizontalAlign="left" borderStyle="solid">
+		<mx:Label text="请勾选要展示的数值属性:"/>
 	</mx:VBox>
-	<mx:Label x="10" y="216" text="权值属性："/>
-	<mx:ComboBox id="comboBox" x="86" y="213" width="122" height="25" dataProvider="{propertyData}"></mx:ComboBox>
-	<mx:Button x="40.5" y="246" label="确 定" click="comfirm()"/>
-	<mx:Button x="115.5" y="246" label="取 消" click="closeHandler()"/>
+	<mx:Label x="10" y="213" paddingLeft="5" text="选择一个属性作为节点权值："/>
+	<mx:ComboBox id="comboBox" x="53.5" y="239" width="122" height="25" dataProvider="{propertyData}"></mx:ComboBox>
+	<mx:Button x="42.5" y="272" label="确 定" click="comfirm()"/>
+	<mx:Button x="117.5" y="272" label="取 消" click="closeHandler()"/>
 </mx:TitleWindow>
