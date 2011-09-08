@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.sun.corba.se.spi.orb.StringPair;
 
@@ -29,16 +30,18 @@ public class BookModel {
 	//private final int BOOK_ATTRI_NUM = 15;
 	private final int CHAPTER_ATTRI_NUM = 7;
 	
+	private AtomicInteger progress = null;
+	
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		BookModel b = new BookModel();
-		b.setBookInfoPath("E:\\data\\book\\bookinfo_7627034.txt");
-		b.setChapterInfoPath("E:\\data\\book\\CHAPTER_7627034.txt");
-		b.setInputPath("E:\\data\\book\\MSISDN_BOOKID_7627034.txt");
-		b.setOutputPath("E:\\tun.txt");
+		b.setBookInfoPath("E:/data/book/新图书信息.txt");
+		b.setChapterInfoPath("E:/data/book/新章节信息.txt");
+		b.setInputPath("E:/data/book/新数据文件.txt");
+		b.setOutputPath("E:/data/book/test");
 		b.onInitial();
 		b.run();
 		b.saveBookXML();
@@ -69,7 +72,7 @@ public class BookModel {
 			String str;
 			reader.readLine();
 			while ((str = reader.readLine()) != null) {
-				if(str.contains(","))str = str.replace(',', '|');
+//				if(str.contains(","))str = str.replace(',', '|');
 				String[] strArray = str.split(seprator);
 				
 				Book book = new Book();
@@ -98,16 +101,21 @@ public class BookModel {
 			String str;
 			reader.readLine();
 			while ((str = reader.readLine()) != null) {
-				if(str.contains(","))str = str.replace(',', '|');
+//				if(str.contains(","))str = str.replace(',', '|');
 				String[] strArray = str.split(seprator);
 				if ( strArray.length == this.CHAPTER_ATTRI_NUM ){
+					String fee;
+					if(strArray[6]==""){
+						fee = "0";
+					}
+					else fee = strArray[6];
 					Chapter chapter = new Chapter(Integer.parseInt(strArray[0]),
 												Integer.parseInt(strArray[1]),
 												strArray[2],
 												Integer.parseInt(strArray[3]),
 												Integer.parseInt(strArray[4]),
 												Integer.parseInt(strArray[5]),
-												Integer.parseInt(strArray[6]));
+												Integer.parseInt(fee));
 					Book book = this.bookMap.get(chapter.getBookId());
 					book.addChapter(chapter);
 				}
@@ -133,21 +141,20 @@ public class BookModel {
 			Book book = null;
 			int i = 0;
 			while ((str = reader.readLine()) != null) {
-				if(str.contains(","))str = str.replace(',', '|');
+//				if(str.contains(","))str = str.replace(',', '|');
 				String[] strArray = str.split(seprator);
 				
 				if ( strArray.length < 2 )
 					continue;
 				
-				if ( book == null ){
-					book = getBookByChapterId(Integer.parseInt(strArray[1]));
-					if ( book != null )
-						this.targetBooksAL.add(book);
+				book = getBookByChapterId(Integer.parseInt(strArray[1]));
+				if(!this.targetBooksAL.contains(book)) {
+					this.targetBooksAL.add(book);
 				}
-				
-				if ( book != null )
-					countChapterUserNumber(strArray, book);
+				countChapterUserNumber(strArray, book);
+					
 				i++;
+				this.progress.set(i);
 				if ( i % 100000 == 0)
 					System.out.println(i);
 			}
@@ -192,13 +199,27 @@ public class BookModel {
 				Collections.sort(keyArrayList);
 				for ( int key : keyArrayList ) {
 					Chapter chapter = book.getChapterMap().get(key);
-					System.out.println(chapter.getId()+","+chapter.getUserNum()+","+chapter.getName()+","+book.getName());
+					System.out.println(book.getId()+"---"+chapter.getId()+","+chapter.getUserNum()+","+chapter.getName()+","+book.getName());
 					str+=book.getName()+","+book.getSerialize()+","+chapter.getId()+","+chapter.getUserNum()+","+chapter.getName()+","+chapter.getFee()+"\n";
 					
 				}
 				output.write(str);
 				output.close();
+				str = "";
 			}
+			
+//			for ( Book book : this.targetBooksAL ) {
+//				System.out.println("bookID:"+book.getId());
+//				Iterator<Integer> iterator = book.getChapterMap().keySet().iterator();
+//				ArrayList<Integer> keyArrayList = new ArrayList<Integer>();
+//				while ( iterator.hasNext() ) {
+//					keyArrayList.add(iterator.next());
+//				}
+//				Collections.sort(keyArrayList);
+//				for ( int key : keyArrayList ) {
+//					Chapter chapter = book.getChapterMap().get(key);
+//				}
+//			}
 			
 		}
 		catch (Exception e) {
@@ -246,6 +267,10 @@ public class BookModel {
 
 	public void setOutputPath(String outputPath) {
 		this.outputPath = outputPath;
+	}
+	
+	public void getProgress(AtomicInteger progress) {
+		this.progress = progress;
 	}
 
 }

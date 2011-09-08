@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -30,9 +31,9 @@ public class BookTundish {
 	private String inputPath = "";
 	private String outputPath = "";
 	private String tundishPath = "";
+	private BookModel bookModel = new BookModel();
 	
 	public void run(){
-		BookModel bookModel = new BookModel();
 		bookModel.setBookInfoPath(bookInfoPath);
 		bookModel.setChapterInfoPath(chapterInfoPath);
 		bookModel.setInputPath(inputPath);
@@ -137,11 +138,11 @@ public class BookTundish {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		BookTundish bt = new BookTundish();
-		bt.setBookInfoPath("E:\\data\\book\\bookinfo.txt");
-		bt.setChapterInfoPath("E:\\data\\book\\chapterinfo.txt");
-		bt.setInputPath("E:\\data\\book\\msisdn_chapterid.txt");
-		bt.setOutputPath("E:\\data\\book\\tun.txt");
-		bt.setTundishPath("E:\\data\\book");
+		bt.setBookInfoPath("E:/data/book/新图书信息.txt");
+		bt.setChapterInfoPath("E:/data/book/新章节信息.txt");
+		bt.setInputPath("E:/data/book/新数据文件.txt");
+		bt.setOutputPath("E:/data/book/test");
+		bt.setTundishPath("E:/data/book/图书漏斗文件.xml");
 		bt.run();
 
 	}
@@ -184,6 +185,10 @@ public class BookTundish {
 	
 	public String getTundishPath(){
 		return this.tundishPath;
+	}
+	
+	public void getProgress(AtomicInteger progress){
+		this.bookModel.getProgress(progress);
 	}
 
 }
