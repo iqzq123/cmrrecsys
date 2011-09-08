@@ -34,7 +34,6 @@ public class BookTundish {
 	private String outputPath = "";
 	private String tundishPath = "";
 	private BookModel bookModel = new BookModel();
-	private AtomicInteger progress = new AtomicInteger(0);
 	
 	public void run(){
 		bookModel.setBookInfoPath(bookInfoPath);
@@ -42,7 +41,6 @@ public class BookTundish {
 		bookModel.setInputPath(inputPath);
 		bookModel.setOutputPath(outputPath);
 		bookModel.onInitial();
-		bookModel.getProgress(progress);
 		bookModel.run();
 		bookModel.saveBookXML();
 		saveTundishXML();
