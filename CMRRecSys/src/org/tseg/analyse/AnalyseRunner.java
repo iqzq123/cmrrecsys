@@ -51,7 +51,7 @@ public class AnalyseRunner {
 			
 
 			String[] strArray = str.split(this.logSplit);
-			if(strArray.length<32){
+			if(strArray.length<22){
 				continue;
 			}
 			//Preprocessor.process(strArray);
