@@ -104,22 +104,24 @@ public class BookModel {
 //				if(str.contains(","))str = str.replace(',', '|');
 				String[] strArray = str.split(seprator);
 				if ( strArray.length == this.CHAPTER_ATTRI_NUM ){
-					String fee;
-					if(strArray[6]==""){
-						fee = "0";
-					}
-					else fee = strArray[6];
+//					String fee;
+//					if(strArray[6]==""){
+//						fee = "0";
+//					}
+//					else fee = strArray[6];
 					Chapter chapter = new Chapter(Integer.parseInt(strArray[0]),
 												Integer.parseInt(strArray[1]),
 												strArray[2],
 												Integer.parseInt(strArray[3]),
 												Integer.parseInt(strArray[4]),
 												Integer.parseInt(strArray[5]),
-												Integer.parseInt(fee));
+												Integer.parseInt(strArray[6]));
 					Book book = this.bookMap.get(chapter.getBookId());
 					book.addChapter(chapter);
 				}
 			}
+			
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -188,8 +190,16 @@ public class BookModel {
 			
 			
 			String str = "";
+			for (int i=0;i<this.targetBooksAL.size();i++){
+				Book book = this.targetBooksAL.get(i);
+				System.out.println(book.getId()+" "+book.getName());
+			}
 			for ( Book book : this.targetBooksAL ){
 				File file = new File(f.getAbsolutePath()+"/"+book.getId());
+				if(!file.exists()){
+					System.out.println("create file"+file.getAbsolutePath());
+					file.createNewFile();
+				}
 				BufferedWriter output = new BufferedWriter(new FileWriter(file));
 				Iterator<Integer> iterator = book.getChapterMap().keySet().iterator();
 				ArrayList<Integer> keyArrayList = new ArrayList<Integer>();
@@ -208,18 +218,6 @@ public class BookModel {
 				str = "";
 			}
 			
-//			for ( Book book : this.targetBooksAL ) {
-//				System.out.println("bookID:"+book.getId());
-//				Iterator<Integer> iterator = book.getChapterMap().keySet().iterator();
-//				ArrayList<Integer> keyArrayList = new ArrayList<Integer>();
-//				while ( iterator.hasNext() ) {
-//					keyArrayList.add(iterator.next());
-//				}
-//				Collections.sort(keyArrayList);
-//				for ( int key : keyArrayList ) {
-//					Chapter chapter = book.getChapterMap().get(key);
-//				}
-//			}
 			
 		}
 		catch (Exception e) {
