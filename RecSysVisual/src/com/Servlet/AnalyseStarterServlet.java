@@ -26,7 +26,7 @@ import com.XMLFileReader;
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException {
 //		Count++;
-//		System.out.println("µÚ"+Count+"´Î½øÀ´À²£¡");
+//		System.out.println("ï¿½ï¿½"+Count+"ï¿½Î½ï¿½42ï¿½ï¿½");
 //		System.out.println("in start servlet1111111122222222222222222");
 //		System.out.println("in start servlet doPost----------------");
 //		String progress = String.valueOf(s.getProgress());
@@ -59,7 +59,6 @@ import com.XMLFileReader;
 			//s.setNegCate(true);
 			
 			try{
-				System.out.println("Òª¿ªÊ¼startÁË11111");
 				s.start(cmd);//"PathFinderClass	2?	|?100?	|?login*;	|;ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾Ò³ï¿½ï¿½");
 				System.out.println("start run..............................");
 //				System.out.println(s.getProgress());
@@ -71,7 +70,6 @@ import com.XMLFileReader;
 		}
 		
 		else if(action.equals("get")){
-			System.out.println("½øÈëget");
 			System.out.println("get's progress:"+progress);
 			response.setContentType("text/xml;charset=utf-8");
 			response.setCharacterEncoding("utf-8");
