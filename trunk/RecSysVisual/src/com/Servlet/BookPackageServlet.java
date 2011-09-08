@@ -14,11 +14,11 @@ import org.tseg.analyse.BookPackage;
 import com.XMLFileReader;
 
 public class BookPackageServlet extends HttpServlet{
-	private String tundishSuffix = "/图书漏斗文件.xml";
-	private String packageSuffix = "/图书打包文件.xml";
+	private String tundishSuffix = "/鍥句功婕忔枟鏂囦欢.xml";
+	private String packageSuffix = "/鍥句功鎵撳寘鏂囦欢.xml";
 	public void doGet(HttpServletRequest request, HttpServletResponse response) 
 	throws ServletException, IOException {
-		System.out.println("-------------------\n进入bookPackageServlet!!!!!!");
+		System.out.println("-------------------\n杩涘叆bookPackageServlet!!!!!!");
 		response.setContentType("text/xml;charset=utf-8");
 		response.setCharacterEncoding("utf-8");
 		

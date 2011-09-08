@@ -14,7 +14,7 @@ import org.tseg.analyse.*;
 import com.XMLFileReader;
 
 public class GetBookTundishServlet extends HttpServlet{
-	private String tundishSuffix = "/图书漏斗文件.xml";
+	private String tundishSuffix = "鍥句功婕忔枟鏂囦欢.xml";
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException {
 		response.setContentType("text/xml;charset=utf-8");
@@ -28,7 +28,7 @@ public class GetBookTundishServlet extends HttpServlet{
 
 		tundishPath = tundishPath + tundishSuffix;
 		
-		System.out.println("进入servlet"+"\n"+bookInfoPath+"\n"+chapterInfoPath+"\n"+readingInfoPath);
+		System.out.println("杩涘叆book tundish servlet"+"\n"+bookInfoPath+"\n"+chapterInfoPath+"\n"+readingInfoPath);
 		
 		BookTundish bookTundish = new BookTundish();
 		File f = new File(readingInfoPath);
