@@ -3,6 +3,7 @@ package com.Servlet;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Calendar;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.servlet.ServletException;
@@ -30,7 +31,8 @@ public class GetBookTundishServlet extends HttpServlet{
 			String chapterInfoPath = java.net.URLDecoder.decode(request.getParameter("chapterInfoPath"),"UTF-8");
 			String readingInfoPath = java.net.URLDecoder.decode(request.getParameter("readingInfoPath"),"UTF-8");
 			String tundishPath = java.net.URLDecoder.decode(request.getParameter("tundishPath"),"UTF-8");
-
+			
+			String currentTime = getCurrentTime();
 			tundishPath = tundishPath + tundishSuffix;
 			
 			System.out.println("进入book tundish servlet"+"\n"+bookInfoPath+"\n"+chapterInfoPath+"\n"+readingInfoPath+"\n"+tundishPath);
@@ -41,20 +43,20 @@ public class GetBookTundishServlet extends HttpServlet{
 			bookTundish.setBookInfoPath(bookInfoPath);
 			bookTundish.setChapterInfoPath(chapterInfoPath);
 			bookTundish.setInputPath(readingInfoPath);
-			bookTundish.setOutputPath(f.getParent()+"/books");
+			bookTundish.setOutputPath(f.getParent()+"/tempbooks"+currentTime);
 			bookTundish.setTundishPath(tundishPath);
 			
 			bookTundish.getProgress(progress);
 			bookTundish.run();
 			
-			
-			PrintWriter out = response.getWriter();
-			XMLFileReader xmlfr = new XMLFileReader();
-			String str = "";
-			str = xmlfr.readXMLToStr(tundishPath);//"E:\\data\\pagevisit\\pv6.txt.out\\tundish.xml");//      
-			out.println(str);
-			out.flush();
-			out.close();
+//			
+//			PrintWriter out = response.getWriter();
+//			XMLFileReader xmlfr = new XMLFileReader();
+//			String str = "";
+//			str = xmlfr.readXMLToStr(tundishPath);//"E:\\data\\pagevisit\\pv6.txt.out\\tundish.xml");//      
+//			out.println(str);
+//			out.flush();
+//			out.close();
 		}
 		else if (action.equals("progress")){
 			System.out.println("get's progress:"+progress);
@@ -65,6 +67,33 @@ public class GetBookTundishServlet extends HttpServlet{
 			out.flush();
 			out.close();
 		}
+		
+	}
+	
+	public String getCurrentTime()
+	{
+		Calendar ca=Calendar.getInstance();
+		String year=Integer.toString(ca.get(Calendar.YEAR));
+		String month=addZero(Integer.toString(ca.get(Calendar.MONTH)+1));
+		String day=addZero(Integer.toString(ca.get(Calendar.DATE)));
+		String hour=addZero(Integer.toString(ca.get(Calendar.HOUR)));
+		String minute=addZero(Integer.toString(ca.get(Calendar.MINUTE)));
+		String second=addZero(Integer.toString(ca.get(Calendar.SECOND)));
+		//System.out.println(year+";"+month+";"+day+";"+hour+";"+minute+";"+second);
+		return year+month+day+hour+minute+second;
+	}
+	public String addZero(String str)
+	{
+		String strNew;
+		if (str.length() == 1) 
+		{
+			strNew = "0" + str;
+		} 
+		else 
+		{
+			strNew = str;
+		}
+		return strNew;
 		
 	}
 
