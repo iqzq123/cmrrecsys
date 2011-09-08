@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="490" height="376"
-	 creationPolicy="all">
+	 creationPolicy="all" showCloseButton="true">
 	 <mx:Script>
 	 	<![CDATA[
 	 		import mx.rpc.events.FaultEvent;
