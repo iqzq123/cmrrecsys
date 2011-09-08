@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -42,6 +43,7 @@ public class FPAnalyser {
 	private Byte analyseType = AnalyseType.NegCate;
 	private boolean isClosed=false;
 	private HashMap<String,Integer> pageMap=new HashMap<String,Integer>();
+	private AtomicInteger progress = null;
 	
 	private int pathCnt=0;
 	
@@ -89,6 +91,7 @@ public class FPAnalyser {
 					
 				}
 				cnt++;
+				this.progress.set(cnt);
 			}
 			System.out.println(cnt);
 			
@@ -470,6 +473,10 @@ public class FPAnalyser {
 
 	public void setLogSplit(String logSplit) {
 		this.logSplit = logSplit;
+	}
+
+	public void getProgress(AtomicInteger progress) {
+		this.progress = progress;
 	}
 
 }
