@@ -71,5 +71,14 @@
     <url-pattern>/FPAAnalyse</url-pattern>
   </servlet-mapping>
   
+   <servlet>
+    <servlet-name>getProgress</servlet-name>
+    <servlet-class>com.Servlet.getProgress</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>getProgress</servlet-name>
+    <url-pattern>/getProgress</url-pattern>
+  </servlet-mapping>
+  
 </web-app>
 
