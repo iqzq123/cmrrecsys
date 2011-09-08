@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Timer;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.lang.SecurityManager;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -34,6 +35,7 @@ public class BookTundish {
 	private String outputPath = "";
 	private String tundishPath = "";
 	private BookModel bookModel = new BookModel();
+	private static AtomicInteger progress = new AtomicInteger(0);
 	
 	public void run(){
 		bookModel.setBookInfoPath(bookInfoPath);
@@ -135,7 +137,35 @@ public class BookTundish {
 			ioexp.printStackTrace();
 		}
 		
+//		try {
+//			deleteTempFile();
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
 	}
+	
+//	private void deleteTempFile() throws Exception {
+//		File inFile = new File(outputPath);
+//		inFile.delete();
+//		File newFile = new File(inFile.getAbsolutePath()+"/9999999999");
+//		newFile.createNewFile();
+//		File [] bookFiles = inFile.listFiles();
+//		System.out.println(bookFiles.length);
+//		for(int i=0;i<bookFiles.length;i++){
+//			File file = bookFiles[i];
+//			System.out.println("1."+file.getAbsolutePath()+file.isAbsolute());
+//			try {
+//				Boolean deleteBoolean = file.delete();
+//				if(deleteBoolean)System.out.println("1.delete file "+file.getAbsolutePath());
+//				
+//			} catch (Exception e) {
+//				// TODO: handle exception
+//				e.printStackTrace();
+//			}
+//		}
+//	}
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -145,6 +175,7 @@ public class BookTundish {
 		bt.setInputPath("E:/data/book/新数据文件.txt");
 		bt.setOutputPath("E:/data/book/test");
 		bt.setTundishPath("E:/data/book/图书漏斗文件.xml");
+		bt.getProgress(progress);
 		bt.run();
 		
 	}
