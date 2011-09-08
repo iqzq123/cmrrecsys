@@ -11,6 +11,7 @@
 			
 			private var fileWindow:FileWindow;
 			private var selectedButton:String;
+			private static const MINISECENDS:int=5000;
 			
 			private function openFileWindow(e:Event):void {
 				selectedButton = ((e.target) as Button).id;
@@ -76,6 +77,7 @@
 				return true;
 			}
 			
+			private var intervalID:uint;
 			private function submit():void {
 				if(checkTextInput()) {
 					var FPAAnalyse:HTTPService = new HTTPService();
@@ -89,15 +91,46 @@
 					params.maxFPLenght = textinput5.text;
 					params.MinRatio = textinput6.text;
 					params.DecayRatio = textinput7.text;
-					
+					params.action = "start";
 					FPAAnalyse.send(params);
-					closeHandle();
 				}
+				intervalID = setInterval(togetProgress,MINISECENDS);
 			}
 			
 			private function closeHandle():void {
 	   			PopUpManager.removePopUp(this);
 	   		}
+	   		
+	   		private var preNum:int = 0;
+		    private var num:int;
+		    private var i:int = 0;
+		    private var count:int = 1;
+	   		public function togetProgress():void {
+		    	var getProgressService:HTTPService = new HTTPService();
+		    	getProgressService.url = "FPAAnalyse";
+		    	var params:URLVariables = new URLVariables();
+		    	params.action = "progress";
+		    	getProgressService.addEventListener(ResultEvent.RESULT,setProgressBar);
+		    	getProgressService.send(params);
+		    }
+		    private function setProgressBar(e:ResultEvent):void {
+		    	var progress:String = String(e.result);
+		    	num = new int(progress);
+		    	if(preNum == num) {
+		    		clearInterval(intervalID);
+		    		progressBar.setProgress(100,100);
+		    		progressBar.label = "执行完毕";
+		    		Alert.show("频繁路径分析执行完毕！");
+		    	}
+		    	else {
+		    		if(num<preNum) count++;
+		    		i+=5;
+		    		preNum = num;
+		    		if(i>100) i=0;
+		    		progressBar.setProgress(i,100);
+		    		progressBar.label = "第"+count+"次读文件，正在执行中..";
+		    	}
+		    }
 	 	]]>
 	 </mx:Script>
 
@@ -117,6 +150,7 @@
 	<mx:TextInput id="textinput7" x="190" y="220" width="182" text="0.9"/>
 	<mx:Button id="bt1" x="379" y="40" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
 	<mx:Button id="bt2" x="379" y="70" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
+	<mx:ProgressBar id="progressBar" x="50" y="280" label="" visible="true" mode="manual" />
 	<mx:Button x="281" y="280" label="确定" fontSize="12" click="submit()"/>
 	<mx:Button x="374" y="280" label="取消" fontSize="12" click="closeHandle()"/>
 	<!--<mx:Button id="bt3" x="379" y="100" label="浏览.." fontSize="12" click="openFileWindow(event)"/>

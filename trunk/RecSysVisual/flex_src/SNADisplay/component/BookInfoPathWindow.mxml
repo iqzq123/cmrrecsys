@@ -16,6 +16,7 @@
 			private var fileWindow:FileWindow;
 			private var selectedButton:String;
 			private var tundishSuffix:String = "/图书漏斗.xml";
+			private static const MINISECENDS:int=1000;
 			
 			private function openFileWindow(e:Event):void {
 				selectedButton = ((e.target) as Button).id;
@@ -40,6 +41,7 @@
 				}
 			}
 			
+			private var intervalID:uint;
 			private function confirm():void {
 				var getBookTundish:HTTPService = new HTTPService();
 				getBookTundish.resultFormat="e4x";
@@ -50,12 +52,13 @@
 				params.chapterInfoPath = encodeURIComponent(textinput2.text);
 				params.readingInfoPath = encodeURIComponent(textinput3.text);
 				params.tundishPath = encodeURIComponent(textinput4.text);
+				params.action = "start";
 								
 //				getBookTundish.addEventListener(ResultEvent.RESULT,genTundish);
 				getBookTundish.addEventListener(FaultEvent.FAULT,faultHandler);
 
 				getBookTundish.send(params);
-				closeHandle();
+				intervalID = setInterval(togetProgress,MINISECENDS);
 			}
 			
 //			private var bookTundish:BookTundishWindow;
@@ -79,8 +82,39 @@
 	   		}
 	   		
 	   		
+	   		private var preNum:int = 0;
+		    private var num:int;
+		    private var i:int = 0;
+	   		public function togetProgress():void {
+		    	var getProgressService:HTTPService = new HTTPService();
+		    	getProgressService.url = "getBookTundish";
+		    	var params:URLVariables = new URLVariables();
+		    	params.action = "progress";
+		    	getProgressService.addEventListener(ResultEvent.RESULT,setProgressBar);
+		    	getProgressService.send(params);
+		    }
+		    private function setProgressBar(e:ResultEvent):void {
+		    	var progress:String = String(e.result);
+		    	num = new int(progress);
+		    	if(preNum == num) {
+		    		clearInterval(intervalID);
+		    		progressBar.setProgress(100,100);
+		    		progressBar.label = "执行完毕";
+		    		Alert.show("图书漏斗分析执行完毕！");
+		    	}
+		    	else {
+		    		i+=5;
+		    		preNum = num;
+		    		if(i>100) i=0;
+		    		progressBar.setProgress(i,100);
+		    		progressBar.label = "正在执行中..";
+		    	}
+		    }
+	   		
+	   		
 		]]>
 	</mx:Script>
+	
 	<mx:Label id="label1" x="36" y="58" text="图书信息路径" width="104" height="27" fontSize="15"/>
 	<mx:Label id="label2" x="36" y="108" text="章节信息路径" width="104" height="27" fontSize="15"/>
 	<mx:Label id="label3" x="36" y="158" text="数据路径" width="104" height="27" fontSize="15" />
@@ -93,6 +127,7 @@
 	<mx:Button id="bt2" x="345" y="108" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
 	<mx:Button id="bt3" x="345" y="158" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
 	<mx:Button id="bt4" x="345" y="208" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
+	<mx:ProgressBar id="progressBar" x="36" y="251" label="" visible="true" mode="manual"/>
 	<mx:Button id="bt5" x="275" y="251" label="确定" fontSize="12" click="confirm()"/>
 	<mx:Button id="bt6" x="345" y="251" label="取消" fontSize="12" click="closeHandle()"/>
 	
