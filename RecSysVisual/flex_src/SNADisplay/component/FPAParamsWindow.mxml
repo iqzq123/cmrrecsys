@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="490" height="376"
 	 creationPolicy="all" showCloseButton="true">
+	 <mx:Metadata>
+		[Event(name="mouseClick")]
+	</mx:Metadata>
 	 <mx:Script>
 	 	<![CDATA[
 	 		import mx.rpc.events.FaultEvent;
@@ -8,6 +11,7 @@
 			import mx.rpc.events.ResultEvent;
 			import mx.managers.PopUpManager;
 			import mx.controls.Alert;
+			import mx.events.CloseEvent;
 			
 			private var fileWindow:FileWindow;
 			private var selectedButton:String;
@@ -120,7 +124,7 @@
 		    		clearInterval(intervalID);
 		    		progressBar.setProgress(100,100);
 		    		progressBar.label = "执行完毕";
-		    		Alert.show("频繁路径分析执行完毕！");
+		    		Alert.show("频繁路径分析执行完毕！","",0,this,closeHandle2);
 		    	}
 		    	else {
 		    		if(num<preNum) count++;
@@ -131,6 +135,10 @@
 		    		progressBar.label = "第"+count+"次读文件，正在执行中..";
 		    	}
 		    }
+		    
+		    private function closeHandle2(e:CloseEvent):void {
+	   			PopUpManager.removePopUp(this);
+	   		}
 	 	]]>
 	 </mx:Script>
 
