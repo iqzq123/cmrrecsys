@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" title="分析面板"
-	width="642" height="540" fontSize="12" showCloseButton="true" close="closeHandle()" creationComplete="init()">
+	width="680" height="550" fontSize="12" showCloseButton="true" close="closeHandle()" creationComplete="init()">
 	<mx:Script>
 		<![CDATA[
 			import mx.rpc.http.mxml.HTTPService;
@@ -481,7 +481,7 @@
 			</mx:Canvas>
 		</mx:TabNavigator>	
 	</mx:Box>	
-	<mx:ProgressBar id="progressBar" x="30" y="464" width="300" visible="true"
+	<mx:ProgressBar id="progressBar" x="38" y="472" width="300" visible="true"
 		 mode="manual" label=""/>
 	<mx:Button label="启动" x="415" y="464" click="start()"/>
 	<mx:Button label="取消" x="488" y="464" click="closeHandle()"/>
