@@ -5,8 +5,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Timer;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -32,6 +34,7 @@ public class BookTundish {
 	private String outputPath = "";
 	private String tundishPath = "";
 	private BookModel bookModel = new BookModel();
+	private AtomicInteger progress = new AtomicInteger(0);
 	
 	public void run(){
 		bookModel.setBookInfoPath(bookInfoPath);
@@ -39,6 +42,7 @@ public class BookTundish {
 		bookModel.setInputPath(inputPath);
 		bookModel.setOutputPath(outputPath);
 		bookModel.onInitial();
+		bookModel.getProgress(progress);
 		bookModel.run();
 		bookModel.saveBookXML();
 		saveTundishXML();
@@ -144,7 +148,7 @@ public class BookTundish {
 		bt.setOutputPath("E:/data/book/test");
 		bt.setTundishPath("E:/data/book/图书漏斗文件.xml");
 		bt.run();
-
+		
 	}
 	
 	public String getBookInfoPath() {
