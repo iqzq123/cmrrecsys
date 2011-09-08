@@ -6,6 +6,7 @@
 	</mx:Metadata>
 	<mx:Script>
 		<![CDATA[
+			import mx.events.CloseEvent;
 			import mx.messaging.messages.HTTPRequestMessage;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.http.mxml.HTTPService;
@@ -100,7 +101,7 @@
 		    		clearInterval(intervalID);
 		    		progressBar.setProgress(100,100);
 		    		progressBar.label = "执行完毕";
-		    		Alert.show("图书漏斗分析执行完毕！");
+		    		Alert.show("图书漏斗分析执行完毕！","",0,this,closeHandle2);
 		    	}
 		    	else {
 		    		i+=5;
@@ -111,7 +112,9 @@
 		    	}
 		    }
 	   		
-	   		
+	   		private function closeHandle2(e:CloseEvent):void {
+	   			PopUpManager.removePopUp(this);
+	   		}
 		]]>
 	</mx:Script>
 	
