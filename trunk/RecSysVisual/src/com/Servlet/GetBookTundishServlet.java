@@ -15,96 +15,103 @@ import org.tseg.analyse.*;
 
 import com.XMLFileReader;
 
-public class GetBookTundishServlet extends HttpServlet{
+public class GetBookTundishServlet extends HttpServlet {
 	private String tundishSuffix = "/图书漏斗文件.xml";
-	private   AtomicInteger progress =new AtomicInteger(0);
+	private AtomicInteger progress = new AtomicInteger(0);
+
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
-	throws ServletException, IOException {
-		response.setContentType("text/xml;charset=utf-8");
-		response.setCharacterEncoding("utf-8");
-		System.out.println("get book tundish servlet!");
-		request.setCharacterEncoding("UTF-8");
-		String action = java.net.URLDecoder.decode(request.getParameter("action"),"UTF-8");
-		System.out.println("action is:"+action);
-		if(action.equals("start")){
-			String bookInfoPath = java.net.URLDecoder.decode(request.getParameter("bookInfoPath"),"UTF-8");
-			String chapterInfoPath = java.net.URLDecoder.decode(request.getParameter("chapterInfoPath"),"UTF-8");
-			String readingInfoPath = java.net.URLDecoder.decode(request.getParameter("readingInfoPath"),"UTF-8");
-			String tundishPath = java.net.URLDecoder.decode(request.getParameter("tundishPath"),"UTF-8");
-			
-			String currentTime = getCurrentTime();
-			if(tundishPath.endsWith("xml")){
-				File tundishFile = new File(tundishPath);
-				File parentFile = tundishFile.getParentFile();
-				if(!parentFile.exists()||parentFile.isFile())parentFile.mkdir();
-			}
-			else{
-				File tundishDir = new File(tundishPath);
-				if(!tundishDir.exists())tundishDir.mkdir();
-				else if(tundishDir.isFile())tundishDir.mkdir();
-				tundishPath = tundishDir.getAbsolutePath() + tundishSuffix;
-			}
-			
-			System.out.println("进入book tundish servlet"+"\n"+bookInfoPath+"\n"+chapterInfoPath+"\n"+readingInfoPath+"\n"+tundishPath);
-			
-			BookTundish bookTundish = new BookTundish();
-			File f = new File(readingInfoPath);
-			
-			bookTundish.setBookInfoPath(bookInfoPath);
-			bookTundish.setChapterInfoPath(chapterInfoPath);
-			bookTundish.setInputPath(readingInfoPath);
-			bookTundish.setOutputPath(f.getParent()+"/tempbooks"+currentTime);
-			bookTundish.setTundishPath(tundishPath);
-			
-			bookTundish.getProgress(progress);
-			bookTundish.run();
-			
-//			
-//			PrintWriter out = response.getWriter();
-//			XMLFileReader xmlfr = new XMLFileReader();
-//			String str = "";
-//			str = xmlfr.readXMLToStr(tundishPath);//"E:\\data\\pagevisit\\pv6.txt.out\\tundish.xml");//      
-//			out.println(str);
-//			out.flush();
-//			out.close();
-		}
-		else if (action.equals("progress")){
-			System.out.println("get's progress:"+progress);
+			throws ServletException, IOException {
+		try {
 			response.setContentType("text/xml;charset=utf-8");
 			response.setCharacterEncoding("utf-8");
-			PrintWriter out = response.getWriter();
-			out.println(progress);
-			out.flush();
-			out.close();
+			System.out.println("get book tundish servlet!");
+			request.setCharacterEncoding("UTF-8");
+			String action = java.net.URLDecoder.decode(request
+					.getParameter("action"), "UTF-8");
+			System.out.println("action is:" + action);
+			if (action.equals("start")) {
+				String bookInfoPath = java.net.URLDecoder.decode(request
+						.getParameter("bookInfoPath"), "UTF-8");
+				String chapterInfoPath = java.net.URLDecoder.decode(request
+						.getParameter("chapterInfoPath"), "UTF-8");
+				String readingInfoPath = java.net.URLDecoder.decode(request
+						.getParameter("readingInfoPath"), "UTF-8");
+				String tundishPath = java.net.URLDecoder.decode(request
+						.getParameter("tundishPath"), "UTF-8");
+
+				String currentTime = getCurrentTime();
+				if (tundishPath.endsWith("xml")) {
+					File tundishFile = new File(tundishPath);
+					File parentFile = tundishFile.getParentFile();
+					if (!parentFile.exists() || parentFile.isFile())
+						parentFile.mkdir();
+				} else {
+					File tundishDir = new File(tundishPath);
+					if (!tundishDir.exists())
+						tundishDir.mkdir();
+					else if (tundishDir.isFile())
+						tundishDir.mkdir();
+					tundishPath = tundishDir.getAbsolutePath() + tundishSuffix;
+				}
+
+				System.out.println("进入book tundish servlet" + "\n"
+						+ bookInfoPath + "\n" + chapterInfoPath + "\n"
+						+ readingInfoPath + "\n" + tundishPath);
+
+				BookTundish bookTundish = new BookTundish();
+				File f = new File(readingInfoPath);
+
+				bookTundish.setBookInfoPath(bookInfoPath);
+				bookTundish.setChapterInfoPath(chapterInfoPath);
+				bookTundish.setInputPath(readingInfoPath);
+				bookTundish.setOutputPath(f.getParent() + "/tempbooks"
+						+ currentTime);
+				bookTundish.setTundishPath(tundishPath);
+
+				bookTundish.getProgress(progress);
+
+				System.out.println("bookTundish servlet run.................");
+				bookTundish.run();
+
+			} else if (action.equals("progress")) {
+				System.out.println("get's progress:" + progress);
+				response.setContentType("text/xml;charset=utf-8");
+				response.setCharacterEncoding("utf-8");
+				PrintWriter out = response.getWriter();
+				out.println(progress);
+				out.flush();
+				out.close();
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			System.out.println("ERROR:GetBookTundishServlet");
+			System.out.println(e.toString());
 		}
-		
+
 	}
-	
-	public String getCurrentTime()
-	{
-		Calendar ca=Calendar.getInstance();
-		String year=Integer.toString(ca.get(Calendar.YEAR));
-		String month=addZero(Integer.toString(ca.get(Calendar.MONTH)+1));
-		String day=addZero(Integer.toString(ca.get(Calendar.DATE)));
-		String hour=addZero(Integer.toString(ca.get(Calendar.HOUR)));
-		String minute=addZero(Integer.toString(ca.get(Calendar.MINUTE)));
-		String second=addZero(Integer.toString(ca.get(Calendar.SECOND)));
-		//System.out.println(year+";"+month+";"+day+";"+hour+";"+minute+";"+second);
-		return year+month+day+hour+minute+second;
+
+	public String getCurrentTime() {
+		Calendar ca = Calendar.getInstance();
+		String year = Integer.toString(ca.get(Calendar.YEAR));
+		String month = addZero(Integer.toString(ca.get(Calendar.MONTH) + 1));
+		String day = addZero(Integer.toString(ca.get(Calendar.DATE)));
+		String hour = addZero(Integer.toString(ca.get(Calendar.HOUR)));
+		String minute = addZero(Integer.toString(ca.get(Calendar.MINUTE)));
+		String second = addZero(Integer.toString(ca.get(Calendar.SECOND)));
+		// System.out.println(year+";"+month+";"+day+";"+hour+";"+minute+";"+second);
+		return year + month + day + hour + minute + second;
 	}
-	public String addZero(String str)
-	{
+
+	public String addZero(String str) {
 		String strNew;
-		if (str.length() == 1) 
-		{
+		if (str.length() == 1) {
 			strNew = "0" + str;
-		} 
-		else 
-		{
+		} else {
 			strNew = str;
 		}
 		return strNew;
-		
+
 	}
 
 }
