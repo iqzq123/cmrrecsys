@@ -67,7 +67,7 @@ public class BookModel {
 			System.out.println("readBookInfo");
 			InputStreamReader read;
 			read = new InputStreamReader(new FileInputStream(
-					new File(bookInfoPath)));
+					new File(bookInfoPath)),"UTF-8");
 			BufferedReader reader = new BufferedReader(read);
 			String str;
 			reader.readLine();
@@ -96,7 +96,7 @@ public class BookModel {
 			System.out.println("readChapterInfo");
 			InputStreamReader read;
 			read = new InputStreamReader(new FileInputStream(
-					new File(chapterInfoPath)));
+					new File(chapterInfoPath)),"UTF-8");
 			BufferedReader reader = new BufferedReader(read);
 			String str;
 			reader.readLine();
@@ -135,7 +135,7 @@ public class BookModel {
 			System.out.println("readReadingInfo");
 			InputStreamReader read;
 			read = new InputStreamReader(new FileInputStream(
-					new File(inputPath)));
+					new File(inputPath)),"UTF-8");
 			System.out.println(this.inputPath);
 			BufferedReader reader = new BufferedReader(read);
 			String str;
