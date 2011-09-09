@@ -2197,7 +2197,7 @@ package SNADisplay.org.Graph.Model
 					}
 				}
 			}
-			Alert.show(s);
+			//Alert.show(s);
 			for each ( node in graphFullData.nodes ){
 				var tempArr:Array = new Array;
 				if ( newNodeDic[node] == true ){
