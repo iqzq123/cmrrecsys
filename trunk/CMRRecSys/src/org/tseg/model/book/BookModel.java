@@ -143,13 +143,22 @@ public class BookModel {
 			Book book = null;
 			int i = 0;
 			while ((str = reader.readLine()) != null) {
-//				if(str.contains(","))str = str.replace(',', '|');
-				String[] strArray = str.split(seprator);
 				
+				String[] strArray = str.split(seprator);
+				if(!checkData(strArray)){
+//					System.out.println("false");
+					i++;
+					continue;
+				}
 				if ( strArray.length < 2 )
 					continue;
 				
 				book = getBookByChapterId(Integer.parseInt(strArray[1]));
+				if(book == null) {
+					System.out.println(i+" not found book");
+					i++;
+					continue;
+				}
 				if(!this.targetBooksAL.contains(book)) {
 					this.targetBooksAL.add(book);
 				}
@@ -234,6 +243,17 @@ public class BookModel {
 				return tempBook;
 		}
 		return null;
+	}
+	
+	private Boolean checkData(String[] ss){
+		try {
+			int temp = Integer.parseInt(ss[1]);
+		} catch (Exception e) {
+			// TODO: handle exception
+			return false;
+		}
+		return true;
+		
 	}
 	public String getBookInfoPath() {
 		return bookInfoPath;
