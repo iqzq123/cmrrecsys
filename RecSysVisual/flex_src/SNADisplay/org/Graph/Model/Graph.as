@@ -2155,5 +2155,76 @@ package SNADisplay.org.Graph.Model
 			else 
 				return -1;
 		}
+		
+		public function showRelevance(relevance:Number = 0.6):void {
+			this._graphFullData = initFromXML(_xmlData);
+			var fromNodeDic:Dictionary = new Dictionary;
+			var graphFullData:IGraphData = this._graphFullData;
+			var edge:IEdge;
+			var tempEdge:IEdge;
+			var fromNode:INode;
+			var toNode:INode;
+			var node:INode;
+			var adjNode:INode
+			var newEdges:Array = new Array;
+			var newNodes:Array = new Array;
+			var newNodeDic:Dictionary = new Dictionary;
+			var s:String = "";
+			for each ( edge in graphFullData.edges ){
+				fromNode = edge.fromNode;
+				if ( fromNodeDic[fromNode] == null ){
+					fromNodeDic[fromNode] = new Array;
+				}
+				(fromNodeDic[fromNode] as Array).push(edge);
+			}
+			for each ( edge in graphFullData.edges ){
+				fromNode = edge.fromNode;
+				toNode = edge.toNode;
+				if ( fromNode == toNode )
+					continue;
+				if ( fromNodeDic[toNode] != null ){
+					for each ( tempEdge in fromNodeDic[toNode] ){
+						if ( tempEdge.toNode == fromNode ){
+							var w1:Number = edge.weight;
+							var w2:Number = tempEdge.weight;
+							if ( 2 * Math.min(w1, w2) / ( w1 + w2 ) >= relevance ){
+								newEdges.push(edge);
+								s += edge.fromNode.id + "," + edge.toNode.id + "\n";
+								newNodeDic[fromNode] = true;
+								newNodeDic[toNode] = true;
+							}
+						}
+					}
+				}
+			}
+			Alert.show(s);
+			for each ( node in graphFullData.nodes ){
+				var tempArr:Array = new Array;
+				if ( newNodeDic[node] == true ){
+					for each ( adjNode in node.inEdges ) {
+						if ( newNodeDic[adjNode] == true ){
+							tempArr.push(adjNode);
+						}
+					}
+					node.inEdges = tempArr;
+					tempArr = new Array;
+					for each ( adjNode in node.outEdges ) {
+						if ( newNodeDic[adjNode] == true ){
+							tempArr.push(adjNode);
+						}
+					}
+					node.outEdges = tempArr;
+					newNodes.push(node);
+				}
+			}
+			graphFullData.nodes = newNodes;
+			graphFullData.edges = newEdges;
+			this._graphData.nodes = this._graphFullData.nodes.concat();
+			this._graphData.edges = this._graphFullData.edges.concat();
+			createForest(this._graphFullData, _root);
+			_mapNodeColor = setNodeColor(this._graphFullData.nodes);
+			_mapEdgeColor = setEdgeColor(this._graphFullData.edges);
+			updateFilteredGraph();
+		}
 	}
 }

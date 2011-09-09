@@ -577,6 +577,16 @@
 				_curGraph.draw();
 			}
 			
+			private function showRelevance():void {
+				if ( this._mode != this.SIMPLE_MODE )
+					return ;
+				(_curGraph as Graph).showRelevance();
+				
+				this.arrowCheckBox.selected = true;
+				this.edgeLabelCheckBox.selected = true;
+				setGraph(_curGraph);
+				_curGraph.draw();
+			}
 			private function pathFilter():void {
 				if ( this._mode == this.SIMPLE_MODE )
 					return ;
@@ -1090,9 +1100,13 @@
 					<mx:Label text="上限"/>
 					<mx:TextInput id="edgeMaxW" width="50" text="-1" restrict="-\0-9"/>
 				</mx:HBox>
-				<mx:Button label="过滤" click="filter()"/>
 				<mx:HBox>
+					<mx:Button label="过滤" click="filter()"/>
 					<mx:Button label="展示原图" click="refresh()" />
+				</mx:HBox>
+				
+				<mx:HBox>
+					<mx:Button label="相关性展示" click="showRelevance()" />
 					<mx:Button id="fishEyeBtn" label="局部放大" click="localMagnify()"/>
 				</mx:HBox>
 			</mx:VBox>
