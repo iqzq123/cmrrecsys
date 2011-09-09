@@ -1090,9 +1090,9 @@
 					<mx:Label text="上限"/>
 					<mx:TextInput id="edgeMaxW" width="50" text="-1" restrict="-\0-9"/>
 				</mx:HBox>
-				<mx:Button label="展示原图" click="filter()"/>
+				<mx:Button label="过滤" click="filter()"/>
 				<mx:HBox>
-					<mx:Button label="刷新" click="refresh()" />
+					<mx:Button label="展示原图" click="refresh()" />
 					<mx:Button id="fishEyeBtn" label="局部放大" click="localMagnify()"/>
 				</mx:HBox>
 			</mx:VBox>
