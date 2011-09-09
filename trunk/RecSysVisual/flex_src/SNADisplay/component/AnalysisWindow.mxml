@@ -8,6 +8,7 @@
 			import mx.collections.ArrayCollection;
 			import mx.managers.PopUpManager;
 			import mx.controls.Alert;
+			import mx.events.CloseEvent;
 			
 			private const PATH_FINDER_NAME:String = "PathFinderClass";
 			private const MIN_PATH_LENGTH:int = 1;
@@ -384,16 +385,20 @@
 		    	if(preNum == num) {
 		    		clearInterval(intervalID);
 		    		progressBar.setProgress(100,100);
-		    		progressBar.label = "执行结束";
+		    		progressBar.label = "执行结束。共"+num+"行";
+		    		Alert.show("执行完毕！","",0,this,closeHandle2);
 		    	}
 		    	else {
 		    		i+=5;
 		    		preNum = num;
 		    		if(i>100) i=0;
 		    		progressBar.setProgress(i,100);
-		    		progressBar.label = "正在执行中..";
+		    		progressBar.label = "正在执行中...第"+num+"行";
 		    	}
 		    }
+		    private function closeHandle2(e:CloseEvent):void {
+	   			PopUpManager.removePopUp(this);
+	   		}
 		]]>
 	</mx:Script>
 	<mx:Box width="100%" height="464" paddingTop="20" paddingLeft="10" paddingRight="10" >
