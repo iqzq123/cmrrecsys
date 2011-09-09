@@ -123,7 +123,7 @@
 		    	if(preNum == num) {
 		    		clearInterval(intervalID);
 		    		progressBar.setProgress(100,100);
-		    		progressBar.label = "执行完毕";
+		    		progressBar.label = "执行完毕.共"+num+"行";
 		    		Alert.show("频繁路径分析执行完毕！","",0,this,closeHandle2);
 		    	}
 		    	else {
@@ -132,7 +132,7 @@
 		    		preNum = num;
 		    		if(i>100) i=0;
 		    		progressBar.setProgress(i,100);
-		    		progressBar.label = "第"+count+"次读文件，正在执行中..";
+		    		progressBar.label = "第"+count+"次读文件，正在执行中...第"+num+"行";
 		    	}
 		    }
 		    
