@@ -170,11 +170,11 @@ public class BookTundish {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		BookTundish bt = new BookTundish();
-		bt.setBookInfoPath("E:/data/book/混沌修真诀图书信息.txt");
-		bt.setChapterInfoPath("E:/data/book/混沌修真诀章节信息.txt");
-		bt.setInputPath("E:/data/book/jinxj.txt");
+		bt.setBookInfoPath("E:/data/book/zdmm_book.txt");
+		bt.setChapterInfoPath("E:/data/book/zdmm_chap.txt");
+		bt.setInputPath("E:/data/book/zdmm_chap_read_qd.txt");
 		bt.setOutputPath("E:/data/book/test");
-		bt.setTundishPath("E:/data/book/混沌修真诀漏斗文件.xml");
+		bt.setTundishPath("E:/data/book/zdmm.xml");
 		bt.getProgress(progress);
 		bt.run();
 		
