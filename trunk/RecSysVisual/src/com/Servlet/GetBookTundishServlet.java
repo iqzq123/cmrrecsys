@@ -33,7 +33,17 @@ public class GetBookTundishServlet extends HttpServlet{
 			String tundishPath = java.net.URLDecoder.decode(request.getParameter("tundishPath"),"UTF-8");
 			
 			String currentTime = getCurrentTime();
-			tundishPath = tundishPath + tundishSuffix;
+			if(tundishPath.endsWith("xml")){
+				File tundishFile = new File(tundishPath);
+				File parentFile = tundishFile.getParentFile();
+				if(!parentFile.exists()||parentFile.isFile())parentFile.mkdir();
+			}
+			else{
+				File tundishDir = new File(tundishPath);
+				if(!tundishDir.exists())tundishDir.mkdir();
+				else if(tundishDir.isFile())tundishDir.mkdir();
+				tundishPath = tundishDir.getAbsolutePath() + tundishSuffix;
+			}
 			
 			System.out.println("进入book tundish servlet"+"\n"+bookInfoPath+"\n"+chapterInfoPath+"\n"+readingInfoPath+"\n"+tundishPath);
 			
