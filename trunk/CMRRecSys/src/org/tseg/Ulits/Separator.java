@@ -11,4 +11,5 @@ public class Separator {
 	static public final String PARAM_SEPARATOR3 = "###";
 	static public final String CATE_SEPARATOR="/";
 	static public final String DATA_SEPARATOR="\\|";
+	static public final String FILENAME_SEPARATOR="_";
 }
