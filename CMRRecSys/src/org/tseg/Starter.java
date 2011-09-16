@@ -85,7 +85,7 @@ public class Starter {
 			}
 
 		}
-		runner.seqRun();
+		runner.run();
 	}
 
 	/**
@@ -95,21 +95,10 @@ public class Starter {
 		// TODO Auto-generated method stub
 		Starter s = new Starter();
 		s.setLogSplit("\\|");
-
-
-
-	
-
-
-
-
-
-
-
 		s.setInputPath("E:/data/pvData/cuixr_pagevisit");
 		s.setOutputPath("E:/data/pvData/cui4");
-
 		s.setSiteDataPath("E:/data");
+		s.getProgress(new AtomicInteger(0));
 		try {
 			String cmd = "StatAnalyse\t" + AnalyseType.NegCate + "\n"
 					+ "StatAnalyse\t" + AnalyseType.PageToCate + "\n"

@@ -1,12 +1,15 @@
 package org.tseg.analyse;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.tseg.Ulits.Separator;
 import org.tseg.Ulits.Ulits;
 import org.tseg.preprocess.Preprocessor;
 
@@ -15,81 +18,154 @@ public class AnalyseRunner {
 	private String inputPath;
 	private String siteDataPath;
 	private String outputPath;
-	private List<Analyse> analyseList=new ArrayList<Analyse>();	
+	private List<Analyse> analyseList = new ArrayList<Analyse>();
+	private int cnt = 0;
+	private int amount=1;
+	private AtomicInteger progress = null;
 
-	private AtomicInteger progress = null;	
+	private String logSplit = "\\|";
 
-	private String logSplit="\\|";
-	
-	public void addAnalyse(Analyse analyse){
+	public void addAnalyse(Analyse analyse) {
 		this.analyseList.add(analyse);
 	}
 
-	public void seqRun()throws IOException{
-		
-		
+	public void run() throws IOException {
+
 		Preprocessor.readMapFile(this.siteDataPath);
-		
-		/////////////////create output floder
+
+		// ///////////////create output floder
 		String outFloder = this.outputPath;
 		Ulits.newFolder(outFloder);
+
+		for (Analyse analyse : this.analyseList) {
+			analyse.setOutputPath(outFloder);
+			analyse.onInitial();
+			System.out.println("............run.........:" + analyse.getName()
+					+ analyse.getType());
+		}
+
 		
+		File inputFile = new File(this.inputPath);
+		String[] nameArray=inputFile.getName().split(Separator.FILENAME_SEPARATOR);
+		try{
+			amount=Integer.parseInt(nameArray[nameArray.length-1])*10000;
+		}catch(Exception e){
+			amount=100000000;
+			System.out.print("fileName Format error");
+		}
+		
+		if (inputFile.isDirectory()) {			
+			File []fileArray=inputFile.listFiles();
+			for(File file:fileArray){
+				runSingleFile(file.getPath());
+			}
+		} else {
+			runSingleFile(this.inputPath);
+		}
+
+		
+		System.out.println("pv总数为：" + cnt);
+		for (Analyse analyse : this.analyseList) {
+			analyse.onReadEnd();
+		}
+
+	}
+
+	private void runSingleFile(String path) throws FileNotFoundException, IOException {
+		
+		FileReader fr = new FileReader(path);
+		BufferedReader reader = new BufferedReader(fr);
+		String str;
+		reader.readLine();	
+		System.out.println("runSingleFile");
+
+		while ((str = reader.readLine()) != null) {
+
+			String[] strArray = str.split(this.logSplit);
+			if (strArray.length < 22) {
+				continue;
+			}
+			for (Analyse analyse : this.analyseList) {
+				String[] proArray = Preprocessor.run(strArray, analyse
+						.getType());
+				analyse.onReadLog(proArray);
+			}
+			cnt++;
+			int percent=(int)((cnt*1.0/this.amount)*100000000);
+			this.progress.set(percent);
+			if (cnt % 10000 == 0) {
+				System.out.println(cnt);
+				System.out.println((this.progress.get()*1.0/100000000));
+			}
+		}
+		reader.close();
+		fr.close();
+	}
+
+	public void seqRun() throws IOException {
+
+		Preprocessor.readMapFile(this.siteDataPath);
+
+		// ///////////////create output floder
+		String outFloder = this.outputPath;
+		Ulits.newFolder(outFloder);
+
 		FileReader fr = new FileReader(this.inputPath);
 		BufferedReader reader = new BufferedReader(fr);
 		String str;
 		reader.readLine();
 		int cnt = 0;
 		System.out.println("seqrun");
-		
-		for(Analyse analyse:this.analyseList){
+
+		for (Analyse analyse : this.analyseList) {
 			analyse.setOutputPath(outFloder);
 			analyse.onInitial();
-			System.out.println("............run.........:"+analyse.getName()+analyse.getType());
+			System.out.println("............run.........:" + analyse.getName()
+					+ analyse.getType());
 		}
 
 		while ((str = reader.readLine()) != null) {
-			
 
 			String[] strArray = str.split(this.logSplit);
-			if(strArray.length<22){
+			if (strArray.length < 22) {
 				continue;
 			}
-			//Preprocessor.process(strArray);
-			for(Analyse analyse:this.analyseList){
-				String[] proArray=Preprocessor.run(strArray, analyse.getType());
+			// Preprocessor.process(strArray);
+			for (Analyse analyse : this.analyseList) {
+				String[] proArray = Preprocessor.run(strArray, analyse
+						.getType());
 				analyse.onReadLog(proArray);
 			}
 			cnt++;
-			this.progress.set(cnt);			
-			if (cnt % 10000 == 0) {		
+			this.progress.set(cnt);
+			if (cnt % 10000 == 0) {
 				System.out.println(this.progress);
 			}
 		}
-		System.out.println("pv总数为："+cnt);
-		for(Analyse analyse:this.analyseList){
+		System.out.println("pv总数为：" + cnt);
+		for (Analyse analyse : this.analyseList) {
 			analyse.onReadEnd();
 		}
-	
+
 	}
+
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		AnalyseRunner b = new AnalyseRunner();
-		
-	
 
 		try {
 
-			b.setInputPath("E:/data/pagevisit/test.txt");
-			b.setOutputPath(b.getInputPath()+".out");
+			b.setInputPath("E:/data/test_a");
+			b.setOutputPath(b.getInputPath() + ".out");
 			b.setSiteDataPath("E:/data");
-				
-			GlobalAnalyse mk=new GlobalAnalyse();
+			b.getProgress(new AtomicInteger(1));
+			GlobalAnalyse mk = new GlobalAnalyse();
 			b.addAnalyse(mk);
-			b.seqRun();
-			
+			b.run();
+
 			System.out.println("success");
 
 		} catch (IOException e) {
@@ -123,14 +199,9 @@ public class AnalyseRunner {
 		this.outputPath = outputPath;
 	}
 
-
-
-
 	public void getProgress(AtomicInteger progress) {
 		this.progress = progress;
 	}
-
-
 
 	public String getLogSplit() {
 		return logSplit;
