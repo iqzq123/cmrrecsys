@@ -967,6 +967,15 @@
 				<mx:Button label="频繁路径分析" click="showFPAParams()" />
 				<mx:Button label="图书流失漏斗分析" click="bookTundish()"/>
 			</mx:VBox>
+			<mx:VBox label="查看" width="100%" height="100%" 
+					paddingTop="5" paddingBottom="5" paddingLeft="5" paddingRight="5" >
+					<mx:HBox width="100%" height="30" >
+						<mx:Label text="筛选目录" fontSize="12"/>
+						<mx:TextInput id="pathInput" width="100"/>
+					</mx:HBox>
+					
+					<mx:Button id="showFileButton" label="查看文件目录" click="" />
+			</mx:VBox>
 			<mx:VBox label="分类查看" width="100%" height="100%" 
 					paddingTop="5" paddingBottom="5" paddingLeft="5" paddingRight="5" >
 				
@@ -1004,9 +1013,9 @@
 				<mx:Button label="路径过滤" click="pathFilter()"/>
 				<mx:HRule width="181" height="1"/>
 				<mx:Button label="表格查看" click="showGraphData()"/>
-				<mx:Button label="文件目录查看" click="fileDir()"/>
+				<!--<mx:Button label="文件目录查看" click="fileDir()"/>-->
 				
-				<mx:Button label="图书流失漏斗展示" click="showBookTundish()"/>
+				<mx:Button label="图书流失漏斗查看" click="showBookTundish()"/>
 			</mx:VBox>
     		<mx:VBox id="contralPad" label="全局查看" width="100%" height="100%" 
     			paddingTop="5" paddingBottom="5" paddingLeft="5" paddingRight="5"  >
