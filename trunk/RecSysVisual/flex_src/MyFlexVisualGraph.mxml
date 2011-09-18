@@ -2,6 +2,7 @@
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="init()" resize="resizeCanvas()">
 	<mx:Script>
 		<![CDATA[
+			import mx.messaging.management.Attribute;
 			import mx.controls.DataGrid;
 			import mx.events.ResizeEvent;
 			import SNADisplay.org.utils.Events.ConfirmEvent;
@@ -14,6 +15,7 @@
 			import mx.controls.Alert;
 			import SNADisplay.org.Source.EmbeddedIcons;
 			import SNADisplay.org.utils.Events.*;
+			import SNADisplay.org.utils.XMLFileTitleName;
 			import SNADisplay.component.*;
 			import mx.managers.PopUpManager;
 			
@@ -249,8 +251,8 @@
 				}
 			}
 			
-			private function loadPathFile(evt:ResultEvent):void {
-				var xmlData:XML = XML(evt.message.body);
+			private function loadPathFile(xmlData:XML):void {
+				//var xmlData:XML = XML(evt.message.body);
 				if ( xmlData == null ){
 					Alert.show("文件为空","出错");
 				}
@@ -658,112 +660,94 @@
 				PopUpManager.centerPopUp(analysisWindow);
 			}
 			
-			private function showChart():void {
+			//查看文件目录
+			private var fileWindow:FileWindow;
+			private function fileDir():void {
 				fileWindow = new FileWindow;
+				fileWindow.subDirectory = subDirectory.text;
 				PopUpManager.addPopUp(fileWindow,this,true);
 				PopUpManager.centerPopUp(fileWindow);
-				fileWindow.addEventListener(Event.SELECT, getChartXML);		
+				fileWindow.addEventListener(Event.SELECT,getXMLDataFile);
 			}
 			
-			private function getChartXML(evt:Event):void {
+			private function getXMLDataFile(e:Event):void {
 				var getXML : HTTPService = new HTTPService();
 				getXML.resultFormat = "e4x";
 				getXML.url = "getXMLServlet";
-				var params:URLVariables = new URLVariables();
-                params.filePath = encodeURIComponent(fileWindow.getFilePath());
-                params.random = Math.random();
-				getXML.addEventListener(ResultEvent.RESULT,  showChartHandler);
+				var params:URLVariables = new URLVariables();				
+                params.filePath = encodeURIComponent(fileWindow.getFilePath());              
+				getXML.addEventListener(ResultEvent.RESULT,  recXMLDataFile);
 				getXML.addEventListener(FaultEvent.FAULT, fHandler);
-				//Alert.show(filePath);
-				getXML.send(params); 
+				getXML.send(params);
+			}
+		
+			private function recXMLDataFile(evt:ResultEvent):void {
+				var xmlData:XML = XML(evt.message.body);
+				var rootLabel:String = "";
+				rootLabel = xmlData.name();
+				//Alert.show("rootLabel:"+rootLabel);
+				if ( rootLabel == XMLFileTitleName.HISTOGRAM ){
+					showChartHandler(xmlData);
+				}
+				else if ( rootLabel == XMLFileTitleName.TUNDISH ){
+					showTundishHandler(xmlData);
+				}
+				else if ( rootLabel == XMLFileTitleName.PATH_FINDER ){
+					layoutComboBox.selectedIndex = 2;
+                	edgeLabelCheckBox.selected = true;
+					loadPathFile(xmlData);
+				}
+				else if ( rootLabel == XMLFileTitleName.FREQUENT_PATH ){
+					layoutComboBox.selectedIndex = 2;
+                	edgeLabelCheckBox.selected = true;
+					loadFRPathFile(xmlData);
+				}
+				else if ( rootLabel == XMLFileTitleName.DURATION 
+						  || rootLabel == XMLFileTitleName.USER_NUM 
+						  || rootLabel == XMLFileTitleName.CLICK_NUM ){
+					showGraphDataHandler(xmlData);
+				}
+				else if ( rootLabel == XMLFileTitleName.BOOK_TUNDISH ){
+					//图书漏斗
+				}
+				else if ( rootLabel == XMLFileTitleName.GRAPH ){
+					loadFile(evt);
+				}
+				
 			}
 			
-			
+			//直方图展示
 			private var chartWindow:ChartWindow;	
-			private function showChartHandler(evt:ResultEvent):void {
-				var xmlData:XML = XML(evt.message.body);
+			private function showChartHandler(xmlData:XML):void {
+				//var xmlData:XML = XML(evt.message.body);
 				chartWindow = new ChartWindow();
 				chartWindow.init(xmlData);
 				PopUpManager.addPopUp(chartWindow,this,false);
 				PopUpManager.centerPopUp(chartWindow);
 			}
 			
-			private function showLineChart():void {
-				var getXML : HTTPService = new HTTPService();
-				getXML.resultFormat = "e4x";
-				getXML.url = "SNADisplay/data/pathHis.xml";
-				getXML.addEventListener(ResultEvent.RESULT,  showLineChartHandler);
-				getXML.addEventListener(FaultEvent.FAULT, fHandler);
-				getXML.send();
-			}
-			
+			//折线图展示（暂无）
 			private var lineChartWindow:LineChartWindow;
-			private function showLineChartHandler(evt:ResultEvent):void {
-				var xmlData:XML = XML(evt.message.body);
+			private function showLineChartHandler( xmlData:XML):void {
+				//var xmlData:XML = XML(evt.message.body);
 				lineChartWindow = new LineChartWindow;
 				lineChartWindow.init(xmlData);
 				PopUpManager.addPopUp(lineChartWindow,this,false);
 				PopUpManager.centerPopUp(lineChartWindow);
 			}
 			
-			private function showTundish():void {
-				fileWindow = new FileWindow;
-				PopUpManager.addPopUp(fileWindow,this,true);
-				PopUpManager.centerPopUp(fileWindow);
-				fileWindow.addEventListener(Event.SELECT, getTundishXML);
-			}
-			
-			private function getTundishXML(evt:Event):void {
-				var getXML : HTTPService = new HTTPService();
-				getXML.resultFormat = "e4x";
-				getXML.url = "getXMLServlet";
-				var params:URLVariables = new URLVariables();
-                params.filePath = encodeURIComponent(fileWindow.getFilePath());
-                params.random = Math.random();
-				getXML.addEventListener(ResultEvent.RESULT,  showTundishHandler);
-				getXML.addEventListener(FaultEvent.FAULT, fHandler);
-				//Alert.show(filePath);
-				getXML.send(params); 
-			}
-			
+			//漏斗展示
 			private var tundishWindow:TundishWindow;
-			private function showTundishHandler(evt:ResultEvent):void {
-				var xmlData:XML = XML(evt.message.body);
+			private function showTundishHandler(xmlData:XML):void {
+				//var xmlData:XML = XML(evt.message.body);
 				tundishWindow = new TundishWindow;
 				PopUpManager.addPopUp(tundishWindow,this,false);
 				PopUpManager.centerPopUp(tundishWindow);
 				tundishWindow.init(xmlData);
 				tundishWindow.draw();
 			}
-
-			private function findPath():void {
-				fileWindow = new FileWindow;
-				PopUpManager.addPopUp(fileWindow,this,true);
-				PopUpManager.centerPopUp(fileWindow);
-				fileWindow.addEventListener(Event.SELECT, getPathFinderXML);
-			}
 			
-			private function getPathFinderXML(evt:Event):void {
-				var getXML : HTTPService = new HTTPService();
-				getXML.resultFormat = "e4x";
-				getXML.url = "getXMLServlet";
-				var params:URLVariables = new URLVariables();
-                params.filePath = encodeURIComponent(fileWindow.getFilePath());
-                params.random = Math.random();
-                layoutComboBox.selectedIndex = 2;
-                edgeLabelCheckBox.selected = true;
-				getXML.addEventListener(ResultEvent.RESULT,  loadPathFile);
-				getXML.addEventListener(FaultEvent.FAULT, fHandler);
-				getXML.send(params); 
-			}
-			
-			private var fileWindow:FileWindow;;
-			private function fileDir():void {
-				fileWindow = new FileWindow;
-				PopUpManager.addPopUp(fileWindow,this,true);
-				PopUpManager.centerPopUp(fileWindow);
-			}
-			
+			//               图书漏斗，待修改
 			private var bookInfoPathWindow:BookInfoPathWindow;
 			private function bookTundish():void {
 				bookInfoPathWindow = new BookInfoPathWindow;
@@ -802,13 +786,6 @@
 				bookTundish.setTundishPath(bookTundishPath);
 			}
 			
-			
-//			private function confirm():void {
-//				Alert.show("confirm");
-//				
-//			private function test(e:ResultEvent):void{
-//				Alert.show(String(e.message.body).substr(0,200));
-//			}
 			private var _nodePropertyArr:Array;
 			private function saveProperty(xmlData:XML):void {
 				var nodeXML:XML = xmlData.descendants("Node")[0];
@@ -853,29 +830,8 @@
 			}
 			
 			private var graphDataGridWindow:DataGridWindow;
-			private function showGraphData():void {
-				fileWindow = new FileWindow;
-				PopUpManager.addPopUp(fileWindow,this,true);
-				PopUpManager.centerPopUp(fileWindow);
-				fileWindow.addEventListener(Event.SELECT, getGraphDataXML);
-			}
 			
-			private function getGraphDataXML(evt:Event):void {
-				var getXML : HTTPService = new HTTPService();
-				getXML.resultFormat = "e4x";
-				getXML.url = "getXMLServlet";
-				var params:URLVariables = new URLVariables();
-                params.filePath = encodeURIComponent(fileWindow.getFilePath());
-                params.random = Math.random();
-                layoutComboBox.selectedIndex = 2;
-                edgeLabelCheckBox.selected = true;
-				getXML.addEventListener(ResultEvent.RESULT,  showGraphDataHandler);
-				getXML.addEventListener(FaultEvent.FAULT, fHandler);
-				getXML.send(params); 
-			}
-			
-			private function showGraphDataHandler(evt:ResultEvent):void {
-				var xmlData:XML = XML(evt.message.body);
+			private function showGraphDataHandler(xmlData:XML):void {
 				graphDataGridWindow = new DataGridWindow;
 				PopUpManager.addPopUp(graphDataGridWindow,this,true);
 				PopUpManager.centerPopUp(graphDataGridWindow);
@@ -888,29 +844,8 @@
 				PopUpManager.centerPopUp(fpaParams);
 			}
 			
-			private function showFRPath():void {
-				fileWindow = new FileWindow;
-				PopUpManager.addPopUp(fileWindow,this,true);
-				PopUpManager.centerPopUp(fileWindow);
-				fileWindow.addEventListener(Event.SELECT, getFRPathXML);
-			}
-			
-			private function getFRPathXML(evt:Event):void {
-				var getXML : HTTPService = new HTTPService();
-				getXML.resultFormat = "e4x";
-				getXML.url = "getXMLServlet";
-				var params:URLVariables = new URLVariables();
-                params.filePath = encodeURIComponent(fileWindow.getFilePath());
-                params.random = Math.random();
-				layoutComboBox.selectedIndex = 2;
-                edgeLabelCheckBox.selected = true;
-				getXML.addEventListener(ResultEvent.RESULT,  loadFRPathFile);
-				getXML.addEventListener(FaultEvent.FAULT, fHandler);
-				getXML.send(params); 
-			}
-			
-			private function loadFRPathFile(evt:ResultEvent):void {
-				var xmlData:XML = XML(evt.message.body);
+			private function loadFRPathFile(xmlData:XML):void {
+				//var xmlData:XML = XML(evt.message.body);
 				if ( xmlData == null ){
 					Alert.show("文件为空","出错");
 				}
@@ -934,7 +869,8 @@
 						_graph.destroy();
 				
 					this._mode = this.FR_PATH_MODE;
-					_graph = new FRPath("MyGraph",false,true,closedPathCheckBox.selected);
+					//频繁路径默认闭包模式
+					_graph = new FRPath("MyGraph",false,true);
 					_graph.initGraphData(xmlData,_graphCanvas);
 					communitiesCheckBox.selected = false;
 					this.arrowCheckBox.selected = true;
@@ -960,7 +896,7 @@
 	<mx:Box id="controlPad" x="0" y="0" width="220" height="100%" 
 	    paddingTop="10" paddingBottom="10" paddingLeft="5" paddingRight="0" >
     	
-    	<mx:Accordion id="acc" x="0" y="0" width="100%" height="100%" 
+    	<mx:Accordion id="acc" x="0" y="0" width="100%" height="100%"  
     		selectedIndex="0" creationPolicy="all" >
     		<mx:VBox label="启动分析" width="100%" height="100%" horizontalAlign="left" paddingTop="10" paddingLeft="15">
 				<mx:Button label="页面分析" click="start()"/>
@@ -969,37 +905,27 @@
 			</mx:VBox>
 			<mx:VBox label="查看" width="100%" height="100%" 
 					paddingTop="5" paddingBottom="5" paddingLeft="5" paddingRight="5" >
-					<mx:HBox width="100%" height="30" >
-						<mx:Label text="筛选目录" fontSize="12"/>
-						<mx:TextInput id="pathInput" width="100"/>
+					<mx:HBox width="100%" >
+						<mx:Label text="筛选目录" />
+						<mx:TextInput id="subDirectory" width="100"/>
 					</mx:HBox>
-					
-					<mx:Button id="showFileButton" label="查看文件目录" click="" />
+					<mx:Button id="showFileButton" label="查看文件目录" click="fileDir()" />
+					<mx:HRule width="181" height="1"/>
+					<mx:Label text="路径查看" />
+					<mx:CheckBox id="mergeRootCheckBox" label="合并根节点" selected="false"/>
 			</mx:VBox>
-			<mx:VBox label="分类查看" width="100%" height="100%" 
+			<mx:VBox label="路径控制面板" width="100%" height="100%" 
 					paddingTop="5" paddingBottom="5" paddingLeft="5" paddingRight="5" >
 				
-				<mx:Button label="直方图查看" click="showChart()"/>
-				<mx:Button label="折线查看" click="showLineChart()"/>
-				<mx:Button label="漏斗查看" click="showTundish()"/>
-				<mx:HRule width="181" height="1"/>
-				<mx:HBox>
-					<mx:Button label="路径查看" click="findPath()"/>
-					<mx:CheckBox id="mergeRootCheckBox" label="合并根节点" selected="false"/>
-				</mx:HBox>
-				<mx:HBox>
-					<mx:Button label="频繁路径查看" click="showFRPath()"/>
-					<mx:CheckBox id="closedPathCheckBox" label="路径闭包模式" selected="false"/>
-				</mx:HBox>
-				
-				<mx:Label text="用户数："/>
+				<!--<mx:HRule width="181" height="1"/>-->
+				<mx:Label text="用户数"/>
 				<mx:HBox>
 					<mx:Label text="下限"/>
 					<mx:TextInput id="pathUserMin" width="50" text="0" restrict="0-9"/>
 					<mx:Label text="上限"/>
 					<mx:TextInput id="pathUserMax" width="50" text="0" restrict="0-9"/>
 				</mx:HBox>
-				<mx:Label text="路径长度："/>
+				<mx:Label text="路径长度"/>
 				<mx:HBox>
 					<mx:Label text="下限"/>
 					<mx:TextInput id="pathLengthMin" width="50" text="0" restrict="0-9"/>
@@ -1011,13 +937,11 @@
 					<mx:TextInput id="filterPageName" width="60"/>
 				</mx:HBox>
 				<mx:Button label="路径过滤" click="pathFilter()"/>
-				<mx:HRule width="181" height="1"/>
-				<mx:Button label="表格查看" click="showGraphData()"/>
-				<!--<mx:Button label="文件目录查看" click="fileDir()"/>-->
+				<!--<mx:HRule width="181" height="1"/>-->
 				
 				<mx:Button label="图书流失漏斗查看" click="showBookTundish()"/>
 			</mx:VBox>
-    		<mx:VBox id="contralPad" label="全局查看" width="100%" height="100%" 
+    		<mx:VBox id="contralPad" label="跳转图控制面板" width="100%" height="100%" 
     			paddingTop="5" paddingBottom="5" paddingLeft="5" paddingRight="5"  >
     			<mx:HBox>
     				<mx:Button id="openFileBtn" label="打开文件" click="openFile()"/>
