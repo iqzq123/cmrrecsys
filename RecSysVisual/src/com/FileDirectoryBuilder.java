@@ -79,8 +79,10 @@ public class FileDirectoryBuilder
 		return os.toString();
     }
 	
-    public String getFileDirXMLStr(String path) {
+    public String getFileDirXMLStr(String path ) {
     	File file = new File(path);
+    	if ( file.exists() == false )
+    		return "";
 		try {
 			db = dbf.newDocumentBuilder();
 		} catch (Exception pce) {
@@ -88,6 +90,7 @@ public class FileDirectoryBuilder
 		}
 		doc = db.newDocument();
 		doc.appendChild(getFile(file));
+		System.out.println("hiahia:"+getFile(file));
         ByteArrayOutputStream os = new ByteArrayOutputStream();     
         try {
 			// ��xmlserializer��document�����ݽ��д���

@@ -10,7 +10,7 @@ package SNADisplay.org.Graph.Model
 	{
 		private var filterPageName:String = "";
 		private var closedFRPath:Boolean = false;	
-		public function FRPath(id:String, directional:Boolean=false, isFastMode:Boolean=false, closedFRPath:Boolean = false)
+		public function FRPath(id:String, directional:Boolean=false, isFastMode:Boolean=false, closedFRPath:Boolean = true)
 		{
 			super(id, directional, isFastMode);
 			this.closedFRPath = closedFRPath;

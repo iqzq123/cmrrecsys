@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" title="文件选取" borderAlpha="0.9"
-	 width="322" height="424" showCloseButton="true" close="closeHandle()" creationComplete="init()"> 
+	 width="322" height="424" showCloseButton="true" fontSize="11"
+	 close="closeHandle()" creationComplete="init()"> 
 	<mx:Script>
 		<![CDATA[
 			import mx.rpc.http.mxml.HTTPService;
@@ -11,14 +12,16 @@
             private var treeData:XMLList = new XMLList;
             
             private var _filePath:String = "";
+            private var _subDirectory:String = "";
             private function init():void {
             	
             	var getFileDir : HTTPService = new HTTPService();
             	var params:URLVariables = new URLVariables();
-				//getFileDir.method = "post";
+
 				getFileDir.resultFormat = "e4x";
 				getFileDir.url = "getFileDirectory";
 				params.random = Math.random();
+				params.subDirectory = encodeURIComponent(_subDirectory);
 				getFileDir.addEventListener(ResultEvent.RESULT,setFileDir)
 				getFileDir.send(params);
             }
@@ -48,14 +51,26 @@
             	return _filePath;
             }
             
+            public function set subDirectory(s:String):void {
+            	this._subDirectory = s;
+            }
+            
+            public function gotoSubDirectory():void {
+            	this._subDirectory = subDireInput.text;
+            	this.init();
+            }
+            
 		]]>
 	</mx:Script>
 
-	<mx:Tree id="myTree" width="100%" height="311" labelField="@label" 
-            showRoot="false" dataProvider="{treeData}" change="treeChanged(event)"/>
+	<mx:Tree id="myTree" width="282" height="274" labelField="@label" 
+            showRoot="false" dataProvider="{treeData}" change="treeChanged(event)" y="37" x="10"/>
 	<mx:Button label="取消" x="215" y="352" width="54" click="closeHandle()"/>
 	<mx:Button label="确定" x="132" y="352" width="54" click="confirm()"/>
 	<mx:Label x="10" y="319" text="路径："/>
 	<mx:TextInput x="48" y="317" width="244" editable="false" text="{_selectedNode.@path}"/>
+	<mx:Label x="10" y="12" text="筛选目录："/>
+	<mx:TextInput x="67" y="10" id="subDireInput"/>
+	<mx:Button x="234" y="10" label="筛选" click="gotoSubDirectory()"/>
 	
 </mx:TitleWindow>

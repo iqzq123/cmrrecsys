@@ -31,17 +31,25 @@ public class GetFileDirectoryServlet extends HttpServlet {
 			response.setContentType("text/xml;charset=utf-8");
 			response.setCharacterEncoding("utf-8");
 			PrintWriter out = response.getWriter();
-			File curDir = new File(".");
+			//File curDir = new File(".");
 			FileDirectoryBuilder getFileDirectory = new FileDirectoryBuilder();
 			String str = "";
 			Properties properties = new Properties();
+			//获得config的路径
 			String webRootPath = getServletContext().getRealPath("/");
 			System.out.print("webRootPath" + webRootPath);
 			InputStream in = new FileInputStream(webRootPath
 					+ "config/config.properties");
+			//读取config文件中的目录属性
 			properties.load(in);
 			String fileDir = "";
 			fileDir = properties.getProperty("directory");
+			String subDirectory = "";
+			subDirectory = java.net.URLDecoder.decode(request
+					.getParameter("subDirectory"), "UTF-8");
+			if ( subDirectory != "" ){
+				fileDir += "/" + subDirectory;
+			}
 			System.out.println(fileDir);
 			if (fileDir != null) {
 				str = getFileDirectory.getFileDirXMLStr(fileDir);
