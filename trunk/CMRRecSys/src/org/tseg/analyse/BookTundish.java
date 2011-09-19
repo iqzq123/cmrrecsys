@@ -29,19 +29,24 @@ public class BookTundish {
 	 * @param args
 	 */
 	
+	private String rootPath = "";
 	private String bookInfoPath = "";
 	private String chapterInfoPath = "";
 	private String inputPath = "";
 	private String outputPath = "";
 	private String tundishPath = "";
+	private String bookString = "";
 	private BookModel bookModel = new BookModel();
 	private static AtomicInteger progress = new AtomicInteger(0);
+	private String sep = ";";
 	
 	public void run(){
 		bookModel.setBookInfoPath(bookInfoPath);
 		bookModel.setChapterInfoPath(chapterInfoPath);
 		bookModel.setInputPath(inputPath);
 		bookModel.setOutputPath(outputPath);
+		bookModel.setBookString(bookString);
+		bookModel.setRootPath(rootPath);
 		bookModel.onInitial();
 		bookModel.run();
 		bookModel.saveBookXML();
@@ -81,6 +86,7 @@ public class BookTundish {
 					sStrings = str.split(",");
 					aRecord.add(sStrings);
 				}
+				br.close();
 				Element bookEmt = doc.createElement("book");
 				bookEmt.setAttribute("bookID", bookFiles[i].getName());
 				bookEmt.setAttribute("bookName", (aRecord.get(0))[0]);
@@ -137,47 +143,47 @@ public class BookTundish {
 			ioexp.printStackTrace();
 		}
 		
-//		try {
-//			deleteTempFile();
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		try {
+			System.out.println("start delete temp files....");
+			deleteTempFile();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("1 "+e.toString());
+		}
 		
 	}
 	
-//	private void deleteTempFile() throws Exception {
-//		File inFile = new File(outputPath);
-//		inFile.delete();
-//		File newFile = new File(inFile.getAbsolutePath()+"/9999999999");
-//		newFile.createNewFile();
-//		File [] bookFiles = inFile.listFiles();
-//		System.out.println(bookFiles.length);
-//		for(int i=0;i<bookFiles.length;i++){
-//			File file = bookFiles[i];
-//			System.out.println("1."+file.getAbsolutePath()+file.isAbsolute());
-//			try {
-//				Boolean deleteBoolean = file.delete();
-//				if(deleteBoolean)System.out.println("1.delete file "+file.getAbsolutePath());
-//				
-//			} catch (Exception e) {
-//				// TODO: handle exception
-//				e.printStackTrace();
-//			}
-//		}
-//	}
+	private void deleteTempFile() throws Exception {
+		File dir = new File(outputPath);
+		System.out.println("enter delete");
+		try {
+			for(File file:dir.listFiles()){
+				System.out.println(file.getAbsolutePath());
+				if(file.delete())System.out.println(file.getAbsolutePath()+" deleted!");
+				else System.out.println("can not delete file "+file.getAbsolutePath());
+			}
+			if(dir.delete())System.out.println(dir.getAbsolutePath()+" deleted!");
+			else System.out.println("can not delete file "+dir.getAbsolutePath());
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			System.out.println("2 "+e.toString());
+		}
+		
+	}
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		BookTundish bt = new BookTundish();
-		bt.setBookInfoPath("E:/data/book/zdmm_book.txt");
-		bt.setChapterInfoPath("E:/data/book/zdmm_chap.txt");
-		bt.setInputPath("E:/data/book/zdmm_chap_read_qd.txt");
+		bt.setBookInfoPath("E:/data/book/dim_bookinfo.txt");
+		bt.setChapterInfoPath("E:/data/book/dim_chapterinfo.txt");
+		bt.setInputPath("E:/data/book/newData.txt");
 		bt.setOutputPath("E:/data/book/test");
-		bt.setTundishPath("E:/data/book/zdmm.xml");
+		bt.setTundishPath("E:/data/book/newData.xml");
+		bt.setBookString("349801926;357747094;");
 		bt.getProgress(progress);
-		bt.run();
-		
+		bt.run();		
 	}
 	
 	public String getBookInfoPath() {
@@ -222,6 +228,20 @@ public class BookTundish {
 	
 	public void getProgress(AtomicInteger progress){
 		this.bookModel.getProgress(progress);
+	}
+	
+	public void setBookString(String string){
+		this.bookString = string;
+	}
+	public String getBookString(){
+		return this.bookString;
+	}
+	
+	public void setRootPath(String rootPath){
+		this.rootPath = rootPath;
+	}
+	public String getRootPath(){
+		return this.rootPath;
 	}
 
 }

@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.sun.corba.se.spi.orb.StringPair;
+import com.sun.java_cup.internal.internal_error;
 
 public class BookModel {
 	private String bookInfoPath = "";
@@ -22,6 +23,9 @@ public class BookModel {
 	private String inputPath = "";
 	private String outputPath = "";
 	private String seprator = "\\|"; //文件分隔符
+	private String sep = ";";   ///////用户输入bookID的分隔符
+	private String bookString = "";
+	private String rootPath = "";
 
 	private HashMap<Integer,Book> bookMap = new HashMap<Integer, Book>();
 	private HashMap<String, Integer> bookNameMap = new HashMap<String, Integer>();
@@ -31,6 +35,7 @@ public class BookModel {
 	private final int CHAPTER_ATTRI_NUM = 7;
 	
 	private AtomicInteger progress = null;
+
 	
 	/**
 	 * @param args
@@ -51,9 +56,23 @@ public class BookModel {
 	
 	public void onInitial() {
 		System.out.println("onInitial");
-		this.readBookInfo();
+		String[] bookIDs = this.bookString.trim().split(sep);
+		int len = bookIDs.length;
+		this.readBookInfo(len);
 		this.readChapterInfo();
 		System.out.println("onInitial END");
+	}
+	
+	public Boolean inBookIDs(String bookID){
+		String[] bookIDs = this.bookString.trim().split(sep);
+		Boolean find = false;
+		for(int i=0;i<bookIDs.length;i++){
+			if(bookID.equals(bookIDs[i])){
+				find = true;
+				break;
+			}
+		}
+		return find;
 	}
 	
 	public void run() {
@@ -62,27 +81,30 @@ public class BookModel {
 		System.out.println("run END");
 	}
 	
-	public void readBookInfo() {
+	public void readBookInfo(int len) {
 		try {
 			System.out.println("readBookInfo");
+			
 			InputStreamReader read;
 			read = new InputStreamReader(new FileInputStream(
 					new File(bookInfoPath)),"UTF-8");
 			BufferedReader reader = new BufferedReader(read);
 			String str;
 			reader.readLine();
-			while ((str = reader.readLine()) != null) {
-//				if(str.contains(","))str = str.replace(',', '|');
+			while (len>0&&(str = reader.readLine()) != null) {
 				String[] strArray = str.split(seprator);
-				
-				Book book = new Book();
-				book.setId(Integer.parseInt(strArray[0]));
-				book.setName(strArray[1]);
-				book.setSerialize(Integer.parseInt(strArray[11]));
-				
-				this.bookMap.put(book.getId(), book);
-				this.bookNameMap.put(book.getName(), book.getId());
-				
+				if(inBookIDs(strArray[0])){
+					len--;
+					Book book = new Book();
+					if(checkStringToInt(strArray[0])&&checkStringToInt(strArray[11])){
+						book.setId(Integer.parseInt(strArray[0]));
+						book.setSerialize(Integer.parseInt(strArray[11]));
+					}
+					else continue;					
+					book.setName(strArray[1]);										
+					this.bookMap.put(book.getId(), book);
+					this.bookNameMap.put(book.getName(), book.getId());
+				}									
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -100,28 +122,36 @@ public class BookModel {
 			BufferedReader reader = new BufferedReader(read);
 			String str;
 			reader.readLine();
+			int i = 0;
 			while ((str = reader.readLine()) != null) {
-//				if(str.contains(","))str = str.replace(',', '|');
+				i++;
+				this.progress.set(i);
 				String[] strArray = str.split(seprator);
-				if ( strArray.length == this.CHAPTER_ATTRI_NUM ){
-//					String fee;
-//					if(strArray[6]==""){
-//						fee = "0";
-//					}
-//					else fee = strArray[6];
-					Chapter chapter = new Chapter(Integer.parseInt(strArray[0]),
-												Integer.parseInt(strArray[1]),
-												strArray[2],
-												Integer.parseInt(strArray[3]),
-												Integer.parseInt(strArray[4]),
-												Integer.parseInt(strArray[5]),
-												Integer.parseInt(strArray[6]));
-					Book book = this.bookMap.get(chapter.getBookId());
-					book.addChapter(chapter);
+				if(inBookIDs(strArray[0])){
+					if ( strArray.length == this.CHAPTER_ATTRI_NUM ){
+						if(checkStringToInt(strArray[0])&&checkStringToInt(strArray[1])
+								&&checkStringToInt(strArray[3])&&checkStringToInt(strArray[4])
+								&&checkStringToInt(strArray[5])&&checkStringToInt(strArray[6])){
+							Chapter chapter = new Chapter(Integer.parseInt(strArray[0]),
+									Integer.parseInt(strArray[1]),
+									strArray[2],
+									Integer.parseInt(strArray[3]),
+									Integer.parseInt(strArray[4]),
+									Integer.parseInt(strArray[5]),
+									Integer.parseInt(strArray[6]));
+							try {
+								Book book = this.bookMap.get(chapter.getBookId());
+								book.addChapter(chapter);
+							} catch (Exception e) {
+								// TODO: handle exception
+							}
+							
+						}
+						else continue;										
+					}
 				}
-			}
-			
-			
+				if(i%100000==0)System.out.println("read chapter info "+i);								
+			}		
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -145,14 +175,12 @@ public class BookModel {
 			while ((str = reader.readLine()) != null) {
 				
 				String[] strArray = str.split(seprator);
-				if(!checkData(strArray)){
-//					System.out.println("false");
+				if(!checkStringToInt(strArray[1])){
 					i++;
 					continue;
 				}
 				if ( strArray.length < 2 )
-					continue;
-				
+					continue;				
 				book = getBookByChapterId(Integer.parseInt(strArray[1]));
 				if(book == null) {
 					System.out.println(i+" not found book");
@@ -167,7 +195,7 @@ public class BookModel {
 				i++;
 				this.progress.set(i);
 				if ( i % 100000 == 0)
-					System.out.println(i);
+					System.out.println("read readinginfo "+i);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -245,16 +273,17 @@ public class BookModel {
 		return null;
 	}
 	
-	private Boolean checkData(String[] ss){
+	private Boolean checkStringToInt(String s){
 		try {
-			int temp = Integer.parseInt(ss[1]);
+			int temp = Integer.parseInt(s);
 		} catch (Exception e) {
 			// TODO: handle exception
 			return false;
 		}
-		return true;
-		
+		return true;		
 	}
+	
+	
 	public String getBookInfoPath() {
 		return bookInfoPath;
 	}
@@ -289,6 +318,20 @@ public class BookModel {
 	
 	public void getProgress(AtomicInteger progress) {
 		this.progress = progress;
+	}
+	
+	public void setBookString(String string){
+		this.bookString = string;
+	}
+	public String getBookString(){
+		return this.bookString;
+	}
+	
+	public void setRootPath(String rootPath){
+		this.rootPath = rootPath;
+	}
+	public String getRootPath(){
+		return this.rootPath;
 	}
 
 }
