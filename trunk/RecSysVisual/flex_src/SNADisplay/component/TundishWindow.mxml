@@ -42,12 +42,14 @@
 	   			levelLabelArr.push(levelLabel);
 	   			this.addChild(levelLabel);
 	   			
-	   			runOffBtn = new Button;
-	   			runOffBtn.id = btnIndex.toString();
-	   			runOffBtn.label = "流失查看";
-	   			runOffBtn.addEventListener(MouseEvent.CLICK, showRunOffTable);
-	   			runOffBtnArr.push(runOffBtn);
-	   			this.addChild(runOffBtn);
+	   			if ( btnIndex < xmlData.child("Level").length() - 1 ){
+	   				runOffBtn = new Button;
+		   			runOffBtn.id = btnIndex.toString();
+		   			runOffBtn.label = "流失查看";
+		   			runOffBtn.addEventListener(MouseEvent.CLICK, showRunOffTable);
+		   			runOffBtnArr.push(runOffBtn);
+		   			this.addChild(runOffBtn);
+	   			}
 	   			
 	   			pageLabel = new Label;
 	   			pageLabel.setStyle("fontSize",12);
@@ -94,10 +96,12 @@
    				levelLabel = levelLabelArr[i];
 	   			levelLabel.x = startX + width/2 - levelLabel.width/2;
 	   			levelLabel.y = startY + height / levelPropArr.length * ( i + 0.5 ) - levelLabel.height;
-	   			//用户流失按钮
-	   			runOffBtn = runOffBtnArr[i];
-	   			runOffBtn.x = canvas.width*0.8 + 5;
-	   			runOffBtn.y = startY + height / levelPropArr.length * ( i + 0.5 ) - runOffBtn.height;
+	   			if ( i < levelPropArr.length -1 ){
+	   				//用户流失按钮
+		   			runOffBtn = runOffBtnArr[i];
+		   			runOffBtn.x = canvas.width*0.8 + 5;
+		   			runOffBtn.y = startY + height / levelPropArr.length * ( i + 1 ) - runOffBtn.height;
+	   			}
    			}
    			
    		}

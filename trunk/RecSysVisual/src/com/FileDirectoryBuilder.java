@@ -90,7 +90,7 @@ public class FileDirectoryBuilder
 		}
 		doc = db.newDocument();
 		doc.appendChild(getFile(file));
-		System.out.println("hiahia:"+getFile(file));
+		System.out.println("in getFileDirXMLStr() "+path);
         ByteArrayOutputStream os = new ByteArrayOutputStream();     
         try {
 			// ��xmlserializer��document�����ݽ��д���
