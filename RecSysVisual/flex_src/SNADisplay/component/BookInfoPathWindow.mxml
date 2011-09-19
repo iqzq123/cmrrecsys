@@ -81,7 +81,7 @@
 		    private function setProgressBar(e:ResultEvent):void {
 		    	var progress:String = String(e.result);
 		    	num = new int(progress);
-		    	if(num==preNum) {
+		    	if(num==-1&&num==preNum) {
 		    		clearInterval(intervalID);
 		    		progressBar.setProgress(100,100);
 		    		progressBar.label = "执行完毕。";

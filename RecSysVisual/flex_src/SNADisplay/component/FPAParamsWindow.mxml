@@ -15,7 +15,7 @@
 			
 			private var fileWindow:FileWindow;
 			private var selectedButton:String;
-			private static const MINISECENDS:int=5000;
+			private static const MINISECENDS:int=2000;
 			private const FULL_NAME:String = "0";
 			private const SHORT_NAME:String = "1";
 			private const CATEGORY:String = "2"
@@ -102,7 +102,7 @@
 	   		
 	   		private var preNum:int = 0;
 		    private var num:int;
-		    private var i:int = 0;
+		    private var i:Number = 0.0;
 		    private var count:int = 1;
 	   		public function togetProgress():void {
 		    	var getProgressService:HTTPService = new HTTPService();
@@ -115,19 +115,18 @@
 		    private function setProgressBar(e:ResultEvent):void {
 		    	var progress:String = String(e.result);
 		    	num = new int(progress);
-		    	if(preNum == num) {
+		    	if(num==-1&&preNum == num) {
 		    		clearInterval(intervalID);
 		    		progressBar.setProgress(100,100);
-		    		progressBar.label = "执行完毕.共"+num+"行";
+		    		progressBar.label = "执行完毕.";
 		    		Alert.show("频繁路径分析执行完毕！","",0,this,closeHandle2);
 		    	}
 		    	else {
 		    		if(num<preNum) count++;
-		    		i+=5;
+		    		i = (num*1.0)/1000000;
 		    		preNum = num;
-		    		if(i>100) i=0;
 		    		progressBar.setProgress(i,100);
-		    		progressBar.label = "第"+count+"次读文件，正在执行中...第"+num+"行";
+		    		progressBar.label = "第"+count+"次读文件，正在执行中..."+i+"%";
 		    	}
 		    }
 		    
