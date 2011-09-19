@@ -30,8 +30,8 @@ public class CheckBookServlet extends HttpServlet{
 			
 			String bookString = java.net.URLDecoder.decode(request
 					.getParameter("bookString"), "UTF-8");
-			String inputPath = fileDir+"/book/dim_bookinfo.txt";  ///////////所有图书的信息
-			String outputPath = fileDir+"/book/checkBookResult.xml";      ///////////存放查询结果的文件
+			String inputPath = fileDir+"/dim/dim_bookinfo.txt";  ///////////所有图书的信息
+			String outputPath = fileDir+"/dim/checkBookResult.xml";      ///////////存放查询结果的文件
 			
 			CheckBook checkBook = new CheckBook();
 			checkBook.setInputPath(inputPath);
