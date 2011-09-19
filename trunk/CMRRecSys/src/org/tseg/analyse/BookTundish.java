@@ -68,7 +68,7 @@ public class BookTundish {
 			System.err.println(pce);
 		}
 		Document doc = db.newDocument();
-		Element root = doc.createElement("Tundish");
+		Element root = doc.createElement("BookTundish");
 		doc.appendChild(root);
 		
 		String str = "";
