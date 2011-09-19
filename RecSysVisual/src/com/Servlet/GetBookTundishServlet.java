@@ -71,8 +71,8 @@ public class GetBookTundishServlet extends HttpServlet {
 				properties.load(in);
 				String fileDir = "";
 				fileDir = properties.getProperty("directory");
-				String bookInfoPath = fileDir + "/book/dim_bookinfo.txt";
-				String chapterInfoPath = fileDir + "/book/dim_chapterinfo.txt";
+				String bookInfoPath = fileDir + "/dim/dim_bookinfo.txt";
+				String chapterInfoPath = fileDir + "/dim/dim_chapterinfo.txt";
 				bookTundish.setBookInfoPath(bookInfoPath);
 				bookTundish.setChapterInfoPath(chapterInfoPath);
 				bookTundish.setInputPath(readingInfoPath);

@@ -50,7 +50,7 @@ public class FPAAnalyseServlet extends HttpServlet {
 				fileDir = properties.getProperty("directory");
 				System.out.println("fileDir is : " + fileDir);
 
-				String siteDataPath = fileDir;
+				String siteDataPath = fileDir+"/dim";
 
 				FPAnalyser fp = new FPAnalyser();
 				fp.getProgress(progress);

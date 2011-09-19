@@ -50,7 +50,7 @@ public class AnalyseStarterServlet extends HttpServlet {
 				properties.load(in);
 				String fileDir = "";
 				fileDir = properties.getProperty("directory");
-				s.setSiteDataPath(fileDir);
+				s.setSiteDataPath(fileDir+"/dim");
 
 				// s.setNegCate(true);
 
