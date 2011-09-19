@@ -68,7 +68,8 @@ public class AnalyseRunner {
 		for (Analyse analyse : this.analyseList) {
 			analyse.onReadEnd();
 		}
-
+		System.out.println("AnalyseRunner end!!!!!!!!!!!!!!");
+		this.progress.set(-1);
 	}
 
 	private void runSingleFile(String path) throws FileNotFoundException, IOException {
