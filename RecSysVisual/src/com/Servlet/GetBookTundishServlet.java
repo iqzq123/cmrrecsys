@@ -1,9 +1,12 @@
 package com.Servlet;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Calendar;
+import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.servlet.ServletException;
@@ -30,10 +33,8 @@ public class GetBookTundishServlet extends HttpServlet {
 					.getParameter("action"), "UTF-8");
 			System.out.println("action is:" + action);
 			if (action.equals("start")) {
-				String bookInfoPath = java.net.URLDecoder.decode(request
-						.getParameter("bookInfoPath"), "UTF-8");
-				String chapterInfoPath = java.net.URLDecoder.decode(request
-						.getParameter("chapterInfoPath"), "UTF-8");
+				String bookString = java.net.URLDecoder.decode(request
+						.getParameter("bookString"), "UTF-8");
 				String readingInfoPath = java.net.URLDecoder.decode(request
 						.getParameter("readingInfoPath"), "UTF-8");
 				String tundishPath = java.net.URLDecoder.decode(request
@@ -55,18 +56,30 @@ public class GetBookTundishServlet extends HttpServlet {
 				}
 
 				System.out.println("进入book tundish servlet" + "\n"
-						+ bookInfoPath + "\n" + chapterInfoPath + "\n"
 						+ readingInfoPath + "\n" + tundishPath);
 
 				BookTundish bookTundish = new BookTundish();
 				File f = new File(readingInfoPath);
 
+				
+				
+				String webRootPath = getServletContext().getRealPath("/");
+				System.out.print("webRootPath" + webRootPath);
+				InputStream in = new FileInputStream(webRootPath
+						+ "config/config.properties");
+				Properties properties = new Properties();
+				properties.load(in);
+				String fileDir = "";
+				fileDir = properties.getProperty("directory");
+				String bookInfoPath = fileDir + "/book/dim_bookinfo.txt";
+				String chapterInfoPath = fileDir + "/book/dim_chapterinfo.txt";
 				bookTundish.setBookInfoPath(bookInfoPath);
 				bookTundish.setChapterInfoPath(chapterInfoPath);
 				bookTundish.setInputPath(readingInfoPath);
 				bookTundish.setOutputPath(f.getParent() + "/tempbooks"
 						+ currentTime);
 				bookTundish.setTundishPath(tundishPath);
+				bookTundish.setBookString(bookString);
 
 				bookTundish.getProgress(progress);
 

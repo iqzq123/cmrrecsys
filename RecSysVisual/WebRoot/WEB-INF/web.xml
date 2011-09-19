@@ -80,5 +80,14 @@
     <url-pattern>/getProgress</url-pattern>
   </servlet-mapping>
   
+   <servlet>
+    <servlet-name>checkBook</servlet-name>
+    <servlet-class>com.Servlet.CheckBookServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>checkBook</servlet-name>
+    <url-pattern>/checkBook</url-pattern>
+  </servlet-mapping>
+  
 </web-app>
 
