@@ -2,6 +2,8 @@ package org.tseg.analyse;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -46,6 +48,8 @@ public class FPAnalyser {
 	private AtomicInteger progress = null;
 	
 	private int pathCnt=0;
+	private int cnt=0;
+	private int amount=0;
 	
 	/**
 	 * @param param
@@ -75,26 +79,18 @@ public class FPAnalyser {
 			fpAlgo.setPathNum(0);
 			fpAlgo.setCurFPLenght(this.curFPLenght);
 			this.curPVHis = null;
-			FileReader fr = new FileReader(this.inputPath);
-			BufferedReader reader = new BufferedReader(fr);
-			String str;
-			reader.readLine();
-			int cnt = 0;
-			while ((str = reader.readLine()) != null) {
-
-				String[] log = Preprocessor.run(str.split(logSplit), analyseType);
-				// Preprocessor.tranPageToCate(log);
-				this.onReadLog(log);
-				if (cnt % 10000 == 0) {
-					System.out.println(cnt+"\n");
-					System.out.println(this.curFPLenght+"\n");
-					
+			this.cnt=0;		
+			File inputFile = new File(this.inputPath);
+			this.amount=Ulits.getFileSize(inputFile.getName());		
+			if (inputFile.isDirectory()) {			
+				File []fileArray=inputFile.listFiles();
+				for(File file:fileArray){
+					runForSingleFile(file.getPath());
 				}
-				cnt++;
-				this.progress.set(cnt);
-			}
-			System.out.println(cnt);
-			
+			} else {
+				runForSingleFile(this.inputPath);
+			}		
+			System.out.println(this.cnt);		
 			this.onReadEnd();
 			System.out.println("curFPLenght:" + this.curFPLenght + "	pathNum:"
 					+ this.fpAlgo.getPathNum() + "\n");
@@ -116,6 +112,31 @@ public class FPAnalyser {
 		saveResult();
 		saveResultXML();
 		System.out.println("pathCnt......................"+this.pathCnt);
+	}
+
+	private void runForSingleFile(String file) throws FileNotFoundException, IOException {
+		
+		FileReader fr = new FileReader(file);
+		BufferedReader reader = new BufferedReader(fr);
+		String str;
+		//reader.readLine();
+		while ((str = reader.readLine()) != null) {
+			String[] log = Preprocessor.run(str.split(logSplit), analyseType);
+			if (log.length < 22) {
+				continue;
+			}
+			// Preprocessor.tranPageToCate(log);
+			this.onReadLog(log);
+			if (cnt % 10000 == 0) {
+				System.out.println(cnt+"\n");
+				System.out.println(this.curFPLenght+"\n");			
+			}
+			cnt++;
+			int percent=(int)((cnt*1.0/this.amount)*100000000);
+			this.progress.set(percent);
+			
+		}
+		
 	}
 
 	/**

@@ -3,6 +3,18 @@ package org.tseg.Ulits;
 import java.util.HashMap;
 
 public class Ulits {
+	
+	public static int getFileSize(String fileName){
+		int amount=0;
+		String[] nameArray=fileName.split(Separator.FILENAME_SEPARATOR);
+		try{
+			amount=Integer.parseInt(nameArray[nameArray.length-1])*10000;
+		}catch(Exception e){
+			amount=100000000;
+			System.out.print("fileName Format error");
+		}
+		return amount;
+	}
 
 	public static boolean isSameCategory(String page1, String page2) {
 
