@@ -411,16 +411,14 @@ public class Tundish extends Analyse {
 					Level targetLevel = (Level) tundishResult.get(indexs[seq]);
 
 					// 当前页面指向漏斗第0层时
-					if (visit.equals(level0.name)) {
+					if ( this.compareVisit(visit, level0.name) ) {//visit.equals(level0.name)
 						// 如果目标层不是第0层，计算前一层的用户流失，且只有目标层不是第0层的时候计算
 						if (targetLevel != level0) {
 						} else {
-							if (!preVisit.equals(level0.name)) {
+							if ( !this.compareVisit(preVisit, level0.name) ) {//!preVisit.equals(level0.name)
 								level0.cnt++;
 							}
 						}
-						// System.out.println(indexs[seq]);
-						// level0.cnt++;
 						indexs[seq] = 1;
 						// 一次漏斗结束后，目标层序号重置为第0层, 如果漏斗只有一层的特殊情况
 						if (indexs[seq] == tundishResult.size())
@@ -429,8 +427,8 @@ public class Tundish extends Analyse {
 					// 如果当前页面不指向漏斗第0层
 					else {
 						// 如果当前页面指向目标层
-						if (visit.equals(targetLevel.name)) {
-							if ( !preVisit.equals(level0.name) ){
+						if ( this.compareVisit(visit, targetLevel.name) ) {//visit.equals(targetLevel.name)
+							if ( !this.compareVisit(preVisit, level0.name) ){//!preVisit.equals(level0.name)
 								//System.out.println("\n!!!!!!!!!!!"+preVisit+"!!!!!!!!!!!!!!!");
 							}
 							targetLevel.cnt++;
@@ -441,13 +439,12 @@ public class Tundish extends Analyse {
 						}
 						// 如果当前页面不指向目标层，计算前一层的用户流失
 						else {
-							// //////////////////
 							Level preLevel = level0;
 
 							// 如果目标层不是第0层，且当前页不是第0层
 							if (targetLevel != level0) {
 								preLevel = (Level) tundishResult.get(indexs[seq] - 1);
-								if ( preLevel.name.equals(preVisit) ){
+								if ( this.compareVisit(preLevel.name, preVisit) ){//preLevel.name.equals(preVisit)
 									runOffPage[seq] = visit;
 								
 								}
@@ -456,7 +453,7 @@ public class Tundish extends Analyse {
 									preLevel = (Level) tundishResult
 											.get(indexs[seq] - 1);
 									// 如果当前页不是前一层的重复的话
-									if (!visit.equals(preLevel)) {
+									if ( !this.compareVisit(visit, preLevel.name) ) {//!visit.equals(preLevel.name)
 										HashMap<String, Integer> hashMap = preLevel.runOffMap;
 										if (hashMap.get(runOffPage[seq]) == null) {
 											hashMap.put(runOffPage[seq], 1);
@@ -511,7 +508,7 @@ public class Tundish extends Analyse {
 					Level targetLevel = (Level) tundishResult.get(indexs[seq]);
 
 					// 当前页面指向漏斗第0层时
-					if (visit.equals(level0.name)) {
+					if ( this.compareVisit(visit, level0.name) ) {//visit.equals(level0.name)
 						// 如果目标层不是第0层，计算前一层的用户流失，且只有目标层不是第0层的时候计算
 						if (targetLevel != level0) {
 							Level preLevel = (Level) tundishResult
@@ -524,7 +521,7 @@ public class Tundish extends Analyse {
 								hashMap.put(visit, cnt + 1);
 							}
 						} else {
-							if (!preVisit.equals(level0.name)) {
+							if (!this.compareVisit(preVisit, level0.name)) {//!preVisit.equals(level0.name)
 								level0.cnt++;
 							}
 						}
@@ -538,7 +535,7 @@ public class Tundish extends Analyse {
 					// 如果当前页面不指向漏斗第0层
 					else {
 						// 如果当前页面指向目标层
-						if (visit.equals(targetLevel.name)) {
+						if ( this.compareVisit(visit, targetLevel.name)) {//visit.equals(targetLevel.name)
 							targetLevel.cnt++;
 							indexs[seq]++;
 							// 如果一次漏斗结束后,比较层数重置到第0层
@@ -554,7 +551,7 @@ public class Tundish extends Analyse {
 								preLevel = (Level) tundishResult
 										.get(indexs[seq] - 1);
 								// 如果当前页不是前一层的重复的话
-								if (!visit.equals(preLevel)) {
+								if ( !this.compareVisit(visit, preLevel.name) ) {//!visit.equals(preLevel.name)
 									HashMap<String, Integer> hashMap = preLevel.runOffMap;
 									if (hashMap.get(visit) == null) {
 										hashMap.put(visit, 1);
@@ -587,29 +584,8 @@ public class Tundish extends Analyse {
 	}
 
 	public static void main(String[] args) {
-		// AnalyseRunner b = new AnalyseRunner();
-		// b.setNegCate(true);
-		// // ReplaceFilter r=new ReplaceFilter();
-		// try {
-		// b.setInputPath("E:/data/pagevisit/pv6.txt");
-		// b.setOutputPath("E:/data/pagevisit/pv6.txt.out");
-		//			
-		// b.setSiteDataPath("E:/data");
-		//
-		// Tundish td = new Tundish();
-		// td.readPathList("E:/data/pagevisit/path.txt");
-		// b.addAnalyse(td);
-		//
-		// b.seqRun();
-		// System.out.println("success");
-		//
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-
 		Starter s = new Starter();
-		s.setInputPath("E:/data/pagevisit/test.txt");
+		s.setInputPath("E:/data/testFile");
 		s.setOutputPath("E:/data/pagevisit/testout.txt");
 		s.setSiteDataPath("E:/data");
 		
@@ -619,7 +595,7 @@ public class Tundish extends Analyse {
 					+ AnalyseType.NegCate + Separator.PARAM_SEPARATOR1 + 1
 					+ Separator.PARAM_SEPARATOR1 + 1
 					+ Separator.PARAM_SEPARATOR1 + "login*"
-					+ Separator.PARAM_SEPARATOR3 + "手机阅读阅读页"
+					+ Separator.PARAM_SEPARATOR3 + "yuedu.jsp"
 					+ Separator.PARAM_SEPARATOR3 + "我的书架");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -667,6 +643,16 @@ public class Tundish extends Analyse {
 
 	public void setTundishList(List<String> tundishList) {
 		this.tundishList = tundishList;
+	}
+	
+	private boolean compareVisit(String visit1,String visit2) {
+		if ( visit1.equals(visit2) )
+			return true;
+		if ( visit1.equals(Preprocessor.getPageName(visit2)))
+			return true;
+		if ( visit2.equals(Preprocessor.getPageName(visit1)))
+			return true;
+		return false;
 	}
 
 }
