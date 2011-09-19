@@ -175,6 +175,8 @@ public class BookModel {
 			Book book = null;
 			int i = 0;
 			while ((str = reader.readLine()) != null) {
+				i++;
+				this.progress.set(i);
 				
 				String[] strArray = str.split(seprator);
 				
@@ -185,7 +187,6 @@ public class BookModel {
 				else {
 					book = getBookByChapterId(Integer.parseInt(strArray[1]));
 					if(book == null) {
-						System.out.println(i+" not found book");
 						i++;
 						continue;
 					}
@@ -194,8 +195,7 @@ public class BookModel {
 					}
 					countChapterUserNumber(strArray, book);
 				}													
-				i++;
-				this.progress.set(i);
+				
 				if ( i % 100000 == 0)
 					System.out.println("read readinginfo "+i);
 			}
