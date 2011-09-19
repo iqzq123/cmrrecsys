@@ -287,23 +287,28 @@ public class PathFinder extends Analyse {
 					EndPoint ep = this.endPoints.get(index);
 					switch (states[index]) {
 					case 0:
-						if (visit.equals(ep.fromPage)) {
+						if ( this.compareVisit(visit, ep.fromPage) ) {//visit.equals(ep.fromPage) || visits[i].equals(ep.fromPage)
 							states[index] = 1;
-							targetPathes[index] = visit;
+							//if ( Preprocessor.getPageName(visit2) )
+							targetPathes[index] = ep.fromPage;
 						}
 						break;
 					case 1:
-						if (visit.equals(ep.fromPage)) {
+						if ( this.compareVisit(visit, ep.fromPage)) {//visit.equals(ep.fromPage) || visits[i].equals(ep.fromPage) 
 							states[index] = 1;
-							targetPathes[index] = visit;
-						} else if (!visit.equals(ep.toPage)) {
+							targetPathes[index] = ep.fromPage;
+						} else if ( !this.compareVisit(visit, ep.toPage)) {//!visit.equals(ep.toPage) && !visits[i].equals(ep.toPage)
 							states[index] = 1;
-							targetPathes[index] += Separator.PARAM_SEPARATOR3
-									+ visit;
+							//用户输入的起始路径是英文，结果也用英文表示
+							if ( !Preprocessor.getPageName(ep.fromPage).equals(ep.fromPage) )
+								targetPathes[index] += Separator.PARAM_SEPARATOR3 + visits[i];
+							//用户输入的起始路径是中午，结果也用中文表示
+							else
+								targetPathes[index] += Separator.PARAM_SEPARATOR3 + visit;
 						} else {
 							states[index] = 0;
 							targetPathes[index] += Separator.PARAM_SEPARATOR3
-									+ visit;
+									+ ep.toPage;
 							if ( rmDuplicatesMap.get(targetPathes[index]) == null ){
 								rmDuplicatesMap.put(targetPathes[index], 1);
 							
@@ -338,17 +343,18 @@ public class PathFinder extends Analyse {
 
 	public static void main(String[] args) {
 		Starter s = new Starter();
-		s.setInputPath("E:/data/pagevisit/test.txt");
+		s.setInputPath("E:/data/testFile");
 		s.setOutputPath("E:/data/pagevisit/testout.txt");
 		s.setSiteDataPath("E:/data");
 		try {
 			s.start("PathFinderClass" + Separator.cmdSeparator
-					+ AnalyseType.Original + Separator.PARAM_SEPARATOR1 + 2
+					+ AnalyseType.NegCate 
+					+ Separator.PARAM_SEPARATOR1 + 2
 					+ Separator.PARAM_SEPARATOR1 + 100
-					+ Separator.PARAM_SEPARATOR1 + 1
+					+ Separator.PARAM_SEPARATOR1 + 30
 					+ Separator.PARAM_SEPARATOR1 + 0
 					+ Separator.PARAM_SEPARATOR1 + "login*"
-					+ Separator.PARAM_SEPARATOR3 + "费用提示页面");
+					+ Separator.PARAM_SEPARATOR3 + "fee.jsp");
 			 //s.start("PathFinderClass	1@@@2@@@5@@@2@@@0@@@login*###费用提示页面");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -394,5 +400,15 @@ public class PathFinder extends Analyse {
 
 	public int getMaxLength() {
 		return this.maxLength;
+	}
+	
+	private boolean compareVisit(String visit1,String visit2) {
+		if ( visit1.equals(visit2) )
+			return true;
+		if ( visit1.equals(Preprocessor.getPageName(visit2)))
+			return true;
+		if ( visit2.equals(Preprocessor.getPageName(visit1)))
+			return true;
+		return false;
 	}
 }
