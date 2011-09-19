@@ -35,21 +35,21 @@ public class GetFileDirectoryServlet extends HttpServlet {
 			FileDirectoryBuilder getFileDirectory = new FileDirectoryBuilder();
 			String str = "";
 			Properties properties = new Properties();
-			//»ñµÃconfigµÄÂ·¾¶
+			//ï¿½ï¿½ï¿½configï¿½ï¿½Â·ï¿½ï¿½
 			String webRootPath = getServletContext().getRealPath("/");
 			System.out.print("webRootPath" + webRootPath);
 			InputStream in = new FileInputStream(webRootPath
 					+ "config/config.properties");
-			//¶ÁÈ¡configÎÄ¼þÖÐµÄÄ¿Â¼ÊôÐÔ
+			//ï¿½ï¿½È¡configï¿½Ä¼ï¿½ï¿½Ðµï¿½Ä¿Â¼ï¿½ï¿½ï¿½ï¿½
 			properties.load(in);
 			String fileDir = "";
 			fileDir = properties.getProperty("directory");
-			String subDirectory = "";
-			subDirectory = java.net.URLDecoder.decode(request
-					.getParameter("subDirectory"), "UTF-8");
-			if ( subDirectory != "" ){
-				fileDir += "/" + subDirectory;
-			}
+//			String subDirectory = "";
+//			subDirectory = java.net.URLDecoder.decode(request
+//					.getParameter("subDirectory"), "UTF-8");
+//			if ( subDirectory != "" ){
+//				fileDir += "/" + subDirectory;
+//			}
 			System.out.println(fileDir);
 			if (fileDir != null) {
 				str = getFileDirectory.getFileDirXMLStr(fileDir);

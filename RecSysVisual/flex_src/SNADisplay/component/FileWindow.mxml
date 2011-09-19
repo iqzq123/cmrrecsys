@@ -9,10 +9,12 @@
 			import mx.managers.PopUpManager;
 			import mx.controls.Alert;
 			[Bindable]
-            private var treeData:XMLList = new XMLList;
-            
+			private var _fullDirectoryXMLList:XMLList = new XMLList;
+			[Bindable]
+            private var _directoryXMLList:XMLList = new XMLList;
             private var _filePath:String = "";
-            private var _subDirectory:String = "";
+            [Bindable]
+            private var _targetDirectory:String = "";
             private function init():void {
             	
             	var getFileDir : HTTPService = new HTTPService();
@@ -21,14 +23,21 @@
 				getFileDir.resultFormat = "e4x";
 				getFileDir.url = "getFileDirectory";
 				params.random = Math.random();
-				params.subDirectory = encodeURIComponent(_subDirectory);
+				//params.subDirectory = "";//encodeURIComponent(_subDirectory);
 				getFileDir.addEventListener(ResultEvent.RESULT,setFileDir)
 				getFileDir.send(params);
             }
             
             private function setFileDir(evt:ResultEvent):void {
-            	
-            	treeData = new XMLList(evt.message.body); 
+            	//Alert.show("a:"+this._targetDirectory);
+            	_fullDirectoryXMLList = new XMLList(evt.message.body); 
+            	if ( this._targetDirectory != "" )
+            		filterDirectory();
+            	else {
+            		//Alert.show("hello");
+            		this._directoryXMLList = this._fullDirectoryXMLList;
+            	}
+            	//Alert.show("result1:\n"+this._directoryXMLList.toXMLString());
             }
 			private function closeHandle():void {
 	   			PopUpManager.removePopUp(this);
@@ -52,25 +61,48 @@
             }
             
             public function set subDirectory(s:String):void {
-            	this._subDirectory = s;
+            	this._targetDirectory = s;
             }
             
-            public function gotoSubDirectory():void {
-            	this._subDirectory = subDireInput.text;
-            	this.init();
+            private var tempXML:XML = <body></body>; 
+            private function filterDirectory():void {
+            	this._targetDirectory = filterDirectoryInput.text;
+            	if ( this._targetDirectory == "" ){
+            		this._directoryXMLList = this._fullDirectoryXMLList;
+            		return ;
+            	}
+            	tempXML = <body></body>; 
+            	this.genDirectoryXMLList(this._fullDirectoryXMLList[0]);
+            	this._directoryXMLList = new XMLList(tempXML);
+            	
             }
             
+            private function genDirectoryXMLList(curDirectoryXML:XML):void {
+            	var directoryXML:XML;
+            	for each ( directoryXML in curDirectoryXML.children() ){
+            		if ( directoryXML.attribute("label").toString().toUpperCase().indexOf(this._targetDirectory.toUpperCase()) != -1 ){
+            			tempXML.appendChild(directoryXML);
+            		}
+            		this.genDirectoryXMLList(directoryXML);
+            	}
+            }
+            
+            private function refreshDirectory():void {
+            	this._targetDirectory = "";
+            	this._directoryXMLList = this._fullDirectoryXMLList;
+            }
 		]]>
 	</mx:Script>
 
-	<mx:Tree id="myTree" width="282" height="274" labelField="@label" 
-            showRoot="false" dataProvider="{treeData}" change="treeChanged(event)" y="37" x="10"/>
+	<mx:Tree id="myTree" width="282" height="245" labelField="@label" 
+            showRoot="false" dataProvider="{this._directoryXMLList}" change="treeChanged(event)" y="66" x="10"/>
 	<mx:Button label="取消" x="215" y="352" width="54" click="closeHandle()"/>
 	<mx:Button label="确定" x="132" y="352" width="54" click="confirm()"/>
 	<mx:Label x="10" y="319" text="路径："/>
 	<mx:TextInput x="48" y="317" width="244" editable="false" text="{_selectedNode.@path}"/>
-	<mx:Label x="10" y="12" text="筛选目录："/>
-	<mx:TextInput x="67" y="10" id="subDireInput"/>
-	<mx:Button x="234" y="10" label="筛选" click="gotoSubDirectory()"/>
+	<mx:Label x="10" y="12" text="筛选文件目录："/>
+	<mx:TextInput x="10" y="35" id="filterDirectoryInput" text="{this._targetDirectory}" width="153"/>
+	<mx:Button x="180" y="35" label="筛选" click="filterDirectory()"/>
+	<mx:Button x="238" y="35" label="返回" width="54" click="refreshDirectory()"/>
 	
 </mx:TitleWindow>
