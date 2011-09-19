@@ -111,6 +111,8 @@ public class FPAnalyser {
 		}
 		saveResult();
 		saveResultXML();
+		this.progress.set(-1);
+		System.out.println("FPAnalyser end!!!!!!!!!!!!!!!!!!!!!!");
 		System.out.println("pathCnt......................"+this.pathCnt);
 	}
 
@@ -121,10 +123,13 @@ public class FPAnalyser {
 		String str;
 		//reader.readLine();
 		while ((str = reader.readLine()) != null) {
-			String[] log = Preprocessor.run(str.split(logSplit), analyseType);
-			if (log.length < 22) {
+			
+			String[] strArray = str.split(this.logSplit);
+			if (strArray.length < 22) {
 				continue;
 			}
+			String[] log = Preprocessor.run(strArray, analyseType);
+		
 			// Preprocessor.tranPageToCate(log);
 			this.onReadLog(log);
 			if (cnt % 10000 == 0) {
@@ -159,10 +164,11 @@ public class FPAnalyser {
 		 * 支持度衰减比例
 		 */
 		FPAnalyser fp = new FPAnalyser();
+		fp.getProgress(new AtomicInteger(0));
 		fp.setLogSplit("\\|");
 		String param="E:/data"+Separator.PARAM_SEPARATOR1+
-		"E:/data/pvdata/only_pv20110902.txt"+Separator.PARAM_SEPARATOR1+
-		"E:/data/pvdata/onlyfp"+Separator.PARAM_SEPARATOR1+
+		"E:/data/test_a/pvdata2.txt"+Separator.PARAM_SEPARATOR1+
+		"E:/data/test14"+Separator.PARAM_SEPARATOR1+
 		AnalyseType.NegCate+Separator.PARAM_SEPARATOR1+
 		true+Separator.PARAM_SEPARATOR1+
 		10+Separator.PARAM_SEPARATOR1+
