@@ -106,6 +106,7 @@ public class BookModel {
 					this.bookNameMap.put(book.getName(), book.getId());
 				}									
 			}
+			reader.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -151,7 +152,8 @@ public class BookModel {
 					}
 				}
 				if(i%100000==0)System.out.println("read chapter info "+i);								
-			}		
+			}
+			reader.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -175,28 +177,30 @@ public class BookModel {
 			while ((str = reader.readLine()) != null) {
 				
 				String[] strArray = str.split(seprator);
-				if(!checkStringToInt(strArray[1])){
+				
+				if(strArray.length < 2||!checkStringToInt(strArray[1])){
 					i++;
 					continue;
 				}
-				if ( strArray.length < 2 )
-					continue;				
-				book = getBookByChapterId(Integer.parseInt(strArray[1]));
-				if(book == null) {
-					System.out.println(i+" not found book");
-					i++;
-					continue;
-				}
-				if(!this.targetBooksAL.contains(book)) {
-					this.targetBooksAL.add(book);
-				}
-				countChapterUserNumber(strArray, book);
-					
+				else {
+					book = getBookByChapterId(Integer.parseInt(strArray[1]));
+					if(book == null) {
+						System.out.println(i+" not found book");
+						i++;
+						continue;
+					}
+					if(!this.targetBooksAL.contains(book)) {
+						this.targetBooksAL.add(book);
+					}
+					countChapterUserNumber(strArray, book);
+				}													
 				i++;
 				this.progress.set(i);
 				if ( i % 100000 == 0)
 					System.out.println("read readinginfo "+i);
 			}
+			reader.close();
+			this.progress.set(-1);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
