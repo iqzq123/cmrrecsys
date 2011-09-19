@@ -72,7 +72,7 @@
 		]]>
 	</mx:Script>
 	<mx:DataGrid x="43" y="24" 
-		width="442" height="245" 
+		width="442" height="246" 
 		visible="true"
 		id="dg"
 		dataProvider="{attr}">
@@ -91,6 +91,6 @@
 
 		</mx:columns>
 	</mx:DataGrid>
-	<mx:Button id="bt1" x="400" y="280" label="确定" click="submit()" />
-	<mx:Button id="bt2" x="450" y="280" label="取消" click="cancel()" />
+	<mx:Button id="bt1" x="374" y="294" label="确定" click="submit()" />
+	<mx:Button id="bt2" x="450" y="294" label="取消" click="cancel()" />
 </mx:TitleWindow>
