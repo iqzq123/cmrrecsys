@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="540" height="380"
+	showCloseButton="true" close="closeHandle()" creationPolicy="all" title="书库中相匹配的图书结果">
+	<mx:Metadata>
+		[Event(name="datasure",type="DataSureEvent")]
+	</mx:Metadata>
+	<mx:Script>
+		<![CDATA[
+		
+			import SNADisplay.org.utils.Events.DataSureEvent;
+			import mx.managers.PopUpManager;
+			import mx.controls.Alert;
+			import mx.collections.ArrayCollection;
+			import mx.controls.CheckBox;
+			
+			[Bindable]
+			private var attr:ArrayCollection = new ArrayCollection();
+			private var selectedAttr:Array = new Array();
+			
+			public function init(xmlData:XML):void{
+				for each(var bookXML:XML in xmlData.child("book") ){
+					var bookID:String = new String(bookXML.attribute("bookID"));
+					var bookName:String = new String(bookXML.attribute("bookName"));
+					var o:Object = new Object;
+					o.bookID = bookID;
+					o.bookName = bookName;
+					attr.addItem(o);
+				}
+			}
+			
+			public function seclick(event:MouseEvent):void
+			{
+				if ((event.target as CheckBox).selected)
+				{
+					dg.selectedItem.selected = true;
+					selectedAttr[selectedAttr.length] = (event.target as CheckBox).data.bookID;
+
+		//			_wantedAttr.setItemAt((event.target as CheckBox).data.name : String,_wantedAttr.length : int);
+				}
+				else
+				{
+					dg.selectedItem.selected = false;
+					var r:int=selectedAttr.indexOf((event.target as CheckBox).data.bookID);
+					
+					for(var i:int=0;i<selectedAttr.length-1;i++){
+						if(i>=r){
+							selectedAttr[i]=selectedAttr[i+1];
+						}
+					}
+					selectedAttr.pop();
+				}
+				
+			}
+			
+			private function closeHandle():void {
+	   			PopUpManager.removePopUp(this);
+	   		}
+	   		
+	   		private function submit():void {
+	   			var e:DataSureEvent = new DataSureEvent("datasure");
+				e.bookID = "";
+				for(var i:int=0; i<selectedAttr.length; i++){
+					e.bookID += selectedAttr[i] + ";";
+				}
+				this.dispatchEvent(e);
+				closeHandle();
+	   		}
+	   		
+	   		private function cancel():void {
+	   			closeHandle();
+	   		}
+		]]>
+	</mx:Script>
+	<mx:DataGrid x="43" y="24" 
+		width="442" height="245" 
+		visible="true"
+		id="dg"
+		dataProvider="{attr}">
+		<mx:columns>
+			<mx:DataGridColumn headerText="图书ID" dataField="bookID" >
+					<mx:itemRenderer>
+						<mx:Component>
+							<mx:CheckBox label = "{data.bookID}"
+										 selected = "{data.selected}"
+										 click = "{this.parentDocument.seclick(event)}" />
+						</mx:Component>
+					</mx:itemRenderer>
+			</mx:DataGridColumn>
+			<mx:DataGridColumn headerText="图书名" dataField="bookName" />
+			
+
+		</mx:columns>
+	</mx:DataGrid>
+	<mx:Button id="bt1" x="400" y="280" label="确定" click="submit()" />
+	<mx:Button id="bt2" x="450" y="280" label="取消" click="cancel()" />
+</mx:TitleWindow>
