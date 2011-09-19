@@ -2,7 +2,7 @@
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="init()" resize="resizeCanvas()">
 	<mx:Script>
 		<![CDATA[
-			import mx.messaging.management.Attribute;
+//			import mx.messaging.management.Attribute;
 			import mx.controls.DataGrid;
 			import mx.events.ResizeEvent;
 			import SNADisplay.org.utils.Events.ConfirmEvent;
@@ -670,12 +670,14 @@
 				fileWindow.addEventListener(Event.SELECT,getXMLDataFile);
 			}
 			
+			var selectedPath:String = "";
 			private function getXMLDataFile(e:Event):void {
 				var getXML : HTTPService = new HTTPService();
 				getXML.resultFormat = "e4x";
 				getXML.url = "getXMLServlet";
 				var params:URLVariables = new URLVariables();				
-                params.filePath = encodeURIComponent(fileWindow.getFilePath());              
+                params.filePath = encodeURIComponent(fileWindow.getFilePath()); 
+                selectedPath =  encodeURIComponent(fileWindow.getFilePath());            
 				getXML.addEventListener(ResultEvent.RESULT,  recXMLDataFile);
 				getXML.addEventListener(FaultEvent.FAULT, fHandler);
 				getXML.send(params);
@@ -709,6 +711,7 @@
 				}
 				else if ( rootLabel == XMLFileTitleName.BOOK_TUNDISH ){
 					//图书漏斗
+					showBookTundish(xmlData);
 				}
 				else if ( rootLabel == XMLFileTitleName.GRAPH ){
 					loadFile(evt);
@@ -755,36 +758,16 @@
 				PopUpManager.centerPopUp(bookInfoPathWindow);				
 			}
 			
-			private function showBookTundish():void {
-				fileWindow = new FileWindow();
-				PopUpManager.addPopUp(fileWindow,this,true);
-				PopUpManager.centerPopUp(fileWindow);
-				fileWindow.addEventListener(Event.SELECT,getBookTundishXML);
-				
-			}
-			
-			private var bookTundishPath:String;
-			private function getBookTundishXML(e:Event):void {				
-				var getXML : HTTPService = new HTTPService();
-				getXML.resultFormat = "e4x";
-				getXML.url = "getXMLServlet";
-				var params:URLVariables = new URLVariables();				
-                params.filePath = encodeURIComponent(fileWindow.getFilePath()); 
-                bookTundishPath = encodeURIComponent(fileWindow.getFilePath());              
-				getXML.addEventListener(ResultEvent.RESULT,  openBookTundish);
-				getXML.addEventListener(FaultEvent.FAULT, fHandler);
-				getXML.send(params);
-			}
-//			private var bookTundish:BookTundishWindow;
-			private function openBookTundish(e:ResultEvent):void {
-				var xmlData:XML = XML(e.message.body);
+			private function showBookTundish(xmlData:XML):void {
 				var bookTundish:BookTundishWindow;
 				bookTundish = new BookTundishWindow;
 				PopUpManager.addPopUp(bookTundish,this,true);
 				PopUpManager.centerPopUp(bookTundish);
 				bookTundish.init(xmlData);
-				bookTundish.setTundishPath(bookTundishPath);
+				bookTundish.setTundishPath(selectedPath);
+				
 			}
+			
 			
 			private var _nodePropertyArr:Array;
 			private function saveProperty(xmlData:XML):void {
@@ -939,13 +922,15 @@
 				<mx:Button label="路径过滤" click="pathFilter()"/>
 				<!--<mx:HRule width="181" height="1"/>-->
 				
-				<mx:Button label="图书流失漏斗查看" click="showBookTundish()"/>
+				<!--<mx:Button label="图书流失漏斗查看" click="showBookTundish()"/>-->
 			</mx:VBox>
     		<mx:VBox id="contralPad" label="跳转图控制面板" width="100%" height="100%" 
     			paddingTop="5" paddingBottom="5" paddingLeft="5" paddingRight="5"  >
+    			<mx:Label text="展示操作:" fontWeight="bold" />
     			<mx:HBox>
     				<mx:Button id="openFileBtn" label="打开文件" click="openFile()"/>
     				<mx:Button id="openFileBtn2" label="另打开文件" click="openFile2()"/>
+    				
     			</mx:HBox>
     			<mx:VBox id="graphChoose" visible="false" includeInLayout="false">
     				<mx:Label text="操作对象："/>
@@ -982,8 +967,13 @@
 				<mx:HBox>
 					<mx:CheckBox includeInLayout="false" visible="false" id="communitiesCheckBox" x="20" y="280" label="显示社团" change="showCommunitiesChange()"/>
 					<mx:Button label="节点属性展示" click="propertyDisplay()"/>
+					
 				</mx:HBox>
+				
 				<mx:Label id="nodePropertyLabel"/>
+				<mx:Button label="展示原图" click="refresh()" />
+				<mx:Button label="相关性展示" click="showRelevance()" />
+				<mx:Button id="fishEyeBtn" label="局部放大" click="localMagnify()"/>
 				<mx:HBox includeInLayout="false" visible="false">
 					<mx:Label text="社团算法："/>
 					<mx:ComboBox id="communitiesComboBox" x="20" y="119" change="showCommunitiesChange()">
@@ -996,7 +986,8 @@
 					</mx:ComboBox>
 				</mx:HBox>
 				<mx:HRule width="181" height="1"/>
-				<mx:Label text="目标节点："/>
+				<mx:Label text="节点操作:" fontWeight="bold" />
+				<mx:Label text="输入目标节点："/>
 				<mx:HBox>
 					<mx:TextInput id="searchNodeText" x="20" y="344" width="85"/>
 					<mx:Button label="查看属性" click="searchNode()"/>
@@ -1012,12 +1003,13 @@
 				</mx:HBox>
 				
 				<mx:HRule width="181" height="1"/>
+				<mx:Label text="过滤操作:" fontWeight="bold" />
 				<mx:HBox visible="false" includeInLayout="false">
 					<mx:RadioButtonGroup id="pathRadiogroup" change="pathStyleChange()"/>	
 					<mx:RadioButton id="pathRadioBtn" label="直接显示" groupName="pathRadiogroup" selected="true"/>
 					<mx:RadioButton id="pathAnimationRadioBtn" label="动态显示" groupName="pathRadiogroup"/>
 				</mx:HBox>
-				<mx:Button id="pathBtn" label="显示路径" click="showPath()"/>	
+				<mx:Button id="pathBtn" label="显示路径" click="showPath()" visible="false" includeInLayout="false"/>
 				<mx:HRule width="181" height="1" visible="false" includeInLayout="false"/>
 				<mx:Label text="点权值："/>
 				<mx:HBox>
@@ -1035,13 +1027,10 @@
 				</mx:HBox>
 				<mx:HBox>
 					<mx:Button label="过滤" click="filter()"/>
-					<mx:Button label="展示原图" click="refresh()" />
+					
 				</mx:HBox>
 				
-				<mx:HBox>
-					<mx:Button label="相关性展示" click="showRelevance()" />
-					<mx:Button id="fishEyeBtn" label="局部放大" click="localMagnify()"/>
-				</mx:HBox>
+				
 			</mx:VBox>
     	</mx:Accordion>
 	</mx:Box>
