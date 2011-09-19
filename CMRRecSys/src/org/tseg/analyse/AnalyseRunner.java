@@ -76,7 +76,7 @@ public class AnalyseRunner {
 		FileReader fr = new FileReader(path);
 		BufferedReader reader = new BufferedReader(fr);
 		String str;
-		reader.readLine();	
+		//reader.readLine();	
 		System.out.println("runSingleFile");
 
 		while ((str = reader.readLine()) != null) {
