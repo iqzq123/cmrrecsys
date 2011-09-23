@@ -26,6 +26,9 @@ public class BookModel {
 	private String sep = ";";   ///////用户输入bookID的分隔符
 	private String bookString = "";
 	private String rootPath = "";
+	private int chapterLine = 0;
+	private int readingInfoLine = 0;
+	
 
 	private HashMap<Integer,Book> bookMap = new HashMap<Integer, Book>();
 	private HashMap<String, Integer> bookNameMap = new HashMap<String, Integer>();
@@ -126,6 +129,7 @@ public class BookModel {
 			int i = 0;
 			while ((str = reader.readLine()) != null) {
 				i++;
+				chapterLine = i;
 				this.progress.set(i);
 				String[] strArray = str.split(seprator);
 				if(inBookIDs(strArray[0])){
@@ -176,6 +180,7 @@ public class BookModel {
 			int i = 0;
 			while ((str = reader.readLine()) != null) {
 				i++;
+				readingInfoLine = i;
 				this.progress.set(i);
 				
 				String[] strArray = str.split(seprator);
@@ -336,6 +341,13 @@ public class BookModel {
 	}
 	public String getRootPath(){
 		return this.rootPath;
+	}
+	
+	public int getChapterLine(){
+		return this.chapterLine;
+	}
+	public int getReadingInfoLine(){
+		return this.readingInfoLine;
 	}
 
 }

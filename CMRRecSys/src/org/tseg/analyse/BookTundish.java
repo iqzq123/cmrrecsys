@@ -39,6 +39,8 @@ public class BookTundish {
 	private BookModel bookModel = new BookModel();
 	private static AtomicInteger progress = new AtomicInteger(0);
 	private String sep = ";";
+	private int chapterLine = 0;
+	private int readingInfoLine = 0;
 	
 	public void run(){
 		bookModel.setBookInfoPath(bookInfoPath);
@@ -242,6 +244,13 @@ public class BookTundish {
 	}
 	public String getRootPath(){
 		return this.rootPath;
+	}
+	
+	public int getChapterLine(){
+		return bookModel.getChapterLine();
+	}
+	public int getReadingInfoLine(){
+		return bookModel.getReadingInfoLine();
 	}
 
 }
