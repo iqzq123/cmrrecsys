@@ -92,11 +92,10 @@ public class AnalyseRunner {
 				analyse.onReadLog(proArray);
 			}
 			cnt++;
-			int percent=(int)((cnt*1.0/this.lineAmount)*100000000);
 			this.progress.set(cnt);
 			if (cnt % 100000 == 0) {
-				System.out.println(cnt);
-				System.out.println((percent*1.0/100000000));
+				System.out.println("read line:"+cnt);
+				
 			}
 		}
 		reader.close();

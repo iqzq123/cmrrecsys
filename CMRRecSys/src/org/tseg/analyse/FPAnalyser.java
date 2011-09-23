@@ -133,7 +133,7 @@ public class FPAnalyser {
 			// Preprocessor.tranPageToCate(log);
 			this.onReadLog(log);
 			if (cnt % 100000 == 0) {
-				System.out.println(cnt+"\n");
+				System.out.println("read line:"+cnt+"\n");
 				System.out.println(this.curFPLenght+"\n");			
 			}
 			cnt++;
