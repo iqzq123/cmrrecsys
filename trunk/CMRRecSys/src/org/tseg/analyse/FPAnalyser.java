@@ -132,7 +132,7 @@ public class FPAnalyser {
 		
 			// Preprocessor.tranPageToCate(log);
 			this.onReadLog(log);
-			if (cnt % 10000 == 0) {
+			if (cnt % 100000 == 0) {
 				System.out.println(cnt+"\n");
 				System.out.println(this.curFPLenght+"\n");			
 			}

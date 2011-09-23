@@ -20,7 +20,7 @@ public class AnalyseRunner {
 	private String outputPath;
 	private List<Analyse> analyseList = new ArrayList<Analyse>();
 	private int cnt = 0;
-	private int amount=1;
+	private int lineAmount=1;
 	private AtomicInteger progress = null;
 
 	private String logSplit = "\\|";
@@ -48,9 +48,9 @@ public class AnalyseRunner {
 		File inputFile = new File(this.inputPath);
 		String[] nameArray=inputFile.getName().split(Separator.FILENAME_SEPARATOR);
 		try{
-			amount=Integer.parseInt(nameArray[nameArray.length-1])*10000;
+			lineAmount=Integer.parseInt(nameArray[nameArray.length-1])*10000;
 		}catch(Exception e){
-			amount=100000000;
+			lineAmount=100000000;
 			System.out.print("fileName Format error");
 		}
 		
@@ -92,11 +92,11 @@ public class AnalyseRunner {
 				analyse.onReadLog(proArray);
 			}
 			cnt++;
-			int percent=(int)((cnt*1.0/this.amount)*100000000);
-			this.progress.set(percent);
-			if (cnt % 10000 == 0) {
+			int percent=(int)((cnt*1.0/this.lineAmount)*100000000);
+			this.progress.set(cnt);
+			if (cnt % 100000 == 0) {
 				System.out.println(cnt);
-				System.out.println((this.progress.get()*1.0/100000000));
+				System.out.println((percent*1.0/100000000));
 			}
 		}
 		reader.close();
@@ -210,6 +210,14 @@ public class AnalyseRunner {
 
 	public void setLogSplit(String logSplit) {
 		this.logSplit = logSplit;
+	}
+
+	public int getLineAmount() {
+		return lineAmount;
+	}
+
+	public void setLineAmount(int lineAmount) {
+		this.lineAmount = lineAmount;
 	}
 
 }

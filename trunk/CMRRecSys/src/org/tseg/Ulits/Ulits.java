@@ -10,7 +10,7 @@ public class Ulits {
 		try{
 			amount=Integer.parseInt(nameArray[nameArray.length-1])*10000;
 		}catch(Exception e){
-			amount=100000000;
+			amount=-1;
 			System.out.print("fileName Format error");
 		}
 		return amount;
