@@ -22,6 +22,7 @@
 			private var selectedButton:String;
 			private var tundishSuffix:String = "/图书漏斗.xml";
 			private static const MINISECENDS:int=1000;
+			private var taskID:String = "";
 			
 			private function openFileWindow(e:Event):void {
 				selectedButton = ((e.target) as Button).id;
@@ -42,6 +43,7 @@
 			
 			private var intervalID:uint;
 			private function confirm():void {
+				taskID = getCurrentTime();
 				var getBookTundish:HTTPService = new HTTPService();
 				getBookTundish.resultFormat="e4x";
 				getBookTundish.url="getBookTundish";
@@ -50,15 +52,17 @@
 				params.readingInfoPath = encodeURIComponent(textinput1.text);
 				params.tundishPath = encodeURIComponent(textinput2.text);
 				params.action = "start";
+				params.taskID = taskID;
 								
 				getBookTundish.addEventListener(FaultEvent.FAULT,faultHandler);
 
 				getBookTundish.send(params);
 				intervalID = setInterval(togetProgress,MINISECENDS);
+				bt5.enabled = false;
 			}
 						
 			private function faultHandler(e:FaultEvent):void {
-				Alert.show("Something wrong!");
+				Alert.show(e.toString());
 			}
 			
 			private function closeHandle():void {
@@ -75,28 +79,36 @@
 		    	getProgressService.url = "getBookTundish";
 		    	var params:URLVariables = new URLVariables();
 		    	params.action = "progress";
+		    	params.taskID = taskID;
 		    	getProgressService.addEventListener(ResultEvent.RESULT,setProgressBar);
 		    	getProgressService.send(params);
 		    }
 		    private function setProgressBar(e:ResultEvent):void {
-		    	var progress:String = String(e.result);
-		    	num = new int(progress);
-		    	if(num==-1&&num==preNum) {
-		    		clearInterval(intervalID);
-		    		progressBar.setProgress(100,100);
-		    		progressBar.label = "执行完毕。";
-		    		Alert.show("图书漏斗分析执行完毕！","",0,this,closeHandle2);
-		    	}
-		    	else {
-		    		if(num<preNum){
-		    			count++;
-		    		}
-		    		if(count==1)progressBar.label = "读取章节信息...第"+num+"行";
-		    		else if(count==2)progressBar.label = "读取用户数据...第"+num+"行";
+		    	var line:String = String(e.result);
+		    	var lines:Array = line.split(",");
+		    	var chapterLine:int = new int(lines[0]);
+		    	var readingInfoLine:int = new int(lines[1]);
+		    	if(chapterLine>0&&readingInfoLine==0){
+		    		progressBar.label = "读取章节信息...第"+chapterLine+"行";
 		    		i+=5;
-		    		preNum = num;
 		    		if(i>100) i=0;
-		    		progressBar.setProgress(i,100);		    		
+		    		progressBar.setProgress(i,100);
+		    		preNum = chapterLine;
+		    	}
+		    	else if(chapterLine>0&&readingInfoLine>0) {
+		    		if(preNum == readingInfoLine&&readingInfoLine>0){
+		    			clearInterval(intervalID);
+		    			progressBar.setProgress(100,100);
+		    			progressBar.label = "执行完毕。";
+		    			Alert.show("图书漏斗分析执行完毕！","",0,this,closeHandle2);
+		    		}
+		    		else{
+		    			progressBar.label = "读取用户数据...第"+readingInfoLine+"行";
+		    			i+=5;
+		    			if(i>100) i=0;
+		    			progressBar.setProgress(i,100);
+		    			preNum = readingInfoLine;
+		    		}		    		
 		    	}
 		    }
 	   		
@@ -127,6 +139,30 @@
 	   			PopUpManager.addPopUp(foundBookWindow,this,true);
    				PopUpManager.centerPopUp(foundBookWindow);
    				foundBookWindow.init(foundBookXML);
+	   		}
+	   		private function getCurrentTime():String {
+	   			var date:Date = new Date;
+	   			var month:String = correctTime("default",new String(date.getMonth()));
+	   			var day:String = correctTime("default",new String(date.getDate()));
+	   			var hour:String = correctTime("default",new String(date.getHours()));
+	   			var minute:String = correctTime("default",new String(date.getMinutes()));
+	   			var second:String = correctTime("default",new String(date.getSeconds()));
+	   			var mmsecond:String = correctTime("mmsecond",new String(date.getMilliseconds()));
+	   			var currentTime:String = month+day+hour+minute+second+mmsecond;
+	   			return currentTime;
+	   		}
+	   		private function correctTime(type:String,str:String):String {
+	   			var strNew:String = str;
+	   			if(type == "default") {
+	   				if(str.length == 1)strNew = "0"+str;
+	   				else if(str.length == 0)strNew = "00";
+	   			}
+	   			else if(type == "mmsecond") {
+	   				if(str.length == 1)strNew = "00"+str;
+	   				else if(str.length == 2)strNew = "0"+str;
+	   				else if(str.length == 0)strNew = "000";
+	   			}
+	   			return strNew;
 	   		}
 		]]>
 	</mx:Script>

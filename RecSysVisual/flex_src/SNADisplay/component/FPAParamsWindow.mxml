@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="490" height="376"
-	 creationPolicy="all" showCloseButton="true" close="closeHandle()">
+	 creationPolicy="all" showCloseButton="true" close="closeHandle()" title="频繁路径分析">
 	 <mx:Metadata>
 		[Event(name="mouseClick")]
 	</mx:Metadata>
@@ -12,6 +12,7 @@
 			import mx.managers.PopUpManager;
 			import mx.controls.Alert;
 			import mx.events.CloseEvent;
+			import flash.utils.getTimer;
 			
 			private var fileWindow:FileWindow;
 			private var selectedButton:String;
@@ -19,7 +20,8 @@
 			private const FULL_NAME:String = "0";
 			private const SHORT_NAME:String = "1";
 			private const CATEGORY:String = "2"
-			
+			private var taskID:String = "";
+
 			private function openFileWindow(e:Event):void {
 				selectedButton = ((e.target) as Button).id;
 				fileWindow = new FileWindow;
@@ -79,19 +81,22 @@
 			private var intervalID:uint;
 			private function submit():void {
 				if(checkTextInput()) {
+					taskID = getCurrentTime();
 					var FPAAnalyse:HTTPService = new HTTPService();
 					FPAAnalyse.resultFormat="e4x";
 					FPAAnalyse.url="FPAAnalyse";
 					var params:URLVariables = new URLVariables();
-					params.inputPath = textinput1.text;
-					params.outputPath = textinput2.text;
+					params.inputPath = encodeURIComponent(textinput1.text);
+					params.outputPath = encodeURIComponent(textinput2.text);
 					params.type = getType();
 					params.Closed = "true"
-					params.maxFPLenght = textinput5.text;
-					params.MinRatio = textinput6.text;
-					params.DecayRatio = textinput7.text;
+					params.maxFPLenght = encodeURIComponent(textinput5.text);
+					params.MinRatio = encodeURIComponent(textinput6.text);
+					params.DecayRatio = encodeURIComponent(textinput7.text);
 					params.action = "start";
+					params.taskID = taskID;
 					FPAAnalyse.send(params);
+					commitBtn.enabled = false;
 				}
 				intervalID = setInterval(togetProgress,MINISECENDS);
 			}
@@ -100,8 +105,9 @@
 	   			PopUpManager.removePopUp(this);
 	   		}
 	   		
-	   		private var preNum:int = 0;
+	   		private var preNum:int = -1;
 		    private var num:int;
+		    private var totalNum:int;
 		    private var i:Number = 0.0;
 		    private var count:int = 1;
 	   		public function togetProgress():void {
@@ -109,29 +115,36 @@
 		    	getProgressService.url = "FPAAnalyse";
 		    	var params:URLVariables = new URLVariables();
 		    	params.action = "progress";
+		    	params.taskID = taskID;
 		    	getProgressService.addEventListener(ResultEvent.RESULT,setProgressBar);
 		    	getProgressService.send(params);
 		    }
 		    private function setProgressBar(e:ResultEvent):void {
-		    	var progress:String = String(e.result);
-		    	num = new int(progress);
-		    	if(num==-1&&preNum == num) {
+		    	var line:String = String(e.result);
+		    	var lines:Array = line.split(",");
+		    	var currentLine:String = lines[0];
+		    	var totalLine:String = lines[1];
+		    	num = new int(currentLine);
+		    	totalNum = new int(totalLine);
+		    	if(num!=0&&preNum == num) {
 		    		clearInterval(intervalID);
 		    		progressBar.setProgress(100,100);
-		    		progressBar.label = "执行完毕.";
+		    		progressBar.label = "执行完毕.共"+num+"行";
 		    		Alert.show("频繁路径分析执行完毕！","",0,this,closeHandle2);
 		    	}
 		    	else {
 		    		if(num<preNum) count++;
-		    		i = (num*1.0)/1000000;
+		    		i = (num*1.0)/totalNum*100;
+		    		i = Number(i.toFixed(2));
 		    		preNum = num;
 		    		progressBar.setProgress(i,100);
 		    		progressBar.label = "第"+count+"次读文件，正在执行中..."+i+"%";
+		    		lineLabel.text = "第"+num+"行,共"+totalNum+"行"
 		    	}
 		    }
 		    
 		    private function closeHandle2(e:CloseEvent):void {
-	   			PopUpManager.removePopUp(this);
+//	   			PopUpManager.removePopUp(this);
 	   		}
 	   		
 	   		private function getType():String {
@@ -140,6 +153,31 @@
 	   			else if(cateNameRadioButton.selected)return CATEGORY;
 	   			return null;
 	   		}	   		
+	   		
+	   		private function getCurrentTime():String {
+	   			var date:Date = new Date;
+	   			var month:String = correctTime("default",new String(date.getMonth()));
+	   			var day:String = correctTime("default",new String(date.getDate()));
+	   			var hour:String = correctTime("default",new String(date.getHours()));
+	   			var minute:String = correctTime("default",new String(date.getMinutes()));
+	   			var second:String = correctTime("default",new String(date.getSeconds()));
+	   			var mmsecond:String = correctTime("mmsecond",new String(date.getMilliseconds()));
+	   			var currentTime:String = month+day+hour+minute+second+mmsecond;
+	   			return currentTime;
+	   		}
+	   		private function correctTime(type:String,str:String):String {
+	   			var strNew:String = str;
+	   			if(type == "default") {
+	   				if(str.length == 1)strNew = "0"+str;
+	   				else if(str.length == 0)strNew = "00";
+	   			}
+	   			else if(type == "mmsecond") {
+	   				if(str.length == 1)strNew = "00"+str;
+	   				else if(str.length == 2)strNew = "0"+str;
+	   				else if(str.length == 0)strNew = "000";
+	   			}
+	   			return strNew;
+	   		}
 	 	]]>
 	 </mx:Script>
 
@@ -155,7 +193,7 @@
 	<mx:TextInput id="textinput5" x="190" y="100" width="182"/>
 	<mx:TextInput id="textinput6" x="190" y="130" width="182" text="0.001"/>
 	<mx:TextInput id="textinput7" x="190" y="160" width="182" text="0.9"/>
-	<mx:RadioButton visible="true" x="190" y="190"  groupName="type" id="shortPageNameRadioButton" label="仅网页名" />
+	<mx:RadioButton visible="true" x="190" y="190"  groupName="type" id="shortPageNameRadioButton" label="仅网页名" selected="true"/>
 	<mx:RadioButton visible="true" x="190" y="210"  groupName="type" id="fullPageNameRadioButton" label="网页名+目录" />
 	<mx:RadioButton visible="true" x="190" y="230"  groupName="type" id="cateNameRadioButton" label="板块分析（一级目录）" />
 	
@@ -165,7 +203,8 @@
 	
 	
 	<mx:ProgressBar id="progressBar" x="50" y="280" label="" visible="true" mode="manual" />
-	<mx:Button x="281" y="280" label="确定" fontSize="12" click="submit()"/>
+	<mx:Label id="lineLabel" x="50" y="315" text="" visible="true"/>
+	<mx:Button id="commitBtn" x="281" y="280" label="启动" fontSize="12" click="submit()"/>
 	<mx:Button x="374" y="280" label="取消" fontSize="12" click="closeHandle()"/>
 	<!--<mx:Button id="bt3" x="379" y="100" label="浏览.." fontSize="12" click="openFileWindow(event)"/>
 	<mx:Button id="bt4" x="379" y="130" label="浏览.." fontSize="12" click="openFileWindow(event)"/>

@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.Hashtable;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -14,12 +15,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.tseg.Starter;
+import org.tseg.analyse.AnalyseRunner;
 
 import com.XMLFileReader;
 
 public class AnalyseStarterServlet extends HttpServlet {
 
 	private AtomicInteger progress = new AtomicInteger(0);
+	private Hashtable<String, Starter> analyseTable = new Hashtable<String, Starter>();
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {		
@@ -29,13 +32,17 @@ public class AnalyseStarterServlet extends HttpServlet {
 					.getParameter("action"), "UTF-8");
 			if (action.equals("start")) {
 				Starter s = new Starter();
+				String taskID = java.net.URLDecoder.decode(request
+						.getParameter("taskID"), "UTF-8");
 				String cmd = java.net.URLDecoder.decode(request
 						.getParameter("cmd"), "UTF-8");
 				String inputPath = java.net.URLDecoder.decode(request
 						.getParameter("inputPath"), "UTF-8");
 				String outputPath = java.net.URLDecoder.decode(request
 						.getParameter("outputPath"), "UTF-8");
+				this.analyseTable.put(taskID, s);
 
+				System.out.println("taskID: "+taskID+"\n");
 				System.out.println("servlet cmd: \n" + cmd);
 				System.out.println("servlet inputPath: \n" + inputPath);
 				System.out.println("servlet outputPath: \n" + outputPath);
@@ -60,11 +67,15 @@ public class AnalyseStarterServlet extends HttpServlet {
 				// System.out.println(s.getProgress());
 
 			} else if (action.equals("get")) {
-				System.out.println("get's progress:" + progress);
 				response.setContentType("text/xml;charset=utf-8");
 				response.setCharacterEncoding("utf-8");
 				PrintWriter out = response.getWriter();
-				out.println(progress);
+				String taskID = java.net.URLDecoder.decode(request
+						.getParameter("taskID"), "UTF-8");
+				Starter starter = analyseTable.get(taskID);
+				int currentLine = starter.getCurLineNum();
+				int totalLine = starter.getLineAmout();
+				out.println(currentLine+","+totalLine);
 				out.flush();
 				out.close();
 			}
