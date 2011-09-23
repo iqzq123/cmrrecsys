@@ -9,6 +9,7 @@ public class Ulits {
 		String[] nameArray=fileName.split(Separator.FILENAME_SEPARATOR);
 		try{
 			amount=Integer.parseInt(nameArray[nameArray.length-1])*10000;
+			System.out.print("................lineAmout:"+amount+"w");
 		}catch(Exception e){
 			amount=-1;
 			System.out.print("fileName Format error");

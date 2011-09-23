@@ -49,7 +49,7 @@ public class FPAnalyser {
 	
 	private int pathCnt=0;
 	private int cnt=0;
-	private int amount=0;
+	private int lineAmount=0;
 	
 	/**
 	 * @param param
@@ -81,7 +81,7 @@ public class FPAnalyser {
 			this.curPVHis = null;
 			this.cnt=0;		
 			File inputFile = new File(this.inputPath);
-			this.amount=Ulits.getFileSize(inputFile.getName());		
+			this.lineAmount=Ulits.getFileSize(inputFile.getName());		
 			if (inputFile.isDirectory()) {			
 				File []fileArray=inputFile.listFiles();
 				for(File file:fileArray){
@@ -137,8 +137,7 @@ public class FPAnalyser {
 				System.out.println(this.curFPLenght+"\n");			
 			}
 			cnt++;
-			int percent=(int)((cnt*1.0/this.amount)*100000000);
-			this.progress.set(percent);
+			this.progress.set(cnt);
 			
 		}
 		
@@ -505,5 +504,11 @@ public class FPAnalyser {
 	public void getProgress(AtomicInteger progress) {
 		this.progress = progress;
 	}
+
+	public int getLineAmount() {
+		return lineAmount;
+	}
+
+
 
 }

@@ -139,7 +139,7 @@ public class AnalyseRunner {
 			}
 			cnt++;
 			this.progress.set(cnt);
-			if (cnt % 10000 == 0) {
+			if (cnt % 100000 == 0) {
 				System.out.println(this.progress);
 			}
 		}
