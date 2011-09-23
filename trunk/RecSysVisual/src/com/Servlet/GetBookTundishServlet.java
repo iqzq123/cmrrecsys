@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Calendar;
+import java.util.Hashtable;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -21,6 +22,7 @@ import com.XMLFileReader;
 public class GetBookTundishServlet extends HttpServlet {
 	private String tundishSuffix = "/图书漏斗文件.xml";
 	private AtomicInteger progress = new AtomicInteger(0);
+	private Hashtable<String, BookTundish> btTable = new Hashtable<String, BookTundish>();
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -31,8 +33,9 @@ public class GetBookTundishServlet extends HttpServlet {
 			request.setCharacterEncoding("UTF-8");
 			String action = java.net.URLDecoder.decode(request
 					.getParameter("action"), "UTF-8");
-			System.out.println("action is:" + action);
 			if (action.equals("start")) {
+				String taskID = java.net.URLDecoder.decode(request
+						.getParameter("taskID"), "UTF-8");
 				String bookString = java.net.URLDecoder.decode(request
 						.getParameter("bookString"), "UTF-8");
 				String readingInfoPath = java.net.URLDecoder.decode(request
@@ -59,6 +62,7 @@ public class GetBookTundishServlet extends HttpServlet {
 						+ readingInfoPath + "\n" + tundishPath);
 
 				BookTundish bookTundish = new BookTundish();
+				btTable.put(taskID, bookTundish);
 				File f = new File(readingInfoPath);
 
 				
@@ -87,11 +91,16 @@ public class GetBookTundishServlet extends HttpServlet {
 				bookTundish.run();
 
 			} else if (action.equals("progress")) {
-				System.out.println("get's progress:" + progress);
 				response.setContentType("text/xml;charset=utf-8");
 				response.setCharacterEncoding("utf-8");
 				PrintWriter out = response.getWriter();
-				out.println(progress);
+				String taskID = java.net.URLDecoder.decode(request
+						.getParameter("taskID"), "UTF-8");
+				BookTundish bookTundish = btTable.get(taskID);
+				int chapterLine = bookTundish.getChapterLine();
+				int readingInfoLine = bookTundish.getReadingInfoLine();
+				System.out.println("chapterLine is : "+chapterLine+"\nreadingInfoLine is:"+readingInfoLine);
+				out.println(chapterLine+","+readingInfoLine);
 				out.flush();
 				out.close();
 			}

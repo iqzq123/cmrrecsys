@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" title="分析面板"
-	width="680" height="550" fontSize="12" showCloseButton="true" close="closeHandle()" creationComplete="init()">
+	width="680" height="580" fontSize="12" showCloseButton="true" close="closeHandle()" creationComplete="init()">
 	<mx:Script>
 		<![CDATA[
 			import mx.rpc.http.mxml.HTTPService;
@@ -25,6 +25,7 @@
 		    private const BASICE_ANALYSE_NAME:String = "StatAnalyse";
 		    private const GLOBAL_ANALYSE_NAME:String = "GlobalAnalyse";
 		    private static const MINISECENDS:int=1000;
+		    private var taskID:String = "";
 		    
 			[Bindable]
 			private var dgDataPathFinder:ArrayCollection = new ArrayCollection;
@@ -152,6 +153,7 @@
 		    	if ( !checkParameters() ){
 		    		return ;
 		    	}
+		    	taskID = getCurrentTime();
 		    	_cmd = cmdGen();
 		    	if ( _cmd == "" ){
 		    		Alert.show("没有添加任何任务");
@@ -164,12 +166,12 @@
                 params.outputPath = encodeURIComponent(resultPath.text);
                 params.cmd = encodeURIComponent(_cmd);
                 params.action = "start";
-//                sendCMD.addEventListener(ResultEvent.RESULT,setProgressBar);		
+                params.taskID = taskID;		
 				sendCMD.send(params); 
 				dispatchEvent(new Event(Event.SELECT,true));
 				intervalID = setInterval(togetProgress,MINISECENDS);
-//				togetProgress();
-//				closeHandle();
+				commitBtn.enabled = false;
+
 		    }
 
 		    private function cmdGen():String {
@@ -370,33 +372,64 @@
 		    private var preNum:int = 0;
 		    private var num:int;
 		    private var i:Number = 0.0;
+		    private var totalNum:int;
 		    public function togetProgress():void {
 		    	var getProgressService:HTTPService = new HTTPService();
 		    	getProgressService.url = "anlayseStarterServlet";
 		    	var params:URLVariables = new URLVariables();
 		    	params.action = "get";
-//		    	getProgressService.method = "POST";
+		    	params.taskID = taskID;
 		    	getProgressService.addEventListener(ResultEvent.RESULT,setProgressBar);
 		    	getProgressService.send(params);
 		    }
 		    private function setProgressBar(e:ResultEvent):void {
-		    	var progress:String = String(e.result);
-		    	num = new int(progress);
-		    	if(num==-1&&preNum == num) {
+		    	var line:String = String(e.result);
+		    	var lines:Array = line.split(",");
+		    	var currentLine:String = lines[0];
+		    	var totalLine:String = lines[1];
+		    	num = new int(currentLine);
+		    	totalNum = new int(totalLine);
+		    	if(num!=0&&preNum == num) {
 		    		clearInterval(intervalID);
 		    		progressBar.setProgress(100,100);
-		    		progressBar.label = "执行结束。";
+		    		progressBar.label = "执行结束。共"+num+"行";
 		    		Alert.show("执行完毕！","",0,this,closeHandle2);
 		    	}
 		    	else {
-		    		i = (num*1.0)/1000000;
+		    		i = (num*1.0)/totalNum*100;
+		    		i = Number(i.toFixed(2));
 		    		preNum = num;
 		    		progressBar.setProgress(i,100);
 		    		progressBar.label = "正在执行中..."+i+"%";
+		    		lineLabel.text = "第"+num+"行，共"+totalNum+"行";
 		    	}
 		    }
 		    private function closeHandle2(e:CloseEvent):void {
 	   			PopUpManager.removePopUp(this);
+	   		}
+	   		private function getCurrentTime():String {
+	   			var date:Date = new Date;
+	   			var month:String = correctTime("default",new String(date.getMonth()));
+	   			var day:String = correctTime("default",new String(date.getDate()));
+	   			var hour:String = correctTime("default",new String(date.getHours()));
+	   			var minute:String = correctTime("default",new String(date.getMinutes()));
+	   			var second:String = correctTime("default",new String(date.getSeconds()));
+	   			var mmsecond:String = correctTime("mmsecond",new String(date.getMilliseconds()));
+	   			var currentTime:String = month+day+hour+minute+second+mmsecond;
+	   			return currentTime;
+	   		}
+	   		private function correctTime(type:String,str:String):String {
+	   			var strNew:String = str;
+	   			if(type == "default") {
+	   				if(str.length == 1)strNew = "0"+str;
+	   				else if(str.length == 0)strNew = "00";
+	   			}
+	   			else if(type == "mmsecond") {
+	   				if(str.length == 1)strNew = "00"+str;
+	   				else if(str.length == 2)strNew = "0"+str;
+	   				else if(str.length == 0)strNew = "000";
+	   			}
+	   			return strNew;
 	   		}
 		]]>
 	</mx:Script>
@@ -487,6 +520,7 @@
 	</mx:Box>	
 	<mx:ProgressBar id="progressBar" x="38" y="472" width="300" visible="true"
 		 mode="manual" label=""/>
-	<mx:Button label="启动" x="415" y="464" click="start()"/>
-	<mx:Button label="取消" x="488" y="464" click="closeHandle()"/>
+	<mx:Label id="lineLabel" x="38" y="500" visible="true" text=""/>
+	<mx:Button id="commitBtn" label="启动" x="415" y="500" click="start()"/>
+	<mx:Button label="取消" x="488" y="500" click="closeHandle()"/>
 </mx:TitleWindow>

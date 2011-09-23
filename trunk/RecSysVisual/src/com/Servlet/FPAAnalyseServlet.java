@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.Hashtable;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -14,8 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.tseg.analyse.FPAnalyser;
 
+
+
 public class FPAAnalyseServlet extends HttpServlet {
 	public String SEPARATOR = "@@@";
+	private Hashtable<String, FPAnalyser> fpTable =new Hashtable<String, FPAnalyser>();	
 	private AtomicInteger progress = new AtomicInteger(0);
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -25,6 +29,8 @@ public class FPAAnalyseServlet extends HttpServlet {
 			String action = java.net.URLDecoder.decode(request
 					.getParameter("action"), "UTF-8");
 			if (action.equals("start")) {
+				String taskID=java.net.URLDecoder.decode(request.getParameter("taskID"),"UTF-8");
+
 				String inputPath = java.net.URLDecoder.decode(request
 						.getParameter("inputPath"), "UTF-8");
 				String outputPath = java.net.URLDecoder.decode(request
@@ -39,7 +45,8 @@ public class FPAAnalyseServlet extends HttpServlet {
 						.getParameter("MinRatio"), "UTF-8");
 				String DecayRatio = java.net.URLDecoder.decode(request
 						.getParameter("DecayRatio"), "UTF-8");
-
+				
+				System.out.println("taskID "+taskID);
 				String webRootPath = getServletContext().getRealPath("/");
 				System.out.print("webRootPath" + webRootPath);
 				Properties properties = new Properties();
@@ -53,7 +60,8 @@ public class FPAAnalyseServlet extends HttpServlet {
 				String siteDataPath = fileDir+"/dim";
 
 				FPAnalyser fp = new FPAnalyser();
-				fp.getProgress(progress);
+				this.fpTable.put(taskID, fp);
+				
 				String params = siteDataPath + this.SEPARATOR + inputPath
 						+ this.SEPARATOR + outputPath + this.SEPARATOR + type
 						+ this.SEPARATOR + Closed + this.SEPARATOR
@@ -61,16 +69,21 @@ public class FPAAnalyseServlet extends HttpServlet {
 						+ this.SEPARATOR + DecayRatio + this.SEPARATOR;
 
 				System.out.println(params);
+				fp.getProgress(progress);
 				fp.readParam(params);
 
 				fp.run();
 
 			} else if (action.equals("progress")) {
-				System.out.println("get's progress:" + progress);
 				response.setContentType("text/xml;charset=utf-8");
 				response.setCharacterEncoding("utf-8");
 				PrintWriter out = response.getWriter();
-				out.println(progress);
+				String taskID = java.net.URLDecoder.decode(request.getParameter("taskID"),"UTF-8");
+				FPAnalyser fp = this.fpTable.get(taskID);
+				System.out.println("progress taskID "+taskID);
+				int currentLine = fp.getCurLineNum();
+				int totalLine = fp.getLineAmount();
+				out.println(currentLine+","+totalLine);
 				out.flush();
 				out.close();
 			}
