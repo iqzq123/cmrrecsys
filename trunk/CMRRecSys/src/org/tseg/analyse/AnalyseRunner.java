@@ -19,7 +19,7 @@ public class AnalyseRunner {
 	private String siteDataPath;
 	private String outputPath;
 	private List<Analyse> analyseList = new ArrayList<Analyse>();
-	private int cnt = 0;
+	private int curLineNum = 0;
 	private int lineAmount=1;
 	private AtomicInteger progress = null;
 
@@ -64,7 +64,7 @@ public class AnalyseRunner {
 		}
 
 		
-		System.out.println("pv总数为：" + cnt);
+		System.out.println("pv总数为：" + curLineNum);
 		for (Analyse analyse : this.analyseList) {
 			analyse.onReadEnd();
 		}
@@ -91,10 +91,10 @@ public class AnalyseRunner {
 						.getType());
 				analyse.onReadLog(proArray);
 			}
-			cnt++;
-			this.progress.set(cnt);
-			if (cnt % 100000 == 0) {
-				System.out.println("read line:"+cnt);
+			curLineNum++;
+			this.progress.set(curLineNum);
+			if (curLineNum % 100000 == 0) {
+				System.out.println("read line:"+curLineNum);
 				
 			}
 		}
@@ -217,6 +217,14 @@ public class AnalyseRunner {
 
 	public void setLineAmount(int lineAmount) {
 		this.lineAmount = lineAmount;
+	}
+
+	public int getCurLineNum() {
+		return curLineNum;
+	}
+
+	public void setCurLineNum(int curLineNum) {
+		this.curLineNum = curLineNum;
 	}
 
 }

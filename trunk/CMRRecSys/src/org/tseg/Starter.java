@@ -19,7 +19,6 @@ public class Starter {
 	private String outputPath = "";
 	private String siteDataPath = "";
 	private String logSplit="\\|";
-	private int lineAmout=0;
 	private HashMap<String, Analyse> analyseMap = new HashMap<String, Analyse>();
 	private AnalyseRunner runner = new AnalyseRunner();
 	
@@ -158,6 +157,9 @@ public class Starter {
 
 	public int getLineAmout() {
 		return runner.getLineAmount();
+	}
+	public int getCurLineNum(){
+		return runner.getCurLineNum();
 	}
 
 }

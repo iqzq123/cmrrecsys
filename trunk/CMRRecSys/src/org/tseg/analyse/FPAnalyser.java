@@ -46,9 +46,8 @@ public class FPAnalyser {
 	private boolean isClosed=false;
 	private HashMap<String,Integer> pageMap=new HashMap<String,Integer>();
 	private AtomicInteger progress = null;
-	
 	private int pathCnt=0;
-	private int cnt=0;
+	private int curLineNum=0;
 	private int lineAmount=0;
 	
 	/**
@@ -79,7 +78,7 @@ public class FPAnalyser {
 			fpAlgo.setPathNum(0);
 			fpAlgo.setCurFPLenght(this.curFPLenght);
 			this.curPVHis = null;
-			this.cnt=0;		
+			this.curLineNum=0;		
 			File inputFile = new File(this.inputPath);
 			this.lineAmount=Ulits.getFileSize(inputFile.getName());		
 			if (inputFile.isDirectory()) {			
@@ -90,7 +89,7 @@ public class FPAnalyser {
 			} else {
 				runForSingleFile(this.inputPath);
 			}		
-			System.out.println(this.cnt);		
+			System.out.println(this.curLineNum);		
 			this.onReadEnd();
 			System.out.println("curFPLenght:" + this.curFPLenght + "	pathNum:"
 					+ this.fpAlgo.getPathNum() + "\n");
@@ -132,12 +131,12 @@ public class FPAnalyser {
 		
 			// Preprocessor.tranPageToCate(log);
 			this.onReadLog(log);
-			if (cnt % 100000 == 0) {
-				System.out.println("read line:"+cnt+"\n");
+			if (curLineNum % 100000 == 0) {
+				System.out.println("read line:"+curLineNum+"\n");
 				System.out.println(this.curFPLenght+"\n");			
 			}
-			cnt++;
-			this.progress.set(cnt);
+			curLineNum++;
+			this.progress.set(curLineNum);
 			
 		}
 		
@@ -509,6 +508,8 @@ public class FPAnalyser {
 		return lineAmount;
 	}
 
-
+	public int getCurLineNum() {
+		return curLineNum;
+	}
 
 }
