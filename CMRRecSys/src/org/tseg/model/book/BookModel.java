@@ -25,9 +25,9 @@ public class BookModel {
 	private String seprator = "\\|"; //文件分隔符
 	private String sep = ";";   ///////用户输入bookID的分隔符
 	private String bookString = "";
-	private String rootPath = "";
 	private int chapterLine = 0;
 	private int readingInfoLine = 0;
+	private String exceptionString = "";
 	
 
 	private HashMap<Integer,Book> bookMap = new HashMap<Integer, Book>();
@@ -36,8 +36,7 @@ public class BookModel {
 	private ArrayList<Book> targetBooksAL = new ArrayList<Book>();
 	//private final int BOOK_ATTRI_NUM = 15;
 	private final int CHAPTER_ATTRI_NUM = 7;
-	
-	private AtomicInteger progress = null;
+
 
 	
 	/**
@@ -113,6 +112,7 @@ public class BookModel {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			this.setExceptionString(e.toString());
 		}
 		System.out.println("readBookInfo END");
 	}
@@ -130,7 +130,6 @@ public class BookModel {
 			while ((str = reader.readLine()) != null) {
 				i++;
 				chapterLine = i;
-				this.progress.set(i);
 				String[] strArray = str.split(seprator);
 				if(inBookIDs(strArray[0])){
 					if ( strArray.length == this.CHAPTER_ATTRI_NUM ){
@@ -161,6 +160,7 @@ public class BookModel {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			this.setExceptionString(e.toString());
 		}
 		System.out.println("readChapterInfo End");
 	}
@@ -180,9 +180,7 @@ public class BookModel {
 			int i = 0;
 			while ((str = reader.readLine()) != null) {
 				i++;
-				readingInfoLine = i;
-				this.progress.set(i);
-				
+				readingInfoLine = i;				
 				String[] strArray = str.split(seprator);
 				
 				if(strArray.length < 2||!checkStringToInt(strArray[1])){
@@ -205,10 +203,10 @@ public class BookModel {
 					System.out.println("read readinginfo "+i);
 			}
 			reader.close();
-			this.progress.set(-1);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			this.setExceptionString(e.toString());
 		}
 		System.out.println("readReadingInfo END");
 	}
@@ -269,6 +267,7 @@ public class BookModel {
 		catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			this.setExceptionString(e.toString());
 		}
 		System.out.println("savaBookXML END");
 	}
@@ -287,7 +286,7 @@ public class BookModel {
 			int temp = Integer.parseInt(s);
 		} catch (Exception e) {
 			// TODO: handle exception
-			return false;
+			return false;			
 		}
 		return true;		
 	}
@@ -325,10 +324,6 @@ public class BookModel {
 		this.outputPath = outputPath;
 	}
 	
-	public void getProgress(AtomicInteger progress) {
-		this.progress = progress;
-	}
-	
 	public void setBookString(String string){
 		this.bookString = string;
 	}
@@ -336,18 +331,18 @@ public class BookModel {
 		return this.bookString;
 	}
 	
-	public void setRootPath(String rootPath){
-		this.rootPath = rootPath;
-	}
-	public String getRootPath(){
-		return this.rootPath;
-	}
-	
 	public int getChapterLine(){
 		return this.chapterLine;
 	}
 	public int getReadingInfoLine(){
 		return this.readingInfoLine;
+	}
+	
+	public void setExceptionString(String string) {
+		this.exceptionString = string;
+	}
+	public String getException() {
+		return this.exceptionString;
 	}
 
 }

@@ -29,7 +29,6 @@ public class BookTundish {
 	 * @param args
 	 */
 	
-	private String rootPath = "";
 	private String bookInfoPath = "";
 	private String chapterInfoPath = "";
 	private String inputPath = "";
@@ -37,10 +36,7 @@ public class BookTundish {
 	private String tundishPath = "";
 	private String bookString = "";
 	private BookModel bookModel = new BookModel();
-	private static AtomicInteger progress = new AtomicInteger(0);
-	private String sep = ";";
-	private int chapterLine = 0;
-	private int readingInfoLine = 0;
+	private String exceptionString = "";
 	
 	public void run(){
 		bookModel.setBookInfoPath(bookInfoPath);
@@ -48,7 +44,6 @@ public class BookTundish {
 		bookModel.setInputPath(inputPath);
 		bookModel.setOutputPath(outputPath);
 		bookModel.setBookString(bookString);
-		bookModel.setRootPath(rootPath);
 		bookModel.onInitial();
 		bookModel.run();
 		bookModel.saveBookXML();
@@ -130,6 +125,7 @@ public class BookTundish {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			this.setException(e.toString());
 		}
 		
 		
@@ -143,6 +139,7 @@ public class BookTundish {
 
 		} catch (IOException ioexp) {
 			ioexp.printStackTrace();
+			this.setException(ioexp.toString());
 		}
 		
 		try {
@@ -151,6 +148,7 @@ public class BookTundish {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			this.setException(e.toString());
 			System.out.println("1 "+e.toString());
 		}
 		
@@ -170,6 +168,7 @@ public class BookTundish {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			this.setException(e.toString());
 			System.out.println("2 "+e.toString());
 		}
 		
@@ -184,7 +183,6 @@ public class BookTundish {
 		bt.setOutputPath("E:/data/book/test");
 		bt.setTundishPath("E:/data/book/newData.xml");
 		bt.setBookString("349801926;357747094;");
-		bt.getProgress(progress);
 		bt.run();		
 	}
 	
@@ -228,10 +226,6 @@ public class BookTundish {
 		return this.tundishPath;
 	}
 	
-	public void getProgress(AtomicInteger progress){
-		this.bookModel.getProgress(progress);
-	}
-	
 	public void setBookString(String string){
 		this.bookString = string;
 	}
@@ -239,18 +233,19 @@ public class BookTundish {
 		return this.bookString;
 	}
 	
-	public void setRootPath(String rootPath){
-		this.rootPath = rootPath;
-	}
-	public String getRootPath(){
-		return this.rootPath;
-	}
-	
 	public int getChapterLine(){
 		return bookModel.getChapterLine();
 	}
 	public int getReadingInfoLine(){
 		return bookModel.getReadingInfoLine();
+	}
+	
+	public String getException(){
+		return this.exceptionString+bookModel.getException();
+	}
+	
+	public void setException(String string){
+		this.exceptionString = string;
 	}
 
 }
