@@ -45,7 +45,6 @@ public class FPAnalyser {
 	private Byte analyseType = AnalyseType.NegCate;
 	private boolean isClosed=false;
 	private HashMap<String,Integer> pageMap=new HashMap<String,Integer>();
-	private AtomicInteger progress = null;
 	private int pathCnt=0;
 	private int curLineNum=0;
 	private int lineAmount=0;
@@ -67,7 +66,7 @@ public class FPAnalyser {
 		this.fpAlgo.setDecayRatio(Double.parseDouble(paramArray[7]));
 	}
 
-	public void run() throws IOException {
+	public void run() throws Exception {
 		
 		Ulits.newFolder(this.outputPath);
 		Preprocessor.readMapFile(this.siteDataPath);
@@ -80,7 +79,7 @@ public class FPAnalyser {
 			this.curPVHis = null;
 			this.curLineNum=0;		
 			File inputFile = new File(this.inputPath);
-			this.lineAmount=Ulits.getFileSize(inputFile.getName());		
+			this.lineAmount=Ulits.getFileLineNum(inputFile.getName());		
 			if (inputFile.isDirectory()) {			
 				File []fileArray=inputFile.listFiles();
 				for(File file:fileArray){
@@ -110,12 +109,12 @@ public class FPAnalyser {
 		}
 		saveResult();
 		saveResultXML();
-		this.progress.set(-1);
+		this.curLineNum=-1;
 		System.out.println("FPAnalyser end!!!!!!!!!!!!!!!!!!!!!!");
 		System.out.println("pathCnt......................"+this.pathCnt);
 	}
 
-	private void runForSingleFile(String file) throws FileNotFoundException, IOException {
+	private void runForSingleFile(String file) throws Exception {
 		
 		FileReader fr = new FileReader(file);
 		BufferedReader reader = new BufferedReader(fr);
@@ -136,7 +135,7 @@ public class FPAnalyser {
 				System.out.println(this.curFPLenght+"\n");			
 			}
 			curLineNum++;
-			this.progress.set(curLineNum);
+			
 			
 		}
 		
@@ -162,7 +161,6 @@ public class FPAnalyser {
 		 * 支持度衰减比例
 		 */
 		FPAnalyser fp = new FPAnalyser();
-		fp.getProgress(new AtomicInteger(0));
 		fp.setLogSplit("\\|");
 		String param="E:/data"+Separator.PARAM_SEPARATOR1+
 		"E:/data/test_a/pvdata2.txt"+Separator.PARAM_SEPARATOR1+
@@ -178,7 +176,7 @@ public class FPAnalyser {
 	
 		try {
 			fp.run();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -500,9 +498,7 @@ public class FPAnalyser {
 		this.logSplit = logSplit;
 	}
 
-	public void getProgress(AtomicInteger progress) {
-		this.progress = progress;
-	}
+	
 
 	public int getLineAmount() {
 		return lineAmount;

@@ -200,7 +200,7 @@ public class PathFinder extends Analyse {
 	}
 
 	@Override
-	public void onReadEnd() throws IOException {
+	public void onReadEnd() throws Exception {
 		System.out.println("PathFinder: onReadEnd");
 		this.userNumFilter();
 		this.savePathList();
@@ -223,7 +223,7 @@ public class PathFinder extends Analyse {
 		}
 	}
 	@Override
-	public void onReadLog(String[] log) throws IOException {
+	public void onReadLog(String[] log) throws Exception {
 		// TODO Auto-generated method stub
 		Long id = Long.parseLong(log[0]);
 		if (this.curPVHis == null) {

@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class Ulits {
 	
-	public static int getFileSize(String fileName){
+	public static int getFileLineNum(String fileName){
 		int amount=0;
 		String[] nameArray=fileName.split(Separator.FILENAME_SEPARATOR);
 		try{

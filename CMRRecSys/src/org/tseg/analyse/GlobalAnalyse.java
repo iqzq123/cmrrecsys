@@ -189,8 +189,11 @@ public class GlobalAnalyse extends Analyse {
 
 	void updateModel(MarkovModel model, Visit v) {
 		
+		
+		if(model==null){
+			return;
+		}
 		String edgeSeperator = Separator.edgeSeparator;
-
 		String keyStr = v.getCurPage() + edgeSeperator + v.getNextPage();
 
 		model.setClickAmout(model.getClickAmout() + 1);
