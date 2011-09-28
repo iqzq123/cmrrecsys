@@ -35,17 +35,18 @@ public class GlobalAnalyse extends Analyse {
 		// TODO Auto-generated method stub
 		String[] paramArray = params.split(Separator.PARAM_SEPARATOR1);
 		this.setType(Byte.parseByte(paramArray[0]));
-		this.minLinkNum=Integer.parseInt(paramArray[1]);
-		
+		this.minLinkNum = Integer.parseInt(paramArray[1]);
+
 	}
 
 	private MarkovModel globalModel = new MarkovModel();
-	private MarkovModel curPerModel = null;	
+	private MarkovModel curPerModel = null;
 	private String curPerID = "";
-	private String outFloder="";
-	private int minLinkNum=100;
-	private int maxPerModelNum=100;
-	private int curPerModelNum=0;
+	private String outFloder = "";
+	private int minLinkNum = 100;
+	private int maxPerModelNum = 100;
+	private int curPerModelNum = 0;
+
 	@Override
 	public void onInitial() {
 		// TODO Auto-generated method stub
@@ -55,91 +56,99 @@ public class GlobalAnalyse extends Analyse {
 	}
 
 	@Override
-	public void onReadEnd() throws IOException {
+	public void onReadEnd() throws Exception {
 		// TODO Auto-generated method stub
-		this.globalModel.saveModelMXL(this.outFloder+"/全局跳转图"+this.getType()+".xml", minLinkNum,
-				false);
-		String relPath=this.outFloder + "/相关页面"+this.getType();
-		if(this.getType()==AnalyseType.PageToCate){
-			relPath=this.outFloder + "/相关板块";
+		this.globalModel.saveModelMXL(this.outFloder + "/全局跳转图"
+				+ this.getType() + ".xml", minLinkNum, false);
+		String relPath = this.outFloder + "/相关页面" + this.getType();
+		if (this.getType() == AnalyseType.PageToCate) {
+			relPath = this.outFloder + "/相关板块";
 		}
-		this.globalModel.saveRelatedPage(relPath+".txt",minLinkNum);
-		this.globalModel.saveRelatedPageXML(relPath+".xml",minLinkNum);
-		this.saveSortedPage(this.outFloder + "/页面uv"+this.getType()+".xml", "userNum");
-		this.saveSortedPage(this.outFloder + "/页面pv"+this.getType()+".xml", "clickNum");
-		this.saveSortedPage(this.outFloder + "/页面时长"+this.getType()+".xml", "duration");
-		this.saveSortedPage(this.outFloder+"/页面人均pv"+this.getType()+".xml", "AverPerPv");
+		this.globalModel.saveRelatedPage(relPath + ".txt", minLinkNum);
+		this.globalModel.saveRelatedPageXML(relPath + ".xml", minLinkNum);
+		this.saveSortedPage(this.outFloder + "/页面uv" + this.getType() + ".xml",
+				"userNum");
+		this.saveSortedPage(this.outFloder + "/页面pv" + this.getType() + ".xml",
+				"clickNum");
+		this.saveSortedPage(this.outFloder + "/页面时长" + this.getType() + ".xml",
+				"duration");
+		this.saveSortedPage(this.outFloder + "/页面人均pv" + this.getType()
+				+ ".xml", "AverPerPv");
 
 	}
 
 	@Override
-	public void onReadLog(String[] log) throws IOException {
+	public void onReadLog(String[] log) throws Exception {
 		// TODO Auto-generated method stub
 		buildGlobalModel(log);
 		buildPersonModel(log);
-	
+
 	}
 
 	void buildGlobalModel(String[] strArray) {
 		Visit v = new Visit(strArray);
 		updateModel(this.globalModel, v);
-		
+
 	}
 
 	void buildPersonModel(String[] strArray) {
-		
+
 		if (!this.curPerID.equals(strArray[0])) {
 			if (this.curPerModel != null) {
-				//////////////计算UV			
+				// ////////////计算UV
 				updateUVStat(this.curPerModel);
-				//////////只保存一定数量的个人model
-//				if(this.curPerModelNum<this.maxPerModelNum){
-//					this.curPerModel.saveModelMXL(this.subFloder + "/"
-//						+ this.curPerID + ".xml", 0, false);
-//				}
-				
+				// ////////只保存一定数量的个人model
+				// if(this.curPerModelNum<this.maxPerModelNum){
+				// this.curPerModel.saveModelMXL(this.subFloder + "/"
+				// + this.curPerID + ".xml", 0, false);
+				// }
+
 				this.curPerModelNum++;
-				
+
 			}
 			this.curPerID = strArray[0];
 			this.curPerModel = new MarkovModel();
-			
+
 		}
 
 		Visit v = new Visit(strArray);
 		updateModel(this.curPerModel, v);
 
 	}
-	
-	public void updateUVStat(MarkovModel perModel){
-			
-		Iterator iter1=perModel.getPageMap().entrySet().iterator();
-		while(iter1.hasNext()){
-			Map.Entry<String, Page> entry=(Map.Entry<String, Page>)iter1.next();
-			String pageID=entry.getKey();
-			Page p=(Page)this.globalModel.getPageMap().get(pageID);
-			p.setUserNum(p.getUserNum()+1);
+
+	public void updateUVStat(MarkovModel perModel) {
+
+		Iterator iter1 = perModel.getPageMap().entrySet().iterator();
+		while (iter1.hasNext()) {
+			Map.Entry<String, Page> entry = (Map.Entry<String, Page>) iter1
+					.next();
+			String pageID = entry.getKey();
+			Page p = (Page) this.globalModel.getPageMap().get(pageID);
+			p.setUserNum(p.getUserNum() + 1);
 			this.globalModel.getPageMap().put(pageID, p);
 		}
-		
+
 	}
-	public void saveSortedPage(String fileName,String property){
-		
-		
-		////////////////sort 
-		Object []pageIDArray=this.globalModel.getPageMap().keySet().toArray();
-		for(int i=0;i<pageIDArray.length;i++){
-			for(int j=i+1;j<pageIDArray.length;j++){
-				Page p1=(Page)this.globalModel.getPageMap().get(pageIDArray[i]);
-				Page p2=(Page)this.globalModel.getPageMap().get(pageIDArray[j]);
-				if(p2.isMoreThan(p1, property)){
-					Object tmp=pageIDArray[i];
-					pageIDArray[i]=pageIDArray[j];
-					pageIDArray[j]=tmp;
+
+	public void saveSortedPage(String fileName, String property)
+			throws IOException {
+
+		// //////////////sort
+		Object[] pageIDArray = this.globalModel.getPageMap().keySet().toArray();
+		for (int i = 0; i < pageIDArray.length; i++) {
+			for (int j = i + 1; j < pageIDArray.length; j++) {
+				Page p1 = (Page) this.globalModel.getPageMap().get(
+						pageIDArray[i]);
+				Page p2 = (Page) this.globalModel.getPageMap().get(
+						pageIDArray[j]);
+				if (p2.isMoreThan(p1, property)) {
+					Object tmp = pageIDArray[i];
+					pageIDArray[i] = pageIDArray[j];
+					pageIDArray[j] = tmp;
 				}
 			}
 		}
-		/////////////save
+		// ///////////save
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = null;
 		try {
@@ -155,42 +164,36 @@ public class GlobalAnalyse extends Analyse {
 			Element page = doc.createElement("page");
 			String pageName = Preprocessor.getPageName((String) pageID);
 			page.setAttribute("pageName", pageName);
-			Page p= (Page)this.globalModel.getPageMap().get(pageID);
-			//page.setAttribute(property,String.valueOf(p.getValue(property)));
-			page.setAttribute("userNum",String.valueOf(p.getUserNum()));
-			page.setAttribute("clickNum",String.valueOf(p.getClickNum()));
-			page.setAttribute("duration",String.valueOf(p.getDuration()));
+			Page p = (Page) this.globalModel.getPageMap().get(pageID);
+			// page.setAttribute(property,String.valueOf(p.getValue(property)));
+			page.setAttribute("userNum", String.valueOf(p.getUserNum()));
+			page.setAttribute("clickNum", String.valueOf(p.getClickNum()));
+			page.setAttribute("duration", String.valueOf(p.getDuration()));
 			page.setAttribute("人均pv数", String.valueOf(p.getAverPerPv()));
 			root.appendChild(page);
 		}
-	
-		Element pageNum=doc.createElement("pageNum");
-		pageNum.setAttribute("number", String.valueOf(this.globalModel.getPageMap().size()));
+
+		Element pageNum = doc.createElement("pageNum");
+		pageNum.setAttribute("number", String.valueOf(this.globalModel
+				.getPageMap().size()));
 		root.appendChild(pageNum);
-		try {
-			// 用xmlserializer把document的内容进行串化
-			FileOutputStream os = null;
-			OutputFormat outformat = new OutputFormat(doc);
-			os = new FileOutputStream(fileName);
-			XMLSerializer xmlSerilizer = new XMLSerializer(os, outformat);
-			xmlSerilizer.serialize(doc);
 
-		} catch (IOException ioexp) {
-			ioexp.printStackTrace();
-		}
+		// 用xmlserializer把document的内容进行串化
+		FileOutputStream os = null;
+		OutputFormat outformat = new OutputFormat(doc);
+		os = new FileOutputStream(fileName);
+		XMLSerializer xmlSerilizer = new XMLSerializer(os, outformat);
+		xmlSerilizer.serialize(doc);
 
-		
 	}
 
 	public void buildGroupModel(List clusterList, String fileName) {
 
-		
 	}
 
 	void updateModel(MarkovModel model, Visit v) {
-		
-		
-		if(model==null){
+
+		if (model == null) {
 			return;
 		}
 		String edgeSeperator = Separator.edgeSeparator;

@@ -1,5 +1,6 @@
 package org.tseg.analyse;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -110,7 +111,7 @@ public class MarkovModelBuilder {
 		}
 	}
 
-	public void buildGroupModel(List clusterList, String fileName) {
+	public void buildGroupModel(List clusterList, String fileName)throws IOException {
 
 		for (int i = 0; i < clusterList.size(); i++) {
 

@@ -37,9 +37,9 @@ public class Tundish extends Analyse {
 	private String localOutputPath = "";
 	private PVHistory curPVHis = null;
 	private List<String> pathList = new ArrayList<String>(); // //////////格式为
-																// a,b,c,d
+	// a,b,c,d
 	private List<String> tundishList = new ArrayList<String>(); // //////////格式为
-																// a,1,b,0.6,c,0.2
+	// a,1,b,0.6,c,0.2
 	private ArrayList<ArrayList<Level>> tundishResults = new ArrayList<ArrayList<Level>>();
 	private ArrayList<ArrayList<Level>> tundishResultsContinuous = new ArrayList<ArrayList<Level>>();
 	private Boolean isDiscrete = false;
@@ -93,36 +93,33 @@ public class Tundish extends Analyse {
 		initResult(this.pathList);
 	}
 
-	public void saveTundishList() {
-		try {
-			FileWriter fw = new FileWriter(this.localOutputPath
-					+ "/漏斗.txt");
-			BufferedWriter writer = new BufferedWriter(fw);
-			for (ArrayList<Level> vector : this.tundishResults) {
-				Iterator<Level> iter2 = vector.iterator();
-				int total = vector.get(0).cnt;
-				String s = "";
-				for (Level level : vector) {
-					float per = 0;
-					System.out.println(level.name + " " + level.cnt);
-					if (total != 0)
-						per = (float) level.cnt / total;
-					else
-						per = 0;
-					s += level.name + "," + per + ",";
-				}
-				System.out.println(s);
-				writer.write(s + '\n');
+	public void saveTundishList() throws IOException {
+
+		FileWriter fw = new FileWriter(this.localOutputPath + "/漏斗.txt");
+		BufferedWriter writer = new BufferedWriter(fw);
+		for (ArrayList<Level> vector : this.tundishResults) {
+			Iterator<Level> iter2 = vector.iterator();
+			int total = vector.get(0).cnt;
+			String s = "";
+			for (Level level : vector) {
+				float per = 0;
+				System.out.println(level.name + " " + level.cnt);
+				if (total != 0)
+					per = (float) level.cnt / total;
+				else
+					per = 0;
+				s += level.name + "," + per + ",";
 			}
-			writer.flush();
-			writer.close();
-			fw.close();
-		} catch (IOException ioexp) {
-			ioexp.printStackTrace();
+			System.out.println(s);
+			writer.write(s + '\n');
 		}
+		writer.flush();
+		writer.close();
+		fw.close();
+
 	}
 
-	public void saveTundishListXML() {
+	public void saveTundishListXML() throws IOException {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = null;
 		try {
@@ -164,61 +161,55 @@ public class Tundish extends Analyse {
 					else
 						per = 0;
 					runOffEmt.setAttribute("proportion", String.valueOf(per));
-					if ( total != 0)
+					if (total != 0)
 						per = (float) hashMap.get(pageName) / total;
 					else
 						per = 0;
-					//runOffEmt.setAttribute("proportion2", String.valueOf(per));
+					// runOffEmt.setAttribute("proportion2",
+					// String.valueOf(per));
 					levelEmt.appendChild(runOffEmt);
 				}
 				root.appendChild(levelEmt);
 			}
 			System.out.println(s);
 		}
-		try {
-			// 用xmlserializer把document的内容进行串化
-			FileOutputStream os = null;
-			OutputFormat outformat = new OutputFormat(doc);
-			os = new FileOutputStream(this.localOutputPath + "/漏斗.xml");
-			XMLSerializer xmlSerilizer = new XMLSerializer(os, outformat);
-			xmlSerilizer.serialize(doc);
 
-		} catch (IOException ioexp) {
-			ioexp.printStackTrace();
-		}
+		// 用xmlserializer把document的内容进行串化
+		FileOutputStream os = null;
+		OutputFormat outformat = new OutputFormat(doc);
+		os = new FileOutputStream(this.localOutputPath + "/漏斗.xml");
+		XMLSerializer xmlSerilizer = new XMLSerializer(os, outformat);
+		xmlSerilizer.serialize(doc);
 
 	}
 
-	public void saveTundishListContinuous() {
-		try {
-			System.out.println("Continuous");
-			FileWriter fw = new FileWriter(this.localOutputPath
-					+ "/连续漏斗.txt");
-			BufferedWriter writer = new BufferedWriter(fw);
-			for (ArrayList<Level> vector : this.tundishResultsContinuous) {
-				int total = vector.get(0).cnt;
-				String s = "";
-				for (Level level : vector) {
-					float per = 0;
-					System.out.println(level.name + " " + level.cnt);
-					if (total != 0)
-						per = (float) level.cnt / total;
-					else
-						per = 0;
-					s += level.name + "," + per + ",";
-				}
-				System.out.println(s);
-				writer.write(s + '\n');
+	public void saveTundishListContinuous() throws IOException {
+
+		System.out.println("Continuous");
+		FileWriter fw = new FileWriter(this.localOutputPath + "/连续漏斗.txt");
+		BufferedWriter writer = new BufferedWriter(fw);
+		for (ArrayList<Level> vector : this.tundishResultsContinuous) {
+			int total = vector.get(0).cnt;
+			String s = "";
+			for (Level level : vector) {
+				float per = 0;
+				System.out.println(level.name + " " + level.cnt);
+				if (total != 0)
+					per = (float) level.cnt / total;
+				else
+					per = 0;
+				s += level.name + "," + per + ",";
 			}
-			writer.flush();
-			writer.close();
-			fw.close();
-		} catch (IOException ioexp) {
-			ioexp.printStackTrace();
+			System.out.println(s);
+			writer.write(s + '\n');
 		}
+		writer.flush();
+		writer.close();
+		fw.close();
+
 	}
 
-	public void saveTundishListContinuousXML() {
+	public void saveTundishListContinuousXML() throws IOException {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = null;
 		try {
@@ -260,29 +251,25 @@ public class Tundish extends Analyse {
 					else
 						per = 0;
 					runOffEmt.setAttribute("proportion", String.valueOf(per));
-					if ( total != 0)
+					if (total != 0)
 						per = (float) hashMap.get(pageName) / total;
 					else
 						per = 0;
-					//runOffEmt.setAttribute("proportion2", String.valueOf(per));
+					// runOffEmt.setAttribute("proportion2",
+					// String.valueOf(per));
 					levelEmt.appendChild(runOffEmt);
 				}
 				root.appendChild(levelEmt);
 			}
 			System.out.println(s);
 		}
-		try {
-			// 用xmlserializer把document的内容进行串化
-			FileOutputStream os = null;
-			OutputFormat outformat = new OutputFormat(doc);
-			os = new FileOutputStream(this.localOutputPath
-					+ "/连续漏斗.xml");
-			XMLSerializer xmlSerilizer = new XMLSerializer(os, outformat);
-			xmlSerilizer.serialize(doc);
 
-		} catch (IOException ioexp) {
-			ioexp.printStackTrace();
-		}
+		// 用xmlserializer把document的内容进行串化
+		FileOutputStream os = null;
+		OutputFormat outformat = new OutputFormat(doc);
+		os = new FileOutputStream(this.localOutputPath + "/连续漏斗.xml");
+		XMLSerializer xmlSerilizer = new XMLSerializer(os, outformat);
+		xmlSerilizer.serialize(doc);
 
 	}
 
@@ -399,7 +386,7 @@ public class Tundish extends Analyse {
 			// 遍历Session中的路径
 			for (int i = 0; i < visits.length; i++) {
 				String visit = Preprocessor.getPageName(visits[i]);
-				//System.out.print(visit + ",");
+				// System.out.print(visit + ",");
 				// 遍历每个漏斗 seq 是漏斗的index
 				for (int seq = 0; seq < this.tundishResults.size(); seq++) {
 					// 目标漏斗
@@ -411,11 +398,11 @@ public class Tundish extends Analyse {
 					Level targetLevel = (Level) tundishResult.get(indexs[seq]);
 
 					// 当前页面指向漏斗第0层时
-					if ( this.compareVisit(visit, level0.name) ) {//visit.equals(level0.name)
+					if (this.compareVisit(visit, level0.name)) {// visit.equals(level0.name)
 						// 如果目标层不是第0层，计算前一层的用户流失，且只有目标层不是第0层的时候计算
 						if (targetLevel != level0) {
 						} else {
-							if ( !this.compareVisit(preVisit, level0.name) ) {//!preVisit.equals(level0.name)
+							if (!this.compareVisit(preVisit, level0.name)) {// !preVisit.equals(level0.name)
 								level0.cnt++;
 							}
 						}
@@ -427,9 +414,9 @@ public class Tundish extends Analyse {
 					// 如果当前页面不指向漏斗第0层
 					else {
 						// 如果当前页面指向目标层
-						if ( this.compareVisit(visit, targetLevel.name) ) {//visit.equals(targetLevel.name)
-							if ( !this.compareVisit(preVisit, level0.name) ){//!preVisit.equals(level0.name)
-								//System.out.println("\n!!!!!!!!!!!"+preVisit+"!!!!!!!!!!!!!!!");
+						if (this.compareVisit(visit, targetLevel.name)) {// visit.equals(targetLevel.name)
+							if (!this.compareVisit(preVisit, level0.name)) {// !preVisit.equals(level0.name)
+								// System.out.println("\n!!!!!!!!!!!"+preVisit+"!!!!!!!!!!!!!!!");
 							}
 							targetLevel.cnt++;
 							indexs[seq]++;
@@ -443,23 +430,27 @@ public class Tundish extends Analyse {
 
 							// 如果目标层不是第0层，且当前页不是第0层
 							if (targetLevel != level0) {
-								preLevel = (Level) tundishResult.get(indexs[seq] - 1);
-								if ( this.compareVisit(preLevel.name, preVisit) ){//preLevel.name.equals(preVisit)
+								preLevel = (Level) tundishResult
+										.get(indexs[seq] - 1);
+								if (this.compareVisit(preLevel.name, preVisit)) {// preLevel.name.equals(preVisit)
 									runOffPage[seq] = visit;
-								
+
 								}
 								if (i == visits.length - 1) {
 
 									preLevel = (Level) tundishResult
 											.get(indexs[seq] - 1);
 									// 如果当前页不是前一层的重复的话
-									if ( !this.compareVisit(visit, preLevel.name) ) {//!visit.equals(preLevel.name)
+									if (!this
+											.compareVisit(visit, preLevel.name)) {// !visit.equals(preLevel.name)
 										HashMap<String, Integer> hashMap = preLevel.runOffMap;
 										if (hashMap.get(runOffPage[seq]) == null) {
 											hashMap.put(runOffPage[seq], 1);
 										} else {
-											int cnt = hashMap.get(runOffPage[seq]);
-											hashMap.put(runOffPage[seq], cnt + 1);
+											int cnt = hashMap
+													.get(runOffPage[seq]);
+											hashMap.put(runOffPage[seq],
+													cnt + 1);
 										}
 										indexs[seq] = 0;
 									}
@@ -479,7 +470,7 @@ public class Tundish extends Analyse {
 				}
 				preVisit = visit;
 			}
-			//System.out.print("\n");
+			// System.out.print("\n");
 		}
 	}
 
@@ -496,7 +487,7 @@ public class Tundish extends Analyse {
 			for (int i = 0; i < visits.length; i++) {
 				// System.out.println(visits[i]);
 				String visit = Preprocessor.getPageName(visits[i]);
-				//System.out.print(visit + ",");
+				// System.out.print(visit + ",");
 				// 遍历每个漏斗 seq 是漏斗的index
 				for (int seq = 0; seq < tundishResultsContinuous.size(); seq++) {
 					// 目标漏斗
@@ -508,7 +499,7 @@ public class Tundish extends Analyse {
 					Level targetLevel = (Level) tundishResult.get(indexs[seq]);
 
 					// 当前页面指向漏斗第0层时
-					if ( this.compareVisit(visit, level0.name) ) {//visit.equals(level0.name)
+					if (this.compareVisit(visit, level0.name)) {// visit.equals(level0.name)
 						// 如果目标层不是第0层，计算前一层的用户流失，且只有目标层不是第0层的时候计算
 						if (targetLevel != level0) {
 							Level preLevel = (Level) tundishResult
@@ -521,7 +512,7 @@ public class Tundish extends Analyse {
 								hashMap.put(visit, cnt + 1);
 							}
 						} else {
-							if (!this.compareVisit(preVisit, level0.name)) {//!preVisit.equals(level0.name)
+							if (!this.compareVisit(preVisit, level0.name)) {// !preVisit.equals(level0.name)
 								level0.cnt++;
 							}
 						}
@@ -535,7 +526,7 @@ public class Tundish extends Analyse {
 					// 如果当前页面不指向漏斗第0层
 					else {
 						// 如果当前页面指向目标层
-						if ( this.compareVisit(visit, targetLevel.name)) {//visit.equals(targetLevel.name)
+						if (this.compareVisit(visit, targetLevel.name)) {// visit.equals(targetLevel.name)
 							targetLevel.cnt++;
 							indexs[seq]++;
 							// 如果一次漏斗结束后,比较层数重置到第0层
@@ -551,7 +542,7 @@ public class Tundish extends Analyse {
 								preLevel = (Level) tundishResult
 										.get(indexs[seq] - 1);
 								// 如果当前页不是前一层的重复的话
-								if ( !this.compareVisit(visit, preLevel.name) ) {//!visit.equals(preLevel.name)
+								if (!this.compareVisit(visit, preLevel.name)) {// !visit.equals(preLevel.name)
 									HashMap<String, Integer> hashMap = preLevel.runOffMap;
 									if (hashMap.get(visit) == null) {
 										hashMap.put(visit, 1);
@@ -578,7 +569,7 @@ public class Tundish extends Analyse {
 				preVisit = visit;
 
 			}
-			//System.out.print("\n");
+			// System.out.print("\n");
 		}
 
 	}
@@ -588,7 +579,7 @@ public class Tundish extends Analyse {
 		s.setInputPath("E:/data/testFile");
 		s.setOutputPath("E:/data/pagevisit/testout.txt");
 		s.setSiteDataPath("E:/data");
-		
+
 		try {
 			// s.start("TundishClass 1? |?1? |?1? |?login*; |;手机阅读阅读页; |;我的书架");
 			s.start("TundishClass" + Separator.cmdSeparator
@@ -644,13 +635,13 @@ public class Tundish extends Analyse {
 	public void setTundishList(List<String> tundishList) {
 		this.tundishList = tundishList;
 	}
-	
-	private boolean compareVisit(String visit1,String visit2) {
-		if ( visit1.equals(visit2) )
+
+	private boolean compareVisit(String visit1, String visit2) {
+		if (visit1.equals(visit2))
 			return true;
-		if ( visit1.equals(Preprocessor.getPageName(visit2)))
+		if (visit1.equals(Preprocessor.getPageName(visit2)))
 			return true;
-		if ( visit2.equals(Preprocessor.getPageName(visit1)))
+		if (visit2.equals(Preprocessor.getPageName(visit1)))
 			return true;
 		return false;
 	}
