@@ -92,8 +92,13 @@ public class StatAnalyse extends Analyse {
 
 	@Override
 	public void onReadLog(String[] strArray) throws IOException {
-
-		Long id = Long.parseLong(strArray[0]);
+		Long id = new Long(0);
+		try{
+			 id = Long.parseLong(strArray[0]);
+		}catch(NumberFormatException e){
+			return;
+		}
+		
 		if (this.curPVHis == null) {
 			this.curPVHis = new PVHistory();
 			this.curPVHis.setId(id);

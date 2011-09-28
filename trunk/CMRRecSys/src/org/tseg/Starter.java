@@ -39,10 +39,7 @@ public class Starter {
 	}
 
 
-	public void getProgress(AtomicInteger progress){
-		this.runner.getProgress(progress);
 
-	}
 	public Starter() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -98,7 +95,7 @@ public class Starter {
 		s.setInputPath("E:/data/pvData/cuixr_pagevisit");
 		s.setOutputPath("E:/data/pvData/cui4");
 		s.setSiteDataPath("E:/data");
-		s.getProgress(new AtomicInteger(0));
+		
 		try {
 			String cmd = "StatAnalyse\t" + AnalyseType.NegCate + "\n"
 					+ "StatAnalyse\t" + AnalyseType.PageToCate + "\n"

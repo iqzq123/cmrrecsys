@@ -11,8 +11,8 @@ public abstract class Analyse {
 	private String outputPath = "";
 	private Byte type=AnalyseType.NegCate;
 	public abstract void onInitial(); 
-	public abstract void onReadLog(String []log)throws IOException;
-	public abstract void onReadEnd()throws IOException;
+	public abstract void onReadLog(String []log)throws Exception;
+	public abstract void onReadEnd()throws Exception;
 	public abstract void readParam(String params);
 	public abstract String getName();
 	public String getOutputPath() {

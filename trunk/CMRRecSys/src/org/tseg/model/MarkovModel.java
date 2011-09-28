@@ -45,6 +45,10 @@ public class MarkovModel {
 				Map.Entry entry = (Map.Entry) iter.next();
 				String edge = (String) entry.getKey();
 				String[] page = edge.split(Separator.edgeSeparator);
+				if(page.length<2){
+					System.out.println("edge null eror:"+edge);
+					continue;
+				}
 				String reverseEdge = page[1] + Separator.edgeSeparator
 						+ page[0];
 				Double val2 = (Double) linkMap.get(reverseEdge);
@@ -106,6 +110,10 @@ public class MarkovModel {
 				Map.Entry entry = (Map.Entry) iter.next();
 				String edge = (String) entry.getKey();
 				String[] page = edge.split(Separator.edgeSeparator);
+				if(page.length<2){
+					System.out.println("edge null eror:"+edge);
+					continue;
+				}
 				String reverseEdge = page[1] + Separator.edgeSeparator
 						+ page[0];
 				Double val2 = (Double) linkMap.get(reverseEdge);
@@ -133,9 +141,7 @@ public class MarkovModel {
 				c.setAttribute("menber", cluster.toString());
 				root.appendChild(c);
 				System.out.println(cluster.toString()+"\n");
-			}
-			
-			
+			}			
 			// 用xmlserializer把document的内容进行串化
 			FileOutputStream os = null;
 			OutputFormat outformat = new OutputFormat(doc);
@@ -253,11 +259,15 @@ public class MarkovModel {
 				Map.Entry entry = (Map.Entry) iter.next();
 				String key = (String) entry.getKey();
 				Double val = (Double) entry.getValue();
+				String []pArray=key.split(seperator);
+				if(pArray.length<2){
+					continue;
+				}
 				if (val > linkThreshold) {
-					String pageName1 =Preprocessor.getPageName( key.split(seperator)[0]);
-					String pageName2 = Preprocessor.getPageName(key.split(seperator)[1]);			
-					pageSet.add(key.split(seperator)[0]);
-					pageSet.add(key.split(seperator)[1]);
+					String pageName1 =Preprocessor.getPageName( pArray[0]);
+					String pageName2 = Preprocessor.getPageName(pArray[1]);			
+					pageSet.add(pArray[0]);
+					pageSet.add(pArray[1]);
 					Element edgeNode = doc.createElement("Edge");
 					edgeNode.setAttribute("fromID", pageName1);
 					edgeNode.setAttribute("toID", pageName2);

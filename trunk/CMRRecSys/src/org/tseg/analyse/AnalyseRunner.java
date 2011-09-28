@@ -21,7 +21,7 @@ public class AnalyseRunner {
 	private List<Analyse> analyseList = new ArrayList<Analyse>();
 	private int curLineNum = 0;
 	private int lineAmount=1;
-	private AtomicInteger progress = null;
+	
 
 	private String logSplit = "\\|";
 
@@ -29,7 +29,7 @@ public class AnalyseRunner {
 		this.analyseList.add(analyse);
 	}
 
-	public void run() throws IOException {
+	public void run() throws Exception {
 
 		Preprocessor.readMapFile(this.siteDataPath);
 
@@ -46,13 +46,7 @@ public class AnalyseRunner {
 
 		
 		File inputFile = new File(this.inputPath);
-		String[] nameArray=inputFile.getName().split(Separator.FILENAME_SEPARATOR);
-		try{
-			lineAmount=Integer.parseInt(nameArray[nameArray.length-1])*10000;
-		}catch(Exception e){
-			lineAmount=100000000;
-			System.out.print("fileName Format error");
-		}
+		this.lineAmount=Ulits.getFileLineNum(inputFile.getName());
 		
 		if (inputFile.isDirectory()) {			
 			File []fileArray=inputFile.listFiles();
@@ -69,10 +63,10 @@ public class AnalyseRunner {
 			analyse.onReadEnd();
 		}
 		System.out.println("AnalyseRunner end!!!!!!!!!!!!!!");
-		this.progress.set(-1);
+		this.curLineNum=-1;
 	}
 
-	private void runSingleFile(String path) throws FileNotFoundException, IOException {
+	private void runSingleFile(String path) throws Exception {
 		
 		FileReader fr = new FileReader(path);
 		BufferedReader reader = new BufferedReader(fr);
@@ -92,7 +86,6 @@ public class AnalyseRunner {
 				analyse.onReadLog(proArray);
 			}
 			curLineNum++;
-			this.progress.set(curLineNum);
 			if (curLineNum % 100000 == 0) {
 				System.out.println("read line:"+curLineNum);
 				
@@ -102,7 +95,7 @@ public class AnalyseRunner {
 		fr.close();
 	}
 
-	public void seqRun() throws IOException {
+	public void seqRun() throws Exception {
 
 		Preprocessor.readMapFile(this.siteDataPath);
 
@@ -137,9 +130,9 @@ public class AnalyseRunner {
 				analyse.onReadLog(proArray);
 			}
 			cnt++;
-			this.progress.set(cnt);
+			
 			if (cnt % 100000 == 0) {
-				System.out.println(this.progress);
+				System.out.println(cnt);
 			}
 		}
 		System.out.println("pv总数为：" + cnt);
@@ -158,17 +151,18 @@ public class AnalyseRunner {
 
 		try {
 
-			b.setInputPath("E:/data/test_a");
+			b.setInputPath("E:/data/pvData/pvdata2.txt");
 			b.setOutputPath(b.getInputPath() + ".out");
 			b.setSiteDataPath("E:/data");
-			b.getProgress(new AtomicInteger(1));
 			GlobalAnalyse mk = new GlobalAnalyse();
+			mk.setMinLinkNum(1);
+			StatAnalyse s=new StatAnalyse();
 			b.addAnalyse(mk);
+			b.addAnalyse(s);
 			b.run();
-
 			System.out.println("success");
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -197,10 +191,6 @@ public class AnalyseRunner {
 
 	public void setOutputPath(String outputPath) {
 		this.outputPath = outputPath;
-	}
-
-	public void getProgress(AtomicInteger progress) {
-		this.progress = progress;
 	}
 
 	public String getLogSplit() {
