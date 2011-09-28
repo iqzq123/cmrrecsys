@@ -18,6 +18,7 @@
 			import SNADisplay.org.utils.XMLFileTitleName;
 			import SNADisplay.component.*;
 			import mx.managers.PopUpManager;
+			import SNADisplay.org.utils.DragPanel;
 			
 			private var _graphCanvas:Canvas;
 			private var _graphCanvas2:Canvas;
@@ -31,10 +32,76 @@
 			private const PATH_MODE:int = 1;
 			private const FR_PATH_MODE:int = 2;
 			private var _mode:int = SIMPLE_MODE;
+			private var dragPanel:DragPanel;
+			private var jobMonitor:JobMonitor;
+			private static const MINISECENDS:int=1000;
+			private var intervalID:uint;
 			
 			private function init():void {
 				_curGraph =  _graph;
+//				this.addChild(dragPanel);
+				initDragPanel();
+				
+				intervalID = setInterval(getTaskInfo,MINISECENDS);
+				
 			}
+			
+			private function initDragPanel():void {
+				dragPanel = new DragPanel();
+				dragPanel.isPopUp = true;
+				dragPanel.title = "任务监控";
+				dragPanel.includeInLayout = false;
+				jobMonitor = new JobMonitor();
+				jobMonitor.percentWidth = 100;
+				jobMonitor.percentHeight = 100;
+				dragPanel.addChild(jobMonitor);
+				dragPanel.myRestoreHeight = 300;
+				dragPanel.myRestoreWidth = 1000;
+				dragPanel.myRestoreX = Application.application.width -dragPanel.myRestoreWidth ;
+				dragPanel.myRestoreY = Application.application.height - dragPanel.myRestoreHeight;
+				dragPanel.height = 80;
+				dragPanel.width = 100;
+				dragPanel.x = Application.application.width - dragPanel.width;
+				dragPanel.y = Application.application.height - dragPanel.height;
+				dragPanel.isMinimized = true;
+				this.addChild(dragPanel);
+//				jobMonitor.init("pageAnalyse","1,E:/data,D:/data,35,80;2,D:/data,E:/data,42,75;3,C:/,D:/,65,-1;");
+//				jobMonitor.init("fpaAnalyse","1,E:/data,D:/data,35,80;2,D:/data,E:/data,42,75;3,C:/,D:/,65,-1;");
+			}
+			
+			private function getTaskInfo():void {
+				var analyseService:HTTPService = new HTTPService();
+				var fpaService:HTTPService = new HTTPService();
+				var bookService:HTTPService = new HTTPService();
+				
+		    	analyseService.url = "anlayseStarterServlet";
+		    	fpaService.url = "FPAAnalyse";
+		    	bookService.url = "getBookTundish";
+		    	
+		    	var params:URLVariables = new URLVariables();
+		    	params.action = "getTaskInfo";
+		    	
+		    	analyseService.addEventListener(ResultEvent.RESULT,initAnalyseJobMonitor);
+		    	fpaService.addEventListener(ResultEvent.RESULT,initFPAJobMonitor);
+		    	bookService.addEventListener(ResultEvent.RESULT,initBookJobMonitor);
+		    	analyseService.send(params);
+		    	fpaService.send(params);
+		    	bookService.send(params);
+			}
+			
+			private function initAnalyseJobMonitor(e:ResultEvent){
+				var str:String = String(e.result);
+				jobMonitor.init("pageAnalyse",str);
+			}
+			private function initFPAJobMonitor(e:ResultEvent){
+				var str:String = String(e.result);
+				jobMonitor.init("fpaAnalyse",str);
+			}
+			private function initBookJobMonitor(e:ResultEvent){
+				var str:String = String(e.result);
+				jobMonitor.init("bookTundish",str);
+			}
+			
 			private function initCanvasListeners(graphCanvas:Canvas):void{
 				if ( graphCanvas != null ){
 					graphCanvas.addEventListener(NodeClickEvent.SINGLE_CLICK, nodeSingleClick);
@@ -886,7 +953,7 @@
 				<mx:Button label="频繁路径分析" click="showFPAParams()" />
 				<mx:Button label="图书流失漏斗分析" click="bookTundish()"/>
 			</mx:VBox>
-			<mx:VBox label="查看" width="100%" height="100%" 
+			<mx:VBox label="查看分析结果" width="100%" height="100%" 
 					paddingTop="5" paddingBottom="5" paddingLeft="5" paddingRight="5" >
 					<mx:HBox width="100%" >
 						<mx:Label text="筛选目录" />
@@ -1037,4 +1104,5 @@
 	<mx:Canvas id="canvas" name="graphCanvas" x="230" y="10" 
 		width="{this.width-240}" height="{this.height-20}" backgroundColor="#F8F8FF"/>
 	<mx:Canvas id="canvas2" name="graphCanvas2" backgroundColor="#F8F8FF"/>
+	
 </mx:Application>
