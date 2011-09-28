@@ -19,6 +19,10 @@ public class CheckBookServlet extends HttpServlet{
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 	throws ServletException, IOException {
 		try {
+			response.setContentType("text/xml;charset=utf-8");
+			response.setCharacterEncoding("utf-8");
+			PrintWriter out = response.getWriter();
+			
 			String webRootPath = getServletContext().getRealPath("/");
 			System.out.print("webRootPath" + webRootPath);
 			InputStream in = new FileInputStream(webRootPath
@@ -40,11 +44,12 @@ public class CheckBookServlet extends HttpServlet{
 			
 			System.out.println("check book servlet.......\n"+bookString+"\n"+inputPath+"\n"+outputPath);
 			checkBook.run();
-			
-			
-			response.setContentType("text/xml;charset=utf-8");
-			response.setCharacterEncoding("utf-8");
-			PrintWriter out = response.getWriter();
+			String exceptionString = checkBook.getException();
+			if(exceptionString.length()>1){
+				out.println("ERROR:\n"+exceptionString);
+				out.flush();
+				out.close();
+			}			
 			XMLFileReader xmlfr = new XMLFileReader();
 			String str = "";
 			str = xmlfr.readXMLToStr(outputPath);      
@@ -53,6 +58,13 @@ public class CheckBookServlet extends HttpServlet{
 			out.close();
 		} catch (Exception e) {
 			// TODO: handle exception
+			response.setContentType("text/xml;charset=utf-8");
+			response.setCharacterEncoding("utf-8");
+			PrintWriter out = response.getWriter();
+			out.println("ERROR:"+e.toString());
+			out.flush();
+			out.close();
+			System.out.println("CheckBookServlet ERROR:");
 			e.printStackTrace();
 		}
 	}

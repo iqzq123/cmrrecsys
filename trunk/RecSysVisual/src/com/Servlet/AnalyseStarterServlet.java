@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -21,7 +22,6 @@ import com.XMLFileReader;
 
 public class AnalyseStarterServlet extends HttpServlet {
 
-	private AtomicInteger progress = new AtomicInteger(0);
 	private Hashtable<String, Starter> analyseTable = new Hashtable<String, Starter>();
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -46,7 +46,6 @@ public class AnalyseStarterServlet extends HttpServlet {
 				System.out.println("servlet cmd: \n" + cmd);
 				System.out.println("servlet inputPath: \n" + inputPath);
 				System.out.println("servlet outputPath: \n" + outputPath);
-				s.getProgress(progress);
 				s.setInputPath(inputPath);
 				s.setOutputPath(outputPath);
 				String webRootPath = getServletContext().getRealPath("/");
@@ -75,13 +74,49 @@ public class AnalyseStarterServlet extends HttpServlet {
 				Starter starter = analyseTable.get(taskID);
 				int currentLine = starter.getCurLineNum();
 				int totalLine = starter.getLineAmout();
+				String exceptionString = starter.getExceptionInfo();
+				if(exceptionString!=null){
+					out.println("ERROR:\n"+exceptionString);
+					out.flush();
+					out.close();
+				}
 				out.println(currentLine+","+totalLine);
 				out.flush();
 				out.close();
 			}
+			else if(action.equals("getTaskInfo")){
+				String taskInfo = "";
+				if(analyseTable.isEmpty()){
+					taskInfo = "null";
+				}
+				else{
+					Iterator<String> taskIDs = analyseTable.keySet().iterator();
+					while(taskIDs.hasNext()){
+						String taskID = taskIDs.next();
+						Starter starter = analyseTable.get(taskID);
+						String inputPath = starter.getInputPath();
+						String outputPath = starter.getOutputPath();
+						int currentLine = starter.getCurLineNum();
+						int totalLine = starter.getLineAmout();
+						taskInfo = taskInfo+taskID+","+inputPath+","+outputPath+","+currentLine+","+totalLine+";";
+					}
+				}
+				response.setContentType("text/xml;charset=utf-8");
+				response.setCharacterEncoding("utf-8");
+				PrintWriter out = response.getWriter();
+				out.println(taskInfo);
+				out.flush();
+				out.close();			
+			}
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			response.setContentType("text/xml;charset=utf-8");
+			response.setCharacterEncoding("utf-8");
+			PrintWriter out = response.getWriter();
+			out.println("ERROR:"+e.toString());
+			out.flush();
+			out.close();
 			e.printStackTrace();
 			System.out.println("ERROR:AnalyseStarterServlet");
 			System.out.println(e.toString());
