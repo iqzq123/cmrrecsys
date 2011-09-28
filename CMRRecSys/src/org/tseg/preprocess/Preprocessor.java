@@ -91,7 +91,7 @@ public class Preprocessor {
 		String []retArray=new String[logArray.length];
 		for(int i=0;i<logArray.length;i++){
 			if(logArray[i].equals("")){
-				logArray[i]="nullvalue";
+				logArray[i]="-1";
 			}
 			retArray[i]=logArray[i];
 		}
