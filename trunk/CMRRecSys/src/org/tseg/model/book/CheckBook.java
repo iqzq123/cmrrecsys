@@ -29,6 +29,7 @@ public class CheckBook {
 	private String sep = ";";
 	private String fileSep = "\\|";
 	private ArrayList<String> targetBooks = new ArrayList<String>();
+	private String exceptionString = "";
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -83,6 +84,7 @@ public class CheckBook {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			this.setException(e.toString());
 		}
 	}
 	
@@ -106,6 +108,7 @@ public class CheckBook {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			this.setException(e.toString());
 		}
 		try {
 			// 用xmlserializer把document的内容进行串化
@@ -117,6 +120,7 @@ public class CheckBook {
 
 		} catch (IOException ioexp) {
 			ioexp.printStackTrace();
+			this.setException(ioexp.toString());
 		}
 	}
 	public void setBookStr(String bookString){
@@ -137,6 +141,12 @@ public class CheckBook {
 	}
 	public String getOutputPath(){
 		return this.outputPath;
+	}
+	public void setException(String string){
+		this.exceptionString = string;
+	}
+	public String getException(){
+		return this.exceptionString;
 	}
 
 }

@@ -156,6 +156,7 @@ public class BookModel {
 				}
 				if(i%100000==0)System.out.println("read chapter info "+i);								
 			}
+			this.chapterLine = -1;
 			reader.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -202,6 +203,7 @@ public class BookModel {
 				if ( i % 100000 == 0)
 					System.out.println("read readinginfo "+i);
 			}
+			this.readingInfoLine = -1;
 			reader.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
