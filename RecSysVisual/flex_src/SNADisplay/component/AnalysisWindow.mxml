@@ -384,25 +384,49 @@
 		    }
 		    private function setProgressBar(e:ResultEvent):void {
 		    	var line:String = String(e.result);
+		    	if(line.substr(0,5)=="ERROR"){
+		    		Alert.show(line);
+		    		clearInterval(intervalID);
+		    		return ;
+		    	}
 		    	var lines:Array = line.split(",");
 		    	var currentLine:String = lines[0];
 		    	var totalLine:String = lines[1];
 		    	num = new int(currentLine);
 		    	totalNum = new int(totalLine);
-		    	if(num!=0&&preNum == num) {
-		    		clearInterval(intervalID);
-		    		progressBar.setProgress(100,100);
-		    		progressBar.label = "执行结束。共"+num+"行";
-		    		Alert.show("执行完毕！","",0,this,closeHandle2);
+		    	if(totalNum > 0){
+		    		if(num==-1&&preNum == num) {
+		    			clearInterval(intervalID);
+		    			progressBar.setProgress(100,100);
+		    			progressBar.label = "执行结束。共"+num+"行";
+		    			Alert.show("执行完毕！","",0,this,closeHandle2);
+		    		}
+		    		else {
+		    			i = (num*1.0)/totalNum*100;
+		    			i = Number(i.toFixed(2));
+		    			preNum = num;
+		    			progressBar.setProgress(i,100);
+		    			progressBar.label = "正在执行中..."+i+"%";
+		    			lineLabel.text = "第"+num+"行，共"+totalNum+"行";
+		    		}
 		    	}
 		    	else {
-		    		i = (num*1.0)/totalNum*100;
-		    		i = Number(i.toFixed(2));
-		    		preNum = num;
-		    		progressBar.setProgress(i,100);
-		    		progressBar.label = "正在执行中..."+i+"%";
-		    		lineLabel.text = "第"+num+"行，共"+totalNum+"行";
+		    		if(num==-1&&preNum == num) {
+		    			clearInterval(intervalID);
+		    			progressBar.setProgress(100,100);
+		    			progressBar.label = "执行结束。共"+num+"行";
+		    			Alert.show("执行完毕！","",0,this,closeHandle2);
+		    		}
+		    		else {
+		    			i = i+5;
+		    			if(i>100)i=0;
+		    			preNum = num;
+		    			progressBar.setProgress(i,100);
+		    			progressBar.label = "正在执行中...";
+		    			lineLabel.text = "第"+num+"行，总行数未知。";
+		    		}
 		    	}
+		    	
 		    }
 		    private function closeHandle2(e:CloseEvent):void {
 	   			PopUpManager.removePopUp(this);

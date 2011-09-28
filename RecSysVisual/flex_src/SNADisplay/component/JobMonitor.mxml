@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="400" height="300" title="正在执行的任务">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			[Bindable]
+			private var analyseTaskArray:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var fpaTaskArray:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var bookTundishTaskArray:ArrayCollection = new ArrayCollection();
+
+ 
+			
+			public function init(taskType:String,taskInfo:String):void {
+				if(taskType == "pageAnalyse")analyseTask(taskInfo);
+				else if(taskType == "fpaAnalyse")fpaTask(taskInfo);
+				else if(taskType == "bookTundish")bookTundishTask(taskInfo);
+			}
+			
+			private function analyseTask(taskInfo:String):void {
+				
+				var taskArray:Array = taskInfo.split(";");
+				for(var i:int = 0;i<taskArray.length-1;i++){
+					var task:String = taskArray[i];
+					var taskInfoArray:Array = task.split(",");
+					var taskID:String = taskInfoArray[0];
+					var currentLine:int = new int(taskInfoArray[3]);
+					var totalLine:int = new int(taskInfoArray[4]);
+					var progress:String = "";
+					if(currentLine==-1){
+							progress = "执行完毕！";
+					}
+					else {
+						if(totalLine > 0){
+							var ratio:Number = (Number)(currentLine*1.0)/totalLine*100;
+							ratio = new Number(ratio.toFixed(2));
+							progress = "正在执行中...第"+currentLine+"行，共"+totalLine+"行。\n"+ratio+"%";
+						}
+						else{
+							progress = "正在执行中...第"+currentLine+"行，总行数未知."
+						}
+					}
+					
+					var o:Object = new Object();
+					o.id = taskInfoArray[0];
+					o.inputPath = taskInfoArray[1];
+					o.outputPath = taskInfoArray[2];
+					o.progress = progress;
+					for(var index:int = 0 ; index<analyseTaskArray.length;index++){
+						var element:Object = analyseTaskArray.getItemAt(index);
+						if(taskID==element.id){
+							analyseTaskArray.removeItemAt(index);
+							analyseTaskArray.addItemAt(o,index);
+							break;
+						}
+					}
+					if(index==analyseTaskArray.length)analyseTaskArray.addItem(o);
+				
+				}
+			}
+			
+			private function fpaTask(taskInfo:String):void {
+				var taskArray:Array = taskInfo.split(";");
+				for(var i:int = 0;i<taskArray.length-1;i++){
+					var task:String = taskArray[i];
+					var taskInfoArray:Array = task.split(",");
+					var taskID:String = taskInfoArray[0];
+					var currentLine:int = new int(taskInfoArray[3]);
+					var totalLine:int = new int(taskInfoArray[4]);
+					var count:int = new int(taskInfoArray[5]);
+					var progress:String = "";
+					if(currentLine==-1){
+						progress = "执行完毕！";
+					}
+					else {
+						if(totalLine>0){
+							var ratio:Number = (Number)(currentLine*1.0)/totalLine*100;
+							ratio = new Number(ratio.toFixed(2));
+							progress = "正在执行中...第"+count+"次读文件，第"+currentLine+"行，共"+totalLine+"行。\n"+ratio+"%";
+						}
+						else{
+							progress = "正在执行中...第"+count+"次读文件，第"+currentLine+"行，总行数未知.";
+						}
+					}
+					
+					var o:Object = new Object();
+					o.id = taskInfoArray[0];
+					o.inputPath = taskInfoArray[1];
+					o.outputPath = taskInfoArray[2];
+					o.progress = progress;
+					for(var index:int = 0 ; index<fpaTaskArray.length;index++){
+						var element:Object = fpaTaskArray.getItemAt(index);
+						if(taskID==element.id){
+							fpaTaskArray.removeItemAt(index);
+							fpaTaskArray.addItemAt(o,index);
+							break;
+						}
+					}
+					if(index==fpaTaskArray.length)fpaTaskArray.addItem(o);
+			
+				}
+			}
+			
+			private function bookTundishTask(taskInfo:String):void {
+				var taskArray:Array = taskInfo.split("@");
+				trace(taskInfo);
+				for(var i:int = 0;i<taskArray.length-1;i++){
+					var task:String = taskArray[i];
+					var taskInfoArray:Array = task.split(",");
+					var taskID:String = taskInfoArray[0];
+					var chapterLine:int = new int(taskInfoArray[4]);
+					var readingLine:int = new int(taskInfoArray[5]);
+					var progress:String = "";
+					if(chapterLine>0&&readingLine==0){
+						progress = "读取章节信息...第"+chapterLine+"行。";
+					}
+					else if(chapterLine==-1&&readingLine>0){
+						progress = "读取用户数据...第"+readingLine+"行";
+					}
+					else if(chapterLine==-1&&readingLine==-1){
+						progress = "执行完毕！";
+					}
+					var o:Object = new Object();
+					o.id = taskInfoArray[0];
+					o.inputPath = taskInfoArray[1];
+					o.outputPath = taskInfoArray[2];
+					o.bookID = taskInfoArray[3];
+					o.progress = progress;
+					for(var index:int = 0 ; index<bookTundishTaskArray.length;index++){
+						var element:Object = bookTundishTaskArray.getItemAt(index);
+						if(taskID==element.id){
+							bookTundishTaskArray.removeItemAt(index);
+							bookTundishTaskArray.addItemAt(o,index);
+							break;
+						}
+					}
+					if(index==bookTundishTaskArray.length)bookTundishTaskArray.addItem(o);
+				}
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:TabNavigator x="0" y="0" width="100%" height="100%">
+	
+		<mx:Canvas id="pageAnalyse" label="页面分析" width="100%" height="100%">
+			<mx:DataGrid x="0" y="0" width="100%" height="100%" dataProvider="{analyseTaskArray}">
+				<mx:columns>
+					<mx:DataGridColumn headerText="任务ID" dataField="id"/>
+					<mx:DataGridColumn headerText="输入路径" dataField="inputPath"/>
+					<mx:DataGridColumn headerText="输出路径" dataField="outputPath"/>
+					<mx:DataGridColumn headerText="状态" dataField="progress">
+						<!--<mx:itemRenderer>
+							<mx:Component>
+								<mx:ProgressBar visible="true" mode="manual"/>
+							</mx:Component>
+						</mx:itemRenderer>-->
+					</mx:DataGridColumn>
+				</mx:columns>
+			</mx:DataGrid>
+		</mx:Canvas>
+		<mx:Canvas id="fpa" label="频繁路径分析" width="100%" height="100%">
+			<mx:DataGrid x="0" y="0" width="100%" height="100%" dataProvider="{fpaTaskArray}">
+				<mx:columns>
+					<mx:DataGridColumn headerText="任务ID" dataField="id"/>
+					<mx:DataGridColumn headerText="输入路径" dataField="inputPath"/>
+					<mx:DataGridColumn headerText="输出路径" dataField="outputPath"/>
+					<mx:DataGridColumn headerText="状态" dataField="progress">
+						<!--<mx:itemRenderer>
+							<mx:Component>
+								<mx:ProgressBar visible="true" mode="manual"/>
+							</mx:Component>
+						</mx:itemRenderer>-->
+					</mx:DataGridColumn>
+				</mx:columns>
+			</mx:DataGrid>
+		</mx:Canvas>
+		<mx:Canvas id="bookTundish" label="图书流失漏斗分析" width="100%" height="100%">
+			<mx:DataGrid x="0" y="0" width="100%" height="100%" dataProvider="{bookTundishTaskArray}">
+				<mx:columns>
+					<mx:DataGridColumn headerText="任务ID" dataField="id"/>
+					<mx:DataGridColumn headerText="输入路径" dataField="inputPath"/>
+					<mx:DataGridColumn headerText="输出路径" dataField="outputPath"/>
+					<mx:DataGridColumn headerText="选择的图书ID" dataField="bookID"/>
+					<mx:DataGridColumn headerText="状态" dataField="progress" >
+						<!--<mx:itemRenderer>
+							<mx:Component>
+								<mx:ProgressBar visible="true" mode="manual"/>
+							</mx:Component>
+						</mx:itemRenderer>-->
+					</mx:DataGridColumn>
+				</mx:columns>
+			</mx:DataGrid>
+		</mx:Canvas>
+	</mx:TabNavigator>
+	
+</mx:TitleWindow>

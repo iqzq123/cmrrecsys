@@ -54,11 +54,19 @@
 				params.action = "start";
 				params.taskID = taskID;
 								
-				getBookTundish.addEventListener(FaultEvent.FAULT,faultHandler);
+				getBookTundish.addEventListener(ResultEvent.RESULT,resultHandler);
 
 				getBookTundish.send(params);
 				intervalID = setInterval(togetProgress,MINISECENDS);
 				bt5.enabled = false;
+			}
+			
+			private function resultHandler(e:ResultEvent):void {
+				var str:String = String(e.result);
+				if(str.substr(0,5)=="ERROR"){
+					Alert.show(str);
+					return;
+				}
 			}
 						
 			private function faultHandler(e:FaultEvent):void {
@@ -85,6 +93,11 @@
 		    }
 		    private function setProgressBar(e:ResultEvent):void {
 		    	var line:String = String(e.result);
+		    	if(line.substr(0,5)=="ERROR"){
+		    		Alert.show(line);
+		    		clearInterval(intervalID);
+		    		return ;
+		    	}
 		    	var lines:Array = line.split(",");
 		    	var chapterLine:int = new int(lines[0]);
 		    	var readingInfoLine:int = new int(lines[1]);
@@ -95,20 +108,18 @@
 		    		progressBar.setProgress(i,100);
 		    		preNum = chapterLine;
 		    	}
-		    	else if(chapterLine>0&&readingInfoLine>0) {
-		    		if(preNum == readingInfoLine&&readingInfoLine>0){
-		    			clearInterval(intervalID);
-		    			progressBar.setProgress(100,100);
-		    			progressBar.label = "执行完毕。";
-		    			Alert.show("图书漏斗分析执行完毕！","",0,this,closeHandle2);
-		    		}
-		    		else{
+		    	else if(chapterLine==-1&&readingInfoLine>0) {
 		    			progressBar.label = "读取用户数据...第"+readingInfoLine+"行";
 		    			i+=5;
 		    			if(i>100) i=0;
 		    			progressBar.setProgress(i,100);
-		    			preNum = readingInfoLine;
-		    		}		    		
+		    			preNum = readingInfoLine;	    		
+		    	}
+		    	else if(chapterLine==-1&&readingInfoLine==-1){
+		    		clearInterval(intervalID);
+		    			progressBar.setProgress(100,100);
+		    			progressBar.label = "执行完毕。";
+		    			Alert.show("图书漏斗分析执行完毕！","",0,this,closeHandle2);
 		    	}
 		    }
 	   		
@@ -125,12 +136,18 @@
 	   				var params:URLVariables = new URLVariables();
 	   				params.bookString = bookString;
 	   				checkBookService.addEventListener(ResultEvent.RESULT,showFoundBook);
+	   				checkBookService.addEventListener(FaultEvent.FAULT,faultHandler);
 	   				checkBookService.send(params);
 	   			}
 	   		}
 	   		
 	   		private function showFoundBook(e:ResultEvent):void {
 	   			var foundBookXML:XML = (XML) (e.message.body);
+	   			var str:String = String(e.result);
+	   			if(str.substr(0,5)=="ERROR"){
+	   				Alert.show(str);
+	   				return;
+	   			}
 	   			var foundBookWindow:FoundBookWindow = new FoundBookWindow();
 	   			foundBookWindow.addEventListener("datasure", function(e:DataSureEvent):void
 					{
