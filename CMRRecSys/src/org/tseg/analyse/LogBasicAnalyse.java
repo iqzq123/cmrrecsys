@@ -20,7 +20,7 @@ public class LogBasicAnalyse {
 
 	private HashMap<Long, PVHistory> personHisMap = new HashMap<Long, PVHistory>();
 
-	public void saveSenNumHistogram(String fileName) {
+	public void saveSenNumHistogram(String fileName)throws Exception {
 
 		Iterator iter = personHisMap.entrySet().iterator();
 		Histogram his = new Histogram();
@@ -40,7 +40,7 @@ public class LogBasicAnalyse {
 
 	}
 
-	public void saveDurationHistogram(String fileName) {
+	public void saveDurationHistogram(String fileName)throws Exception {
 
 		Iterator iter = personHisMap.entrySet().iterator();
 		Histogram his = new Histogram();

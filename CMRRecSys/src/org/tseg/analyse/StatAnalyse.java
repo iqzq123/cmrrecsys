@@ -85,13 +85,13 @@ public class StatAnalyse extends Analyse {
 	}
 
 	@Override
-	public void onReadEnd() throws IOException {
+	public void onReadEnd() throws Exception {
 		// TODO Auto-generated method stub
 		this.saveHistogram();
 	}
 
 	@Override
-	public void onReadLog(String[] strArray) throws IOException {
+	public void onReadLog(String[] strArray) throws Exception {
 		Long id = new Long(0);
 		try{
 			 id = Long.parseLong(strArray[0]);
@@ -121,7 +121,7 @@ public class StatAnalyse extends Analyse {
 
 	}
 
-	public void saveHistogram() {
+	public void saveHistogram()throws Exception {
 
 		this.senNumHis.build();
 		this.senNumHis.saveXML(statPath + "/登录次数直方图.xml");

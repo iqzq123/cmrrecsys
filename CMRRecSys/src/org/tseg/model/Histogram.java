@@ -53,8 +53,8 @@ public class Histogram {
 		int num = 0;
 		if (min > 0) {
 			num = ((int) aver / min) / 5;
-		}else{
-			num=(int)(aver/5);
+		} else {
+			num = (int) (aver / 5);
 		}
 		if (num > 1) {
 			this.distance = num;
@@ -73,7 +73,7 @@ public class Histogram {
 					colValueList.set(i, new Integer(tmp));
 				}
 			}
-			if (b >= this.columnNum*distance + min) {
+			if (b >= this.columnNum * distance + min) {
 				lastColumnNum++;
 			}
 		}
@@ -84,7 +84,7 @@ public class Histogram {
 		// this.colValueList.get(this.columnNum-1)+1));
 	}
 
-	public void saveXML(String fileName) {
+	public void saveXML(String fileName) throws Exception {
 
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = null;
@@ -94,7 +94,7 @@ public class Histogram {
 			System.err.println(pce);
 		}
 		Document doc = db.newDocument();
-		
+
 		Element root = doc.createElement("Histogram");
 		doc.appendChild(root);
 
@@ -121,7 +121,7 @@ public class Histogram {
 		Element averNode = doc.createElement("aver");
 		averNode.setAttribute("value", String.valueOf(this.aver));
 		root.appendChild(averNode);
-		
+
 		Element amountNode = doc.createElement("amount");
 		amountNode.setAttribute("value", String.valueOf(this.dataList.size()));
 		root.appendChild(amountNode);
@@ -145,17 +145,13 @@ public class Histogram {
 		columns.appendChild(column);
 		root.appendChild(columns);
 
-		try {
-			// 用xmlserializer把document的内容进行串化
-			FileOutputStream os = null;
-			OutputFormat outformat = new OutputFormat(doc);
-			os = new FileOutputStream(fileName);
-			XMLSerializer xmlSerilizer = new XMLSerializer(os, outformat);
-			xmlSerilizer.serialize(doc);
+		// 用xmlserializer把document的内容进行串化
+		FileOutputStream os = null;
+		OutputFormat outformat = new OutputFormat(doc);
+		os = new FileOutputStream(fileName);
+		XMLSerializer xmlSerilizer = new XMLSerializer(os, outformat);
+		xmlSerilizer.serialize(doc);
 
-		} catch (IOException ioexp) {
-			ioexp.printStackTrace();
-		}
 	}
 
 	/**

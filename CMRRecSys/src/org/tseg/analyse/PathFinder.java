@@ -36,7 +36,7 @@ public class PathFinder extends Analyse {
 	private final int MAX_USER = Integer.MAX_VALUE;
 	private PVHistory curPVHis = null;
 	private ArrayList<EndPoint> endPoints = new ArrayList<EndPoint>();
-	private ArrayList<HashMap<String,Integer>> pathCntMapAL = new ArrayList<HashMap<String,Integer>>();
+	private ArrayList<HashMap<String, Integer>> pathCntMapAL = new ArrayList<HashMap<String, Integer>>();
 	private int minLength = MIN_LENGTH;
 	private int maxLength = MAX_LENGTH;
 	private int minUser = MIN_USER;
@@ -99,40 +99,38 @@ public class PathFinder extends Analyse {
 			endPoint.fromPage = strArray[0];
 			endPoint.toPage = strArray[1];
 			this.endPoints.add(endPoint);
-			HashMap<String,Integer> pathCnt = new HashMap<String,Integer>();
+			HashMap<String, Integer> pathCnt = new HashMap<String, Integer>();
 			this.pathCntMapAL.add(pathCnt);
 		}
 		reader.close();
 		fr.close();
 	}
 
-	public void savePathList() {
-		try {
-			System.out.println(this.NAME + ":savePath:" + this.localOutputPath + "/路径发现.txt");
-			FileWriter fw = new FileWriter(this.localOutputPath
-					+ "/路径发现.txt");
-			BufferedWriter writer = new BufferedWriter(fw);
-			//Iterator<EndPoint> iter = this.endPoints.iterator();
-			//while (iter.hasNext()) {
-			int index = 0;
-			for ( EndPoint ep : this.endPoints ) {
-				for (String s : ep.pathList) {
-					String newStr = s.replace(Separator.PARAM_SEPARATOR3, ",");
-					String weight = this.pathCntMapAL.get(index).get(s).toString();
-					writer.write(newStr + "," + weight + '\n');
-					System.out.println(newStr + "," + weight);
-				}
-				index ++;
+	public void savePathList() throws Exception {
+
+		System.out.println(this.NAME + ":savePath:" + this.localOutputPath
+				+ "/路径发现.txt");
+		FileWriter fw = new FileWriter(this.localOutputPath + "/路径发现.txt");
+		BufferedWriter writer = new BufferedWriter(fw);
+		// Iterator<EndPoint> iter = this.endPoints.iterator();
+		// while (iter.hasNext()) {
+		int index = 0;
+		for (EndPoint ep : this.endPoints) {
+			for (String s : ep.pathList) {
+				String newStr = s.replace(Separator.PARAM_SEPARATOR3, ",");
+				String weight = this.pathCntMapAL.get(index).get(s).toString();
+				writer.write(newStr + "," + weight + '\n');
+				System.out.println(newStr + "," + weight);
 			}
-			writer.flush();
-			writer.close();
-			fw.close();
-		} catch (IOException ioexp) {
-			ioexp.printStackTrace();
+			index++;
 		}
+		writer.flush();
+		writer.close();
+		fw.close();
+
 	}
-	
-	public void savePathListXML() {
+
+	public void savePathListXML() throws Exception {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = null;
 		try {
@@ -147,18 +145,19 @@ public class PathFinder extends Analyse {
 		// String toPage = "";
 		Element node;
 		// 每一对端点的结果
-		for ( EndPoint ep: this.endPoints ){
+		for (EndPoint ep : this.endPoints) {
 			Element endPointEmt = doc.createElement("EndPoints");
 			endPointEmt.setAttribute("fromPage", ep.fromPage);
 			endPointEmt.setAttribute("toPage", ep.toPage);
 			root.appendChild(endPointEmt);
-			for (String path : ep.pathList ) {
-				String weight = this.pathCntMapAL.get(index).get(path).toString();
+			for (String path : ep.pathList) {
+				String weight = this.pathCntMapAL.get(index).get(path)
+						.toString();
 				Element pathEmt = doc.createElement("Path");
 				pathEmt.setAttribute("userNum", weight);
 				endPointEmt.appendChild(pathEmt);
 				String[] pages = path.split(Separator.PARAM_SEPARATOR3);
-				for (int i = 0; i < pages.length ; i++) {
+				for (int i = 0; i < pages.length; i++) {
 					Element pageEmt = doc.createElement("Page");
 					pageEmt.setAttribute("pageName", pages[i]);
 					pathEmt.appendChild(pageEmt);
@@ -166,17 +165,13 @@ public class PathFinder extends Analyse {
 			}
 			index++;
 		}
-		try {
-			// 用xmlserializer把document的内容进行串化
-			FileOutputStream os = null;
-			OutputFormat outformat = new OutputFormat(doc);
-			os = new FileOutputStream(this.localOutputPath + "/路径发现.xml");
-			XMLSerializer xmlSerilizer = new XMLSerializer(os, outformat);
-			xmlSerilizer.serialize(doc);
 
-		} catch (IOException ioexp) {
-			ioexp.printStackTrace();
-		}
+		// 用xmlserializer把document的内容进行串化
+		FileOutputStream os = null;
+		OutputFormat outformat = new OutputFormat(doc);
+		os = new FileOutputStream(this.localOutputPath + "/路径发现.xml");
+		XMLSerializer xmlSerilizer = new XMLSerializer(os, outformat);
+		xmlSerilizer.serialize(doc);
 
 	}
 
@@ -186,14 +181,11 @@ public class PathFinder extends Analyse {
 		Byte type = this.getType();
 		Ulits.newFolder(this.getOutputPath() + "/路径发现");
 		if (type.equals(AnalyseType.Original)) {
-			this.localOutputPath = this.getOutputPath()
-					+ "/路径发现/网页名+目录";
+			this.localOutputPath = this.getOutputPath() + "/路径发现/网页名+目录";
 		} else if (type.equals(AnalyseType.NegCate)) {
-			this.localOutputPath = this.getOutputPath()
-					+ "/路径发现/仅网页名";
+			this.localOutputPath = this.getOutputPath() + "/路径发现/仅网页名";
 		} else if (type.equals(AnalyseType.PageToCate)) {
-			this.localOutputPath = this.getOutputPath()
-					+ "/路径发现/板块分析（一级目录）";
+			this.localOutputPath = this.getOutputPath() + "/路径发现/板块分析（一级目录）";
 		}
 		Ulits.newFolder(this.localOutputPath);
 		System.out.println(this.localOutputPath);
@@ -206,22 +198,23 @@ public class PathFinder extends Analyse {
 		this.savePathList();
 		this.savePathListXML();
 	}
-	
+
 	private void userNumFilter() {
 		int index = 0;
-		for ( EndPoint ep : this.endPoints ) {
+		for (EndPoint ep : this.endPoints) {
 			ArrayList<String> newPathList = new ArrayList<String>();
 			for (String s : ep.pathList) {
 				String weight = this.pathCntMapAL.get(index).get(s).toString();
 				int w = Integer.parseInt(weight);
-				if ( w >= this.minUser && w <= this.maxUser ){
+				if (w >= this.minUser && w <= this.maxUser) {
 					newPathList.add(s);
 				}
 			}
 			ep.pathList = newPathList;
-			index ++;
+			index++;
 		}
 	}
+
 	@Override
 	public void onReadLog(String[] log) throws Exception {
 		// TODO Auto-generated method stub
@@ -270,7 +263,7 @@ public class PathFinder extends Analyse {
 	private void onReadHis(PVHistory his, int minLength, int maxLength) {
 		int[] states = new int[this.endPoints.size()];
 		String[] targetPathes = new String[this.endPoints.size()];
-		HashMap<String,Integer> rmDuplicatesMap = new HashMap<String,Integer>();
+		HashMap<String, Integer> rmDuplicatesMap = new HashMap<String, Integer>();
 		// 遍历每个Session
 		for (String path : his.getPathString()) {
 			String[] visits = path.split(Separator.pathSeparator);
@@ -287,52 +280,64 @@ public class PathFinder extends Analyse {
 					EndPoint ep = this.endPoints.get(index);
 					switch (states[index]) {
 					case 0:
-						if ( this.compareVisit(visit, ep.fromPage) ) {//visit.equals(ep.fromPage) || visits[i].equals(ep.fromPage)
+						if (this.compareVisit(visit, ep.fromPage)) {// visit.equals(ep.fromPage)
+																	// ||
+																	// visits[i].equals(ep.fromPage)
 							states[index] = 1;
-							//if ( Preprocessor.getPageName(visit2) )
+							// if ( Preprocessor.getPageName(visit2) )
 							targetPathes[index] = ep.fromPage;
 						}
 						break;
 					case 1:
-						if ( this.compareVisit(visit, ep.fromPage)) {//visit.equals(ep.fromPage) || visits[i].equals(ep.fromPage) 
+						if (this.compareVisit(visit, ep.fromPage)) {// visit.equals(ep.fromPage)
+																	// ||
+																	// visits[i].equals(ep.fromPage)
 							states[index] = 1;
 							targetPathes[index] = ep.fromPage;
-						} else if ( !this.compareVisit(visit, ep.toPage)) {//!visit.equals(ep.toPage) && !visits[i].equals(ep.toPage)
+						} else if (!this.compareVisit(visit, ep.toPage)) {// !visit.equals(ep.toPage)
+																			// &&
+																			// !visits[i].equals(ep.toPage)
 							states[index] = 1;
-							//用户输入的起始路径是英文，结果也用英文表示
-							if ( !Preprocessor.getPageName(ep.fromPage).equals(ep.fromPage) )
-								targetPathes[index] += Separator.PARAM_SEPARATOR3 + visits[i];
-							//用户输入的起始路径是中午，结果也用中文表示
+							// 用户输入的起始路径是英文，结果也用英文表示
+							if (!Preprocessor.getPageName(ep.fromPage).equals(
+									ep.fromPage))
+								targetPathes[index] += Separator.PARAM_SEPARATOR3
+										+ visits[i];
+							// 用户输入的起始路径是中午，结果也用中文表示
 							else
-								targetPathes[index] += Separator.PARAM_SEPARATOR3 + visit;
+								targetPathes[index] += Separator.PARAM_SEPARATOR3
+										+ visit;
 						} else {
 							states[index] = 0;
 							targetPathes[index] += Separator.PARAM_SEPARATOR3
 									+ ep.toPage;
-							if ( rmDuplicatesMap.get(targetPathes[index]) == null ){
+							if (rmDuplicatesMap.get(targetPathes[index]) == null) {
 								rmDuplicatesMap.put(targetPathes[index], 1);
-							
-								HashMap<String,Integer> pathCntMap = (HashMap<String,Integer>) this.pathCntMapAL
+
+								HashMap<String, Integer> pathCntMap = (HashMap<String, Integer>) this.pathCntMapAL
 										.get(index);
 								int length = targetPathes[index]
 										.split(Separator.PARAM_SEPARATOR3).length;
-	
+
 								if (length >= minLength && length <= maxLength) {
 									// System.out.println(path);
-									if ( pathCntMap.get(targetPathes[index]) == null ) {
+									if (pathCntMap.get(targetPathes[index]) == null) {
 										pathCntMap.put(targetPathes[index], 1);
 										ep.pathList.add(targetPathes[index]);
 									} else {
-										int cnt = Integer.parseInt(pathCntMap.get(
-												targetPathes[index]).toString());
+										int cnt = Integer.parseInt(pathCntMap
+												.get(targetPathes[index])
+												.toString());
 										cnt++;
-										pathCntMap.put(targetPathes[index], cnt);
+										pathCntMap
+												.put(targetPathes[index], cnt);
 									}
 								}
 							}
-//							else {
-//								System.out.println("id:"+his.getId()+" pvNum:"+his.getPvNum()+" "+targetPathes[index]);
-//							}
+							// else {
+							// System.out.println("id:"+his.getId()+"
+							// pvNum:"+his.getPvNum()+" "+targetPathes[index]);
+							// }
 						}
 						break;
 					}
@@ -348,14 +353,13 @@ public class PathFinder extends Analyse {
 		s.setSiteDataPath("E:/data");
 		try {
 			s.start("PathFinderClass" + Separator.cmdSeparator
-					+ AnalyseType.NegCate 
-					+ Separator.PARAM_SEPARATOR1 + 2
+					+ AnalyseType.NegCate + Separator.PARAM_SEPARATOR1 + 2
 					+ Separator.PARAM_SEPARATOR1 + 100
 					+ Separator.PARAM_SEPARATOR1 + 30
 					+ Separator.PARAM_SEPARATOR1 + 0
 					+ Separator.PARAM_SEPARATOR1 + "login*"
 					+ Separator.PARAM_SEPARATOR3 + "fee.jsp");
-			 //s.start("PathFinderClass	1@@@2@@@5@@@2@@@0@@@login*###费用提示页面");
+			// s.start("PathFinderClass 1@@@2@@@5@@@2@@@0@@@login*###费用提示页面");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -372,14 +376,14 @@ public class PathFinder extends Analyse {
 			ep.fromPage = s.split(Separator.PARAM_SEPARATOR3)[0];
 			ep.toPage = s.split(Separator.PARAM_SEPARATOR3)[1];
 			this.endPoints.add(ep);
-			HashMap<String,Integer> pathCnt = new HashMap<String,Integer>();
+			HashMap<String, Integer> pathCnt = new HashMap<String, Integer>();
 			this.pathCntMapAL.add(pathCnt);
 		}
 	}
 
 	public ArrayList<String> getEndPoints() {
 		ArrayList<String> epAL = new ArrayList<String>();
-		for ( EndPoint ep:this.endPoints ) {
+		for (EndPoint ep : this.endPoints) {
 			String s = ep.fromPage + "," + ep.toPage;
 			epAL.add(s);
 		}
@@ -401,13 +405,13 @@ public class PathFinder extends Analyse {
 	public int getMaxLength() {
 		return this.maxLength;
 	}
-	
-	private boolean compareVisit(String visit1,String visit2) {
-		if ( visit1.equals(visit2) )
+
+	private boolean compareVisit(String visit1, String visit2) {
+		if (visit1.equals(visit2))
 			return true;
-		if ( visit1.equals(Preprocessor.getPageName(visit2)))
+		if (visit1.equals(Preprocessor.getPageName(visit2)))
 			return true;
-		if ( visit2.equals(Preprocessor.getPageName(visit1)))
+		if (visit2.equals(Preprocessor.getPageName(visit1)))
 			return true;
 		return false;
 	}

@@ -14,14 +14,13 @@ import org.tseg.analyse.Tundish;
 
 public class Starter {
 
-	
 	private String inputPath = "";
 	private String outputPath = "";
 	private String siteDataPath = "";
-	private String logSplit="\\|";
+	private String logSplit = "\\|";
 	private HashMap<String, Analyse> analyseMap = new HashMap<String, Analyse>();
 	private AnalyseRunner runner = new AnalyseRunner();
-	
+	private String exceptionInfo = null;
 
 	public Analyse getInstanceByName(String name) {
 
@@ -37,8 +36,6 @@ public class Starter {
 
 		return obj;
 	}
-
-
 
 	public Starter() {
 		super();
@@ -58,31 +55,33 @@ public class Starter {
 
 	public void start(String cmd) throws Exception {
 
-		
-	
-		runner.setInputPath(this.inputPath);
-		runner.setOutputPath(this.outputPath);
-		runner.setSiteDataPath(this.siteDataPath);
-		runner.setLogSplit(this.logSplit);
-		
-		String[] cmdArray = cmd.split(Separator.cmdLineSeparator);
-		for (String cmdLine : cmdArray) {
-			String[] strArray = cmdLine.split(Separator.cmdSeparator);
-			String name = strArray[0];
-			String param = "";
-			for (int i = 1; i < strArray.length; i++) {
-				param += strArray[i] + Separator.cmdSeparator;
-			}
-			param = param.substring(0, param.length() - 1);
-			// Analyse analyse = this.analyseMap.get(name);
-			Analyse analyse = getInstanceByName(name);
-			if (analyse != null) {
-				analyse.readParam(param);
-				runner.addAnalyse(analyse);
-			}
+		try {
+			runner.setInputPath(this.inputPath);
+			runner.setOutputPath(this.outputPath);
+			runner.setSiteDataPath(this.siteDataPath);
+			runner.setLogSplit(this.logSplit);
 
+			String[] cmdArray = cmd.split(Separator.cmdLineSeparator);
+			for (String cmdLine : cmdArray) {
+				String[] strArray = cmdLine.split(Separator.cmdSeparator);
+				String name = strArray[0];
+				String param = "";
+				for (int i = 1; i < strArray.length; i++) {
+					param += strArray[i] + Separator.cmdSeparator;
+				}
+				param = param.substring(0, param.length() - 1);
+				// Analyse analyse = this.analyseMap.get(name);
+				Analyse analyse = getInstanceByName(name);
+				if (analyse != null) {
+					analyse.readParam(param);
+					runner.addAnalyse(analyse);
+				}
+
+			}
+			runner.run();
+		} catch (Exception e) {
+			this.exceptionInfo = e.toString();
 		}
-		runner.run();
 	}
 
 	/**
@@ -95,15 +94,17 @@ public class Starter {
 		s.setInputPath("E:/data/pvData/cuixr_pagevisit");
 		s.setOutputPath("E:/data/pvData/cui4");
 		s.setSiteDataPath("E:/data");
-		
+
 		try {
 			String cmd = "StatAnalyse\t" + AnalyseType.NegCate + "\n"
 					+ "StatAnalyse\t" + AnalyseType.PageToCate + "\n"
 					+ "StatAnalyse\t" + AnalyseType.Original + "\n";
-//					+ "GlobalAnalyse\t" + AnalyseType.Original +Separator.PARAM_SEPARATOR1+100+ "\n"
-//					+ "GlobalAnalyse\t" + AnalyseType.PageToCate + Separator.PARAM_SEPARATOR1+100+"\n"
-//					+ "GlobalAnalyse\t" + AnalyseType.NegCate+Separator.PARAM_SEPARATOR1+100;
-
+			// + "GlobalAnalyse\t" + AnalyseType.Original
+			// +Separator.PARAM_SEPARATOR1+100+ "\n"
+			// + "GlobalAnalyse\t" + AnalyseType.PageToCate +
+			// Separator.PARAM_SEPARATOR1+100+"\n"
+			// + "GlobalAnalyse\t" +
+			// AnalyseType.NegCate+Separator.PARAM_SEPARATOR1+100;
 
 			String cmd2 = "PathFinderClass	1@@@1@@@0@@@30@@@0@@@直接进入###手机阅读贴身书童&&&手机阅读贴身书童###手机阅读阅读页&&&直接进入###手机阅读阅读页&&&直接进入###bmsuc.jsp";
 			s.start(cmd2);
@@ -138,7 +139,7 @@ public class Starter {
 	public String getSiteDataPath() {
 		return siteDataPath;
 	}
- 
+
 	public void setSiteDataPath(String siteDataPath) {
 		this.siteDataPath = siteDataPath;
 	}
@@ -151,12 +152,20 @@ public class Starter {
 		this.logSplit = logSplit;
 	}
 
-
 	public int getLineAmout() {
 		return runner.getLineAmount();
 	}
-	public int getCurLineNum(){
+
+	public int getCurLineNum() {
 		return runner.getCurLineNum();
+	}
+
+	public String getExceptionInfo() {
+		return exceptionInfo;
+	}
+
+	public void setExceptionInfo(String exceptionInfo) {
+		this.exceptionInfo = exceptionInfo;
 	}
 
 }

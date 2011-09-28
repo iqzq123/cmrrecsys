@@ -37,108 +37,113 @@ public class FPAnalyser {
 	private String inputPath;
 	private String outputPath;
 	private String siteDataPath;
-	private String logSplit="\\|";
+	private String logSplit = "\\|";
 	private PVHistory curPVHis = null;
 	private FPAlgorithm fpAlgo = new FPAlgorithm();
 	private int maxFPLenght = 10;
 	private int curFPLenght = 1;
 	private Byte analyseType = AnalyseType.NegCate;
-	private boolean isClosed=false;
-	private HashMap<String,Integer> pageMap=new HashMap<String,Integer>();
-	private int pathCnt=0;
-	private int curLineNum=0;
-	private int lineAmount=0;
-	
+	private boolean isClosed = false;
+	private HashMap<String, Integer> pageMap = new HashMap<String, Integer>();
+	private int pathCnt = 0;
+	private int curLineNum = 0;
+	private int lineAmount = 0;
+	private String exceptionInfo = null;
+
 	/**
 	 * @param param
-	 * 读取参数
+	 *            读取参数
 	 */
-	public void readParam(String param){
-		
-		String []paramArray=param.split(Separator.PARAM_SEPARATOR1);
-		this.siteDataPath=paramArray[0];
-		this.inputPath=paramArray[1];
-		this.outputPath=paramArray[2];
-		this.analyseType=Byte.parseByte(paramArray[3]);
+	public void readParam(String param) {
+
+		String[] paramArray = param.split(Separator.PARAM_SEPARATOR1);
+		this.siteDataPath = paramArray[0];
+		this.inputPath = paramArray[1];
+		this.outputPath = paramArray[2];
+		this.analyseType = Byte.parseByte(paramArray[3]);
 		this.setClosed(Boolean.parseBoolean(paramArray[4]));
-		this.maxFPLenght=Integer.parseInt(paramArray[5]);
+		this.maxFPLenght = Integer.parseInt(paramArray[5]);
 		this.fpAlgo.setMinRatio(Double.parseDouble(paramArray[6]));
 		this.fpAlgo.setDecayRatio(Double.parseDouble(paramArray[7]));
 	}
 
 	public void run() throws Exception {
-		
-		Ulits.newFolder(this.outputPath);
-		Preprocessor.readMapFile(this.siteDataPath);
-		
-		while (this.curFPLenght < this.maxFPLenght) {
 
-			fpAlgo.setCurCandiPathMap(new HashMap<String, Integer>());
-			fpAlgo.setPathNum(0);
-			fpAlgo.setCurFPLenght(this.curFPLenght);
-			this.curPVHis = null;
-			this.curLineNum=0;		
-			File inputFile = new File(this.inputPath);
-			this.lineAmount=Ulits.getFileLineNum(inputFile.getName());		
-			if (inputFile.isDirectory()) {			
-				File []fileArray=inputFile.listFiles();
-				for(File file:fileArray){
-					runForSingleFile(file.getPath());
+		try {
+
+			Ulits.newFolder(this.outputPath);
+			Preprocessor.readMapFile(this.siteDataPath);
+
+			while (this.curFPLenght < this.maxFPLenght) {
+
+				fpAlgo.setCurCandiPathMap(new HashMap<String, Integer>());
+				fpAlgo.setPathNum(0);
+				fpAlgo.setCurFPLenght(this.curFPLenght);
+				this.curPVHis = null;
+				this.curLineNum = 0;
+				File inputFile = new File(this.inputPath);
+				this.lineAmount = Ulits.getFileLineNum(inputFile.getName());
+				if (inputFile.isDirectory()) {
+					File[] fileArray = inputFile.listFiles();
+					for (File file : fileArray) {
+						runForSingleFile(file.getPath());
+					}
+				} else {
+					runForSingleFile(this.inputPath);
 				}
-			} else {
-				runForSingleFile(this.inputPath);
-			}		
-			System.out.println(this.curLineNum);		
-			this.onReadEnd();
-			System.out.println("curFPLenght:" + this.curFPLenght + "	pathNum:"
-					+ this.fpAlgo.getPathNum() + "\n");
-			System.out.println("fpNum:"
-					+ this.fpAlgo.getFpMapList().get(this.curFPLenght).size());
+				System.out.println(this.curLineNum);
+				this.onReadEnd();
+				System.out.println("curFPLenght:" + this.curFPLenght
+						+ "	pathNum:" + this.fpAlgo.getPathNum() + "\n");
+				System.out.println("fpNum:"
+						+ this.fpAlgo.getFpMapList().get(this.curFPLenght)
+								.size());
 
-			this.curFPLenght++;
-			if (this.fpAlgo.getCurCandiPathMap().size() == 0) {
-				break;
+				this.curFPLenght++;
+				if (this.fpAlgo.getCurCandiPathMap().size() == 0) {
+					break;
+				}
 			}
-		}
 
-		
-		this.fpAlgo.getFpMapList().remove(0);
-		if(this.isClosed==true){
-			System.out.println("start close\n");
-			closeFP(this.fpAlgo.getFpMapList());
+			this.fpAlgo.getFpMapList().remove(0);
+			if (this.isClosed == true) {
+				System.out.println("start close\n");
+				closeFP(this.fpAlgo.getFpMapList());
+			}
+			saveResult();
+			saveResultXML();
+			this.curLineNum = -1;
+			System.out.println("FPAnalyser end!!!!!!!!!!!!!!!!!!!!!!");
+			System.out.println("pathCnt......................" + this.pathCnt);
+		} catch (Exception e) {
+			this.exceptionInfo = e.toString();
 		}
-		saveResult();
-		saveResultXML();
-		this.curLineNum=-1;
-		System.out.println("FPAnalyser end!!!!!!!!!!!!!!!!!!!!!!");
-		System.out.println("pathCnt......................"+this.pathCnt);
 	}
 
 	private void runForSingleFile(String file) throws Exception {
-		
+
 		FileReader fr = new FileReader(file);
 		BufferedReader reader = new BufferedReader(fr);
 		String str;
-		//reader.readLine();
+		// reader.readLine();
 		while ((str = reader.readLine()) != null) {
-			
+
 			String[] strArray = str.split(this.logSplit);
 			if (strArray.length < 22) {
 				continue;
 			}
 			String[] log = Preprocessor.run(strArray, analyseType);
-		
+
 			// Preprocessor.tranPageToCate(log);
 			this.onReadLog(log);
 			if (curLineNum % 100000 == 0) {
-				System.out.println("read line:"+curLineNum+"\n");
-				System.out.println(this.curFPLenght+"\n");			
+				System.out.println("read line:" + curLineNum + "\n");
+				System.out.println(this.curFPLenght + "\n");
 			}
 			curLineNum++;
-			
-			
+
 		}
-		
+
 	}
 
 	/**
@@ -148,40 +153,26 @@ public class FPAnalyser {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		
 		/**
-		 * param 参数的顺序如下：
-		 * 站点相关数据的路径
-		 * 输入路径
-		 * 输出路径
-		 * 分析类型
-		 * 是否就闭集
-		 * 最长频繁路径程度
-		 * 最小支持度
-		 * 支持度衰减比例
+		 * param 参数的顺序如下： 站点相关数据的路径 输入路径 输出路径 分析类型 是否就闭集 最长频繁路径程度 最小支持度 支持度衰减比例
 		 */
 		FPAnalyser fp = new FPAnalyser();
 		fp.setLogSplit("\\|");
-		String param="E:/data"+Separator.PARAM_SEPARATOR1+
-		"E:/data/test_a/pvdata2.txt"+Separator.PARAM_SEPARATOR1+
-		"E:/data/test14"+Separator.PARAM_SEPARATOR1+
-		AnalyseType.NegCate+Separator.PARAM_SEPARATOR1+
-		true+Separator.PARAM_SEPARATOR1+
-		10+Separator.PARAM_SEPARATOR1+
-		0.001+Separator.PARAM_SEPARATOR1+
-		0.9+Separator.PARAM_SEPARATOR1;
+		String param = "E:/data" + Separator.PARAM_SEPARATOR1
+				+ "E:/data/test_a/pvdata2.txt" + Separator.PARAM_SEPARATOR1
+				+ "E:/data/test14" + Separator.PARAM_SEPARATOR1
+				+ AnalyseType.NegCate + Separator.PARAM_SEPARATOR1 + true
+				+ Separator.PARAM_SEPARATOR1 + 10 + Separator.PARAM_SEPARATOR1
+				+ 0.001 + Separator.PARAM_SEPARATOR1 + 0.9
+				+ Separator.PARAM_SEPARATOR1;
 		fp.readParam(param);
-		
 
-	
 		try {
 			fp.run();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-	
 
 	}
 
@@ -222,25 +213,24 @@ public class FPAnalyser {
 								subPath += pageArray[j]
 										+ Separator.pathSeparator;
 							}
-						
+
 						}
-						subPath = subPath
-						.substring(0, subPath.length() - 1);
+						subPath = subPath.substring(0, subPath.length() - 1);
 						if (preFpMap.containsKey(subPath)) {
 							preFpMap.remove(subPath);
 						}
 
 					}
 				}
-				
+
 			}
-			preFpMap=fpMap;
-			
+			preFpMap = fpMap;
+
 		}
 	}
 
-	public void saveResultXML() {
-		
+	public void saveResultXML() throws Exception {
+
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = null;
 		try {
@@ -252,7 +242,7 @@ public class FPAnalyser {
 		Element root = doc.createElement("FrequentPath");
 		doc.appendChild(root);
 
-		for (HashMap<String, Integer> map : this.fpAlgo.getFpMapList()) {		
+		for (HashMap<String, Integer> map : this.fpAlgo.getFpMapList()) {
 			Iterator iter = map.entrySet().iterator();
 			List<String> fpList = new ArrayList<String>();
 			while (iter.hasNext()) {
@@ -268,49 +258,47 @@ public class FPAnalyser {
 						System.out.println(s);
 						pageCnt = -1;
 					}
-					lift = lift * (value * 1.0 / pageCnt);				
+					lift = lift * (value * 1.0 / pageCnt);
 				}
 				fpList.add(key + "\t" + value.toString() + "\t" + lift);
 			}
 			sortFpListByLift(fpList);
-		
+
 			for (String s : fpList) {
 				Element pathElement = doc.createElement("Path");
-				String[] strArray=s.split("\t");
-				String path=strArray[0];
-				String[] pageArray=path.split(Separator.pathSeparator);
+				String[] strArray = s.split("\t");
+				String path = strArray[0];
+				String[] pageArray = path.split(Separator.pathSeparator);
 				pathElement.setAttribute("pathNum", strArray[1]);
 				pathElement.setAttribute("lift", strArray[2]);
-				for(String page:pageArray){
+				for (String page : pageArray) {
 					Element pageElement = doc.createElement("Page");
-					pageElement.setAttribute("pageName", Preprocessor.getPageName(page));
+					pageElement.setAttribute("pageName", Preprocessor
+							.getPageName(page));
 					pathElement.appendChild(pageElement);
 				}
 				root.appendChild(pathElement);
 			}
-			
+
 		}
 
-		try {
-			// 用xmlserializer把document的内容进行串化
-			FileOutputStream os = null;
-			OutputFormat outformat = new OutputFormat(doc);
-			os = new FileOutputStream(this.outputPath+"/频繁路径"+this.analyseType+".xml");
-			XMLSerializer xmlSerilizer = new XMLSerializer(os, outformat);
-			xmlSerilizer.serialize(doc);
-
-		} catch (IOException ioexp) {
-			ioexp.printStackTrace();
-		}
+		// 用xmlserializer把document的内容进行串化
+		FileOutputStream os = null;
+		OutputFormat outformat = new OutputFormat(doc);
+		os = new FileOutputStream(this.outputPath + "/频繁路径" + this.analyseType
+				+ ".xml");
+		XMLSerializer xmlSerilizer = new XMLSerializer(os, outformat);
+		xmlSerilizer.serialize(doc);
 
 	}
 
 	public void saveResult() {
 
 		try {
-			FileWriter fw = new FileWriter(this.outputPath+"/频繁路径"+this.analyseType+".txt");
+			FileWriter fw = new FileWriter(this.outputPath + "/频繁路径"
+					+ this.analyseType + ".txt");
 			BufferedWriter writer = new BufferedWriter(fw);
-			int len = 0;			
+			int len = 0;
 			for (HashMap<String, Integer> map : this.fpAlgo.getFpMapList()) {
 				Iterator iter = map.entrySet().iterator();
 				// System.out.println("路径长度....................................."+len);
@@ -328,7 +316,7 @@ public class FPAnalyser {
 					String path = "";
 					double lift = 1.0;
 					for (String s : pageArray) {
-					
+
 						Integer pageCnt = this.pageMap.get(s);
 						if (pageCnt == null) {
 							System.out.println("pageCnt ==null\n");
@@ -391,34 +379,32 @@ public class FPAnalyser {
 	}
 
 	public void onReadPath(String path) {
-		
+
 		List<String> pList = new ArrayList<String>();
 		String[] nodeArray = path.split(",");
 		if (nodeArray.length > 20) {
 			// System.out.println("大于 20");
 			return;
 		}
-		Set<String> set=new HashSet<String>();
-		if(this.curFPLenght==1){
+		Set<String> set = new HashSet<String>();
+		if (this.curFPLenght == 1) {
 			this.pathCnt++;
-			for(String page:nodeArray){
-				
-				if(!set.contains(page)){
-					Integer cnt=this.pageMap.get(page);
-					if(cnt!=null){
+			for (String page : nodeArray) {
+
+				if (!set.contains(page)) {
+					Integer cnt = this.pageMap.get(page);
+					if (cnt != null) {
 						cnt++;
 						this.pageMap.put(page, cnt);
-					}else{
+					} else {
 						this.pageMap.put(page, 1);
 					}
 					set.add(page);
-				}		
-			
+				}
+
 			}
 		}
-	
-		
-	
+
 		fpAlgo.getCandiPath(nodeArray, 0, null, this.curFPLenght, pList);
 		fpAlgo.countPath(pList);
 		fpAlgo.increasePathNum();
@@ -498,14 +484,20 @@ public class FPAnalyser {
 		this.logSplit = logSplit;
 	}
 
-	
-
 	public int getLineAmount() {
 		return lineAmount;
 	}
 
 	public int getCurLineNum() {
 		return curLineNum;
+	}
+
+	public String getExceptionInfo() {
+		return exceptionInfo;
+	}
+
+	public void setExceptionInfo(String exceptionInfo) {
+		this.exceptionInfo = exceptionInfo;
 	}
 
 }

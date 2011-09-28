@@ -32,9 +32,9 @@ public class MarkovModel {
 	private HashMap pageMap = new HashMap();
 	private int clickAmout = 0;
 
-	public void saveRelatedPage(String fileName,int minLinkNum) {
+	public void saveRelatedPage(String fileName,int minLinkNum)throws IOException {
 		
-		try {
+	
 			
 			FileWriter fw = new FileWriter(fileName);
 			BufferedWriter writer = new BufferedWriter(fw);
@@ -82,15 +82,12 @@ public class MarkovModel {
 			cpm.printKCliqueCommunity(writer);
 			writer.flush();
 			writer.close();
-		} catch (IOException ioexp) {
-			ioexp.printStackTrace();
-		}
-
+		
 	}
 	
-	public void saveRelatedPageXML(String fileName,int minLinkNum){
+	public void saveRelatedPageXML(String fileName,int minLinkNum)throws IOException{
 		
-		try {
+
 			
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = null;
@@ -150,9 +147,6 @@ public class MarkovModel {
 			xmlSerilizer.serialize(doc);
 			
 		
-		} catch (IOException ioexp) {
-			ioexp.printStackTrace();
-		}
 		
 	}
 
@@ -231,7 +225,7 @@ public class MarkovModel {
 	}
 
 	public void saveModelMXL(String fileName, int linkThreshold,
-			boolean isFilter) {
+			boolean isFilter)throws IOException {
 
 		
 		
@@ -249,7 +243,7 @@ public class MarkovModel {
 
 		String seperator = Separator.edgeSeparator;
 		HashSet pageSet = new HashSet();
-		try {
+	
 			FileWriter fw = new FileWriter(fileName);
 			BufferedWriter writer = new BufferedWriter(fw);
 
@@ -306,9 +300,7 @@ public class MarkovModel {
 			XMLSerializer xmlSerilizer = new XMLSerializer(os, outformat);
 			xmlSerilizer.serialize(doc);
 
-		} catch (IOException ioexp) {
-			ioexp.printStackTrace();
-		}
+		
 	}
 
 	public MarkovModel() {
