@@ -36,7 +36,7 @@ public class BookTundish {
 	private String tundishPath = "";
 	private String bookString = "";
 	private BookModel bookModel = new BookModel();
-	private String exceptionString = "";
+	private String exceptionString = null;
 	
 	public void run(){
 		bookModel.setBookInfoPath(bookInfoPath);
