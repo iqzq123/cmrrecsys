@@ -11,6 +11,8 @@
 			private var fpaTaskArray:ArrayCollection = new ArrayCollection();
 			[Bindable]
 			private var bookTundishTaskArray:ArrayCollection = new ArrayCollection();
+			
+			private var taskSep:String = "@";
 
  
 			
@@ -22,13 +24,15 @@
 			
 			private function analyseTask(taskInfo:String):void {
 				
-				var taskArray:Array = taskInfo.split(";");
+				var taskArray:Array = taskInfo.split(taskSep);
 				for(var i:int = 0;i<taskArray.length-1;i++){
 					var task:String = taskArray[i];
+					var exception:String = "";
 					var taskInfoArray:Array = task.split(",");
 					var taskID:String = taskInfoArray[0];
 					var currentLine:int = new int(taskInfoArray[3]);
 					var totalLine:int = new int(taskInfoArray[4]);
+					
 					var progress:String = "";
 					if(currentLine==-1){
 							progress = "执行完毕！";
@@ -37,7 +41,7 @@
 						if(totalLine > 0){
 							var ratio:Number = (Number)(currentLine*1.0)/totalLine*100;
 							ratio = new Number(ratio.toFixed(2));
-							progress = "正在执行中...第"+currentLine+"行，共"+totalLine+"行。\n"+ratio+"%";
+							progress = "正在执行中..."+"第"+currentLine+"行，共"+totalLine+"行。"+ratio+"%";
 						}
 						else{
 							progress = "正在执行中...第"+currentLine+"行，总行数未知."
@@ -48,7 +52,14 @@
 					o.id = taskInfoArray[0];
 					o.inputPath = taskInfoArray[1];
 					o.outputPath = taskInfoArray[2];
-					o.progress = progress;
+					if(taskInfoArray.length == 6){
+						exception = taskInfoArray[5];
+						o.progress = exception;
+					}
+					else{
+						o.progress = progress;
+					}
+					
 					for(var index:int = 0 ; index<analyseTaskArray.length;index++){
 						var element:Object = analyseTaskArray.getItemAt(index);
 						if(taskID==element.id){
@@ -63,9 +74,10 @@
 			}
 			
 			private function fpaTask(taskInfo:String):void {
-				var taskArray:Array = taskInfo.split(";");
+				var taskArray:Array = taskInfo.split(taskSep);
 				for(var i:int = 0;i<taskArray.length-1;i++){
 					var task:String = taskArray[i];
+					var exception:String = "";
 					var taskInfoArray:Array = task.split(",");
 					var taskID:String = taskInfoArray[0];
 					var currentLine:int = new int(taskInfoArray[3]);
@@ -79,7 +91,7 @@
 						if(totalLine>0){
 							var ratio:Number = (Number)(currentLine*1.0)/totalLine*100;
 							ratio = new Number(ratio.toFixed(2));
-							progress = "正在执行中...第"+count+"次读文件，第"+currentLine+"行，共"+totalLine+"行。\n"+ratio+"%";
+							progress = "正在执行中...第"+count+"次读文件，第"+currentLine+"行，共"+totalLine+"行。"+ratio+"%";
 						}
 						else{
 							progress = "正在执行中...第"+count+"次读文件，第"+currentLine+"行，总行数未知.";
@@ -90,7 +102,13 @@
 					o.id = taskInfoArray[0];
 					o.inputPath = taskInfoArray[1];
 					o.outputPath = taskInfoArray[2];
-					o.progress = progress;
+					if(taskInfoArray.length == 7){
+						exception = taskInfoArray[6];
+						o.progress = exception;
+					}
+					else{
+						o.progress = progress;
+					}
 					for(var index:int = 0 ; index<fpaTaskArray.length;index++){
 						var element:Object = fpaTaskArray.getItemAt(index);
 						if(taskID==element.id){
@@ -105,10 +123,11 @@
 			}
 			
 			private function bookTundishTask(taskInfo:String):void {
-				var taskArray:Array = taskInfo.split("@");
+				var taskArray:Array = taskInfo.split(taskSep);
 				trace(taskInfo);
 				for(var i:int = 0;i<taskArray.length-1;i++){
 					var task:String = taskArray[i];
+					var exception:String = "";
 					var taskInfoArray:Array = task.split(",");
 					var taskID:String = taskInfoArray[0];
 					var chapterLine:int = new int(taskInfoArray[4]);
@@ -128,7 +147,13 @@
 					o.inputPath = taskInfoArray[1];
 					o.outputPath = taskInfoArray[2];
 					o.bookID = taskInfoArray[3];
-					o.progress = progress;
+					if(taskInfoArray.length == 7){
+						exception = taskInfoArray[6];
+						o.progress = exception;
+					}
+					else{
+						o.progress = progress;
+					}
 					for(var index:int = 0 ; index<bookTundishTaskArray.length;index++){
 						var element:Object = bookTundishTaskArray.getItemAt(index);
 						if(taskID==element.id){

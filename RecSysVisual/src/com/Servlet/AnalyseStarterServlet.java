@@ -23,6 +23,7 @@ import com.XMLFileReader;
 public class AnalyseStarterServlet extends HttpServlet {
 
 	private Hashtable<String, Starter> analyseTable = new Hashtable<String, Starter>();
+	private String taskSep = "@";
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {		
@@ -96,9 +97,16 @@ public class AnalyseStarterServlet extends HttpServlet {
 						Starter starter = analyseTable.get(taskID);
 						String inputPath = starter.getInputPath();
 						String outputPath = starter.getOutputPath();
+						String exceptionString = starter.getExceptionInfo();
 						int currentLine = starter.getCurLineNum();
 						int totalLine = starter.getLineAmout();
-						taskInfo = taskInfo+taskID+","+inputPath+","+outputPath+","+currentLine+","+totalLine+";";
+						taskInfo = taskInfo+taskID+","+inputPath+","+outputPath+","+currentLine+","+totalLine;
+						if(exceptionString==null){
+							taskInfo = taskInfo+taskSep;
+						}
+						else {
+							taskInfo = taskInfo+","+exceptionString+taskSep;
+						}
 					}
 				}
 				response.setContentType("text/xml;charset=utf-8");

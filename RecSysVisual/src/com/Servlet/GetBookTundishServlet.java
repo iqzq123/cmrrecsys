@@ -23,6 +23,7 @@ import com.XMLFileReader;
 public class GetBookTundishServlet extends HttpServlet {
 	private String tundishSuffix = "/图书漏斗文件.xml";
 	private Hashtable<String, BookTundish> btTable = new Hashtable<String, BookTundish>();
+	private String taskSep = "@";
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -97,11 +98,12 @@ public class GetBookTundishServlet extends HttpServlet {
 				int chapterLine = bookTundish.getChapterLine();
 				int readingInfoLine = bookTundish.getReadingInfoLine();
 				String exceptionString = bookTundish.getException();
-				if(exceptionString.length()>1){
+				System.out.println("exceptionString: "+exceptionString);
+				if(!exceptionString.equals("nullnull")){
 					out.println("ERROR:\n"+exceptionString);
 					out.flush();
 					out.close();
-				}				
+				}
 				System.out.println("chapterLine is : "+chapterLine+"\nreadingInfoLine is:"+readingInfoLine);
 				out.println(chapterLine+","+readingInfoLine);
 				out.flush();
@@ -122,7 +124,14 @@ public class GetBookTundishServlet extends HttpServlet {
 						String bookString = bookTundish.getBookString();
 						int chapterLine = bookTundish.getChapterLine();
 						int readingInfoLine = bookTundish.getReadingInfoLine();
-						taskInfo = taskInfo+taskID+","+inputPath+","+outputPath+","+bookString+","+chapterLine+","+readingInfoLine+"@";
+						taskInfo = taskInfo+taskID+","+inputPath+","+outputPath+","+bookString+","+chapterLine+","+readingInfoLine;
+						String exceptionString = bookTundish.getException();
+						if(exceptionString.equals("nullnull")){
+							taskInfo = taskInfo + taskSep;
+						}
+						else {
+							taskInfo = taskInfo + "," + exceptionString + taskSep;
+						}
 					}
 				}
 				response.setContentType("text/xml;charset=utf-8");
