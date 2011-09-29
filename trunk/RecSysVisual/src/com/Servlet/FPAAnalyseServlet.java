@@ -24,6 +24,7 @@ public class FPAAnalyseServlet extends HttpServlet {
 	private Hashtable<String, FPAnalyser> fpTable =new Hashtable<String, FPAnalyser>();	
 	private Hashtable<String, Integer> preNumTable = new Hashtable<String, Integer>();
 	private Hashtable<String, Integer> countTable = new Hashtable<String, Integer>();
+	private String taskSep = "@";
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -122,7 +123,14 @@ public class FPAAnalyseServlet extends HttpServlet {
 						preNum = currentLine;
 						this.preNumTable.remove(taskID);
 						this.preNumTable.put(taskID, preNum);
-						taskInfo = taskInfo+taskID+","+inputPath+","+outputPath+","+currentLine+","+totalLine+","+count+";";
+						taskInfo = taskInfo+taskID+","+inputPath+","+outputPath+","+currentLine+","+totalLine+","+count ;
+						String exceptionString = fp.getExceptionInfo();
+						if(exceptionString == null){
+							taskInfo = taskInfo+taskSep;
+						}
+						else {
+							taskInfo = taskInfo+","+exceptionString+taskSep;
+						}
 					}
 				}
 				response.setContentType("text/xml;charset=utf-8");
