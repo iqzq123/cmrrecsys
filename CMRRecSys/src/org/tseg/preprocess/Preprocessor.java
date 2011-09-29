@@ -89,6 +89,12 @@ public class Preprocessor {
 	static public String[] run(String[] logArray,byte type){
 		
 		String []retArray=new String[logArray.length];
+		try{
+			 Long.parseLong(logArray[0]);
+		}catch(NumberFormatException e){
+			logArray[0]="-1";
+		}
+		
 		for(int i=0;i<logArray.length;i++){
 			if(logArray[i].equals("")){
 				logArray[i]="-1";
