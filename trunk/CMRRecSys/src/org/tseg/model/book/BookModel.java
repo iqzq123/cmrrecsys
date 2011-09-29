@@ -27,7 +27,7 @@ public class BookModel {
 	private String bookString = "";
 	private int chapterLine = 0;
 	private int readingInfoLine = 0;
-	private String exceptionString = "";
+	private String exceptionString = null;
 	
 
 	private HashMap<Integer,Book> bookMap = new HashMap<Integer, Book>();
