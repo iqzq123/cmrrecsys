@@ -161,6 +161,7 @@ public class GlobalAnalyse extends Analyse {
 		Element root = doc.createElement(property);
 		doc.appendChild(root);
 		for (Object pageID : pageIDArray) {
+			try{
 			Element page = doc.createElement("page");
 			String pageName = Preprocessor.getPageName((String) pageID);
 			page.setAttribute("pageName", pageName);
@@ -171,6 +172,11 @@ public class GlobalAnalyse extends Analyse {
 			page.setAttribute("duration", String.valueOf(p.getDuration()));
 			page.setAttribute("人均pv数", String.valueOf(p.getAverPerPv()));
 			root.appendChild(page);
+			}catch(Exception e){
+				System.out.println("saveSortedPage erro");
+				continue;
+			}
+	
 		}
 
 		Element pageNum = doc.createElement("pageNum");
