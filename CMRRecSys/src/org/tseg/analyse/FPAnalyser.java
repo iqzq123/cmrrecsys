@@ -127,6 +127,12 @@ public class FPAnalyser {
 		String str;
 		// reader.readLine();
 		while ((str = reader.readLine()) != null) {
+			
+			curLineNum++;
+			if(!Preprocessor.CheckUnicodeString(str)){
+				System.out.println(curLineNum+":contains invalid character");
+				continue;
+			}
 
 			String[] strArray = str.split(this.logSplit);
 			if (strArray.length < 22) {
@@ -140,7 +146,7 @@ public class FPAnalyser {
 				System.out.println("read line:" + curLineNum + "\n");
 				System.out.println(this.curFPLenght + "\n");
 			}
-			curLineNum++;
+			
 
 		}
 
