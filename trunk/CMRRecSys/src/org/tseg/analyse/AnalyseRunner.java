@@ -76,6 +76,11 @@ public class AnalyseRunner {
 
 		while ((str = reader.readLine()) != null) {
 
+			curLineNum++;
+			if(!Preprocessor.CheckUnicodeString(str)){
+				System.out.println(curLineNum+":contains invalid character");
+				continue;
+			}
 			String[] strArray = str.split(this.logSplit);
 			if (strArray.length < 22) {
 				continue;
@@ -85,7 +90,7 @@ public class AnalyseRunner {
 						.getType());
 				analyse.onReadLog(proArray);
 			}
-			curLineNum++;
+			
 			if (curLineNum % 100000 == 0) {
 				System.out.println("read line:"+curLineNum);
 				
@@ -151,7 +156,7 @@ public class AnalyseRunner {
 
 		try {
 
-			b.setInputPath("E:/data/pvData/pvdata2.txt");
+			b.setInputPath("E:/data/pvData/test.txt");
 			b.setOutputPath(b.getInputPath() + ".out");
 			b.setSiteDataPath("E:/data");
 			GlobalAnalyse mk = new GlobalAnalyse();

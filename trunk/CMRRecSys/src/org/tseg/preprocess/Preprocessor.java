@@ -15,20 +15,41 @@ public class Preprocessor {
 
 	static private HashMap pageMap = new HashMap();
 	static private HashMap categoryMap = new HashMap();
-	
-	
-	static public String getPageName(String key) {
-		
 
-		if(key.contains(Separator.CATE_SEPARATOR)){
-			String[] keyArray=key.split(Separator.CATE_SEPARATOR);
-			String s="";
-			for(int i=0;i<keyArray.length-1;i++){
-				s+=getCateName(keyArray[i])+Separator.CATE_SEPARATOR;
+	static public boolean CheckUnicodeString(String value)
+    {
+		
+		
+    
+		for (int i=0; i < value.length(); ++i) {
+        if (value.charAt(i) > 0xFFFD)
+        {
+          // throw new Exception("Invalid Unicode");// 或者直接替换掉0x0
+            
+            return false;
+        }
+        else if (value.charAt(i)< 0x20 && value.charAt(i) != '\t' & value.charAt(i) != '\n' &value.charAt(i)!= '\r')
+        {
+            // throw new Exception("Invalid Xml Characters");// 或者直接替换掉0x													/
+        
+        	return false;
+        }
+        
+       }
+		return true;
+    }
+
+	static public String getPageName(String key) {
+
+		if (key.contains(Separator.CATE_SEPARATOR)) {
+			String[] keyArray = key.split(Separator.CATE_SEPARATOR);
+			String s = "";
+			for (int i = 0; i < keyArray.length - 1; i++) {
+				s += getCateName(keyArray[i]) + Separator.CATE_SEPARATOR;
 			}
-			s+=getPageName(keyArray[keyArray.length-1]);
+			s += getPageName(keyArray[keyArray.length - 1]);
 			return s;
-		}else{
+		} else {
 			String s = (String) pageMap.get(key);
 			if (s == null) {
 				// /////////针对页面变成目录分析的情况
@@ -43,12 +64,12 @@ public class Preprocessor {
 				return s;
 			}
 		}
-	
+
 	}
 
 	static public String getCateName(String key) {
 
-		String s = (String) categoryMap.get(key); 
+		String s = (String) categoryMap.get(key);
 		if (s == null) {
 			return key;
 		} else {
@@ -85,23 +106,23 @@ public class Preprocessor {
 		strArray[21] = "$";
 
 	}
-	
-	static public String[] run(String[] logArray,byte type){
-		
-		String []retArray=new String[logArray.length];
-		try{
-			 Long.parseLong(logArray[0]);
-		}catch(NumberFormatException e){
-			logArray[0]="-1";
+
+	static public String[] run(String[] logArray, byte type) {
+
+		String[] retArray = new String[logArray.length];
+		try {
+			Long.parseLong(logArray[0]);
+		} catch (NumberFormatException e) {
+			logArray[0] = "-1";
 		}
-		
-		for(int i=0;i<logArray.length;i++){
-			if(logArray[i].equals("")){
-				logArray[i]="-1";
+
+		for (int i = 0; i < logArray.length; i++) {
+			if (logArray[i].equals("")) {
+				logArray[i] = "-1";
 			}
-			retArray[i]=logArray[i];
+			retArray[i] = logArray[i];
 		}
-		
+
 		if (type == AnalyseType.NegCate) {
 
 			retArray[6] = "$";
@@ -117,8 +138,8 @@ public class Preprocessor {
 			retArray[20] = "$";
 			retArray[21] = "$";
 		}
-		if(type==AnalyseType.PageToCate){
-			
+		if (type == AnalyseType.PageToCate) {
+
 			retArray[4] = retArray[6];
 			if (!retArray[12].contains("login")) {
 				retArray[12] = retArray[13];
@@ -139,19 +160,16 @@ public class Preprocessor {
 			retArray[19] = "$";
 			retArray[20] = "$";
 			retArray[21] = "$";
-			
+
 		}
 		return retArray;
 	}
-
-
 
 	static public void readMapFile(String fileName) throws IOException {
 
 		InputStreamReader read = new InputStreamReader(new FileInputStream(
 				new File(fileName + "/iread_pagename.txt")), "UTF-8");
 		BufferedReader reader = new BufferedReader(read);
-
 
 		String str;
 		reader.readLine();
@@ -185,8 +203,6 @@ public class Preprocessor {
 
 	}
 
-
-
 	static public HashMap getPageMap() {
 		return pageMap;
 	}
@@ -194,7 +210,5 @@ public class Preprocessor {
 	static public HashMap getCategoryMap() {
 		return categoryMap;
 	}
-
-	
 
 }
