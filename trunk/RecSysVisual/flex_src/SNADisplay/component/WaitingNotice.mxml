@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" width="214" height="100" fontSize="13">
+	<mx:TextArea text="由于数据文件太大，读取时间可能会很长，请耐心等待..." width="100%" height="100%"/>
+</mx:Panel>

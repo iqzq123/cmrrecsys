@@ -78,6 +78,6 @@
 	            />
 	        </mx:series>
 	    </mx:ColumnChart>
-	    <mx:Text  id="valueDisplayText" paddingLeft="70" paddingBottom="5" text="{valueText}"/>
+	    <mx:Text  id="valueDisplayText" paddingLeft="70" paddingBottom="5" text="{valueText}" width="890"/>
  	</mx:VBox>
 </mx:TitleWindow>
