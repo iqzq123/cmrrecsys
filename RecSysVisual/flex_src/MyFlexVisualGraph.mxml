@@ -737,22 +737,29 @@
 				fileWindow.addEventListener(Event.SELECT,getXMLDataFile);
 			}
 			
-			var selectedPath:String = "";
+			private var selectedPath:String = "";
+			private var waitingNotice:WaitingNotice; 
 			private function getXMLDataFile(e:Event):void {
 				var getXML : HTTPService = new HTTPService();
 				getXML.resultFormat = "e4x";
 				getXML.url = "getXMLServlet";
 				var params:URLVariables = new URLVariables();				
                 params.filePath = encodeURIComponent(fileWindow.getFilePath()); 
-                selectedPath =  encodeURIComponent(fileWindow.getFilePath());            
+                selectedPath =  encodeURIComponent(fileWindow.getFilePath());    
 				getXML.addEventListener(ResultEvent.RESULT,  recXMLDataFile);
 				getXML.addEventListener(FaultEvent.FAULT, fHandler);
 				getXML.send(params);
+				waitingNotice = new WaitingNotice();
+				PopUpManager.addPopUp(waitingNotice,this,true);
+				PopUpManager.centerPopUp(waitingNotice);
+				
 			}
 		
 			private function recXMLDataFile(evt:ResultEvent):void {
 				var xmlData:XML = XML(evt.message.body);
 				var rootLabel:String = "";
+				PopUpManager.removePopUp(waitingNotice);
+				waitingNotice = null;
 				rootLabel = xmlData.name();
 				//Alert.show("rootLabel:"+rootLabel);
 				if ( rootLabel == XMLFileTitleName.HISTOGRAM ){
@@ -773,7 +780,9 @@
 				}
 				else if ( rootLabel == XMLFileTitleName.DURATION 
 						  || rootLabel == XMLFileTitleName.USER_NUM 
-						  || rootLabel == XMLFileTitleName.CLICK_NUM ){
+						  || rootLabel == XMLFileTitleName.CLICK_NUM 
+						  || rootLabel == XMLFileTitleName.RELATED_PAGE
+						  || rootLabel == XMLFileTitleName.AVER_PER_PV){
 					showGraphDataHandler(xmlData);
 				}
 				else if ( rootLabel == XMLFileTitleName.BOOK_TUNDISH ){
