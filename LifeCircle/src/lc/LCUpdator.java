@@ -96,6 +96,7 @@ public class LCUpdator {
 			}
 			
 		}
+		lc.setChange(false);
 		return lc;
 		
 	}
@@ -177,6 +178,7 @@ public class LCUpdator {
 		FileWriter fw=new FileWriter(this.outputFile);
 		BufferedWriter writer=new BufferedWriter(fw);
 		String line2=null;
+		//
 		while((line2=reader2.readLine())!=null){
 			UserLC lc=new UserLC(line2);
 			UserDayInfo u=(UserDayInfo)this.UDITable.get(lc.getId());
