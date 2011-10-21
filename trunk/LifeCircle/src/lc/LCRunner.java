@@ -49,7 +49,7 @@ public class LCRunner {
 			System.out.println("success");
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("eror");
+			System.out.println("error");
 		}
 
 	}

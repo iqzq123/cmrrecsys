@@ -13,7 +13,7 @@ public class HesitateStatus implements Status {
 
 	public Status run(UserLC lc) {
 		// TODO Auto-generated method stub
-		if(lc.getPreStatus1()==StatusType.FAVOR&&lc.getPreFee()>0){
+		if((!lc.getStatusHis().contains(String.valueOf(StatusType.COMFIRM)))&&lc.getPreFee()>0){
 			lc.setStatus(StatusType.COMFIRM);
 			return Transfer.getStatusInstance(StatusType.COMFIRM);
 		}

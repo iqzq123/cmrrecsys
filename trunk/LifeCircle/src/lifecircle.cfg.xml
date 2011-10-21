@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<property name="lapsedInterval">15</property>
+	<property name="pvThreshold">10</property>
+	<property name="rootDirectory">D:\\杭州项目\\10月20日\\data\\</property>
+</configuration>

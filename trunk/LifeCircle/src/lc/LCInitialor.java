@@ -42,9 +42,9 @@ public class LCInitialor {
 		writer.close();
 	}
 	 public void replace()throws Exception{
-		 FileReader fr=new FileReader("E:/data/datas/update.txt");
+		 FileReader fr=new FileReader(GlobalValue.rootDirectory+"update.txt");
 			BufferedReader reader=new BufferedReader(fr);
-			FileWriter fw=new FileWriter("E:/data/datas/update1.txt");
+			FileWriter fw=new FileWriter(GlobalValue.rootDirectory+"update1.txt");
 			BufferedWriter writer=new BufferedWriter(fw);
 			//FileWriter
 			String line=null;
