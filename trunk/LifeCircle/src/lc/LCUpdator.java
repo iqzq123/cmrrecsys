@@ -2,12 +2,12 @@ package lc;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
-import java.util.TimeZone;
 
 import status.StatusType;
 import status.Transfer;
@@ -24,8 +24,6 @@ public class LCUpdator
 
 	public UserLC update(UserLC lc, UserDayInfo info)
 	{
-		if (updateDate == null)
-			updateDate = info.getVisitDate();
 		long interval = 0;
 		try
 		{
@@ -209,7 +207,10 @@ public class LCUpdator
 						.split(GlobalValue.DATASEP)[0]), u);
 			}
 		}
-
+		//None of the old users has visit record  in one day is too rare to happen.Thus we 
+		//neglect the probability of NullPoint Exception... 
+		updateDate = ((UserDayInfo)(UDITable.values().toArray()[0])).getVisitDate();
+		
 		FileReader fr2 = new FileReader(this.LCTableFile);
 		BufferedReader reader2 = new BufferedReader(fr2);
 		FileWriter fw = new FileWriter(this.outputFile);
@@ -236,6 +237,8 @@ public class LCUpdator
 		}
 		writer.flush();
 		writer.close();
+		fr.close();
+		fr2.close();
 
 		/*
 		 * FileOutputStream fOut = new FileOutputStream(this.LCTableFile);
@@ -255,7 +258,7 @@ public class LCUpdator
 		try
 		{
 			java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(
-					"yyyy-MM-dd hh:mm:ss", java.util.Locale.US);
+					"yyyyMMdd", java.util.Locale.US);
 			String[] s = line.split(GlobalValue.DATASEP);
 			long msisdn = Long.parseLong(s[0]);
 			Date record_day = sdf.parse(s[1]);
@@ -297,6 +300,7 @@ public class LCUpdator
 			
 		} catch (Exception e)
 		{
+			e.printStackTrace();
 			newUser.setId(-1);
 		}
 		newUserList.add(newUser);
@@ -308,13 +312,20 @@ public class LCUpdator
 		System.out.println("LCUpadator run！！！！！！！！！！！！！！！");
 
 		LCUpdator lc = new LCUpdator();
-		lc.test();
+//		lc.test();
 		try
 		{
-			lc.setLCTableFile("E:/data/datas/lc.txt");
-			lc.setInputFile("E:/data/datas/update2.txt");
-			lc.setOutputFile("E:/data/datas/lcout.txt");
+			int num = Integer.parseInt(args[0]);
+			String lcFile = GlobalValue.rootDirectory + "lc" + num + ".txt";
+			String inputFile = GlobalValue.rootDirectory + "update" + num + ".txt";
+			String outputFile = GlobalValue.rootDirectory + "lc" + num + ".tmp";
+			lc.setLCTableFile(lcFile);
+			lc.setInputFile(inputFile);
+			lc.setOutputFile(outputFile);
 			lc.run();
+			if(new File(lcFile).exists())
+				new File(lcFile).delete();
+			new File(outputFile).renameTo(new File(lcFile));
 		} catch (Exception e)
 		{
 			e.printStackTrace();
