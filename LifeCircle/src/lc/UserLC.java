@@ -96,6 +96,32 @@ public class UserLC {
 		isChange+s+statusHis;
 		return retStr;
 	}
+	
+	
+	public Date getPreFeeDate()
+	{
+		return preFeeDate;
+	}
+	public void setPreFeeDate(Date preFeeDate)
+	{
+		this.preFeeDate = preFeeDate;
+	}
+	public byte getPreStatus2()
+	{
+		return preStatus2;
+	}
+	public void setPreStatus2(byte preStatus2)
+	{
+		this.preStatus2 = preStatus2;
+	}
+	public byte getPreStatus3()
+	{
+		return preStatus3;
+	}
+	public void setPreStatus3(byte preStatus3)
+	{
+		this.preStatus3 = preStatus3;
+	}
 	public int getPre3AverPV(){
 		int averPV=this.getPrePvCnt();
 		int prePV1=this.getPrePvCnt()-this.getPvIncre1();

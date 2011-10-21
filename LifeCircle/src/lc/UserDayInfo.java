@@ -28,7 +28,7 @@ public class UserDayInfo {
 			this.freeChapterCnt=Integer.parseInt(s[6]);
 			this.downloadCnt=Integer.parseInt(s[7]);
 		}catch(Exception e){
-			System.out.println("UserDayInfo input Format eror");
+			System.out.println("UserDayInfo input Format error");
 		}
 		
 		
