@@ -16,23 +16,8 @@ public class LCRunner {
 
 	public void run() throws Exception {
 
-		for (int i = 0; i < 4; i++) {
-			List<String> list = new ArrayList<String>();
-			ProcessBuilder pb = null;
-			Process p = null;
-
-			String java = System.getProperty("java.home") + File.separator
-					+ "bin" + File.separator + "java";
-			String classpath = System.getProperty("java.class.path");
-			// list the files and directorys under C:\
-			list.add(java);
-			list.add("-classpath");
-			list.add(classpath);
-			list.add(LCUpdator.class.getName());
-			list.add("C:/"+i+".txt");
-			pb = new ProcessBuilder(list);
-			p = pb.start();
-			System.out.println(pb.command());
+		for (int i = 1; i <= 4; i++) {
+			LCUpdator.main(new String[]{"" + i});
 		}
 
 	}

@@ -2,5 +2,5 @@
 <configuration>
 	<property name="lapsedInterval">15</property>
 	<property name="pvThreshold">10</property>
-	<property name="rootDirectory">D:\\杭州项目\\10月20日\\data\\</property>
+	<property name="rootDirectory">D:\杭州项目\10月20日\test\</property>
 </configuration>
