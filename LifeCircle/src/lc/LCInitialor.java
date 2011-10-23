@@ -71,7 +71,6 @@ public class LCInitialor
 		try
 		{
 			// lcInit.replace();
-			System.out.println(Boolean.parseBoolean("F"));
 			for(int i = 1; i <= 4; i++)
 			{
 				lcInit.initial(
