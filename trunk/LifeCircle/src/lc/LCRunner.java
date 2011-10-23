@@ -10,51 +10,31 @@ import java.util.List;
 
 public class LCRunner {
 
-	private String LCTablePath = null;
-	private String inputPath = null;
-	private String split=",";
-
-	public void run() throws Exception {
-
-		for (int i = 1; i <= 4; i++) {
-			LCUpdator.main(new String[]{"" + i});
-		}
-
-	}
-
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		LCRunner r = new LCRunner();
-		try {
-			r.run();
-			System.out.println("success");
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("error");
+		if(null != args && args.length == 1 && "-i".equals(args[0]))
+		{
+			LCInitialor.main(null);
 		}
+		else if(null != args && args.length == 1 && "-u".equals(args[0]))
+		{
+			LCUpdator.main(null);
+		}
+		else
+		{
+			System.out.println(
+				"Usage: lc [-i] [-u]"+"\n"+
+				"Options："+"\n"+
+				"    "+"-i"+"\t"+"Initialize the Lifecircle System."+"\n"+
+				"    "+"-u"+"\t"+"Update the Lifecircle System."+"\n"
+			);
+		}
+		
 
-	}
-	public String getLCTablePath() {
-		return LCTablePath;
-	}
-	public void setLCTablePath(String tablePath) {
-		LCTablePath = tablePath;
-	}
-	public String getInputPath() {
-		return inputPath;
-	}
-	public void setInputPath(String inputPath) {
-		this.inputPath = inputPath;
-	}
-	public String getSplit() {
-		return split;
-	}
-	public void setSplit(String split) {
-		this.split = split;
 	}
 
 }

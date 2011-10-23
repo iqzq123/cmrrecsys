@@ -311,42 +311,26 @@ public class LCUpdator
 
 		System.out.println("LCUpadator run！！！！！！！！！！！！！！！");
 
-		LCUpdator lc = new LCUpdator();
-//		lc.test();
-		try
-		{
-			int num = Integer.parseInt(args[0]);
-			String lcFile = GlobalValue.rootDirectory + "lc" + num + ".txt";
-			String inputFile = GlobalValue.rootDirectory + "update" + num + ".txt";
-			String outputFile = GlobalValue.rootDirectory + "lc" + num + ".tmp";
-			lc.setLCTableFile(lcFile);
-			lc.setInputFile(inputFile);
-			lc.setOutputFile(outputFile);
-			lc.run();
-			if(new File(lcFile).exists())
-				new File(lcFile).delete();
-			new File(outputFile).renameTo(new File(lcFile));
-		} catch (Exception e)
-		{
-			e.printStackTrace();
+		for (int num = 1; num <= 4; num++) {
+			LCUpdator lc = new LCUpdator();
+//			lc.test();
+			try
+			{
+				String lcFile = GlobalValue.rootDirectory + "lc" + num + ".txt";
+				String inputFile = GlobalValue.rootDirectory + "update" + num + ".txt";
+				String outputFile = GlobalValue.rootDirectory + "lc" + num + ".tmp";
+				lc.setLCTableFile(lcFile);
+				lc.setInputFile(inputFile);
+				lc.setOutputFile(outputFile);
+				lc.run();
+				if(new File(lcFile).exists())
+					new File(lcFile).delete();
+				new File(outputFile).renameTo(new File(lcFile));
+			} catch (Exception e)
+			{
+				e.printStackTrace();
+			}
 		}
-
-		// // //////////2011-06-04 06:35:50 时间格式
-		// java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(
-		// "yyyy-MM-dd hh:mm:ss", java.util.Locale.US);
-		// //sdf.setTimeZone(TimeZone.getTimeZone("GMT-4"));
-		// try {
-		// java.util.Date d = sdf.parse("2011-06-04 6:35:50");
-		// java.util.Date d2 = sdf.parse("2011-06-05 6:35:50");
-		// //System.out.print((d2.getTime()-d.getTime())/(24*3600000));
-		// Date d1=new Date();
-		// System.out.print(d1.toLocaleString());
-		//		
-		// } catch (ParseException e) {
-		//			
-		//
-		// }
-
 	}
 
 	public String getLCTableFile()
