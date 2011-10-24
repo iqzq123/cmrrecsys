@@ -66,22 +66,19 @@ public class LCInitialor
 
 	public static void main(String[] args)
 	{
-		System.out.println("LCInitialor run！！！！！！！！！！！！！！！");
+		int num = Integer.parseInt(args[0]);
+		System.out.println("LCInitialor NO." + num + " starts!");
 		LCInitialor lcInit = new LCInitialor();
 		try
 		{
-			// lcInit.replace();
-			for(int i = 1; i <= 4; i++)
-			{
-				lcInit.initial(
-					GlobalValue.rootDirectory + "init"+ i + ".txt", 
-					GlobalValue.rootDirectory + "lc"+ i + ".txt");
-			}
-			System.out.println("LCInitialor sucess");
+			lcInit.initial(
+				GlobalValue.rootDirectory + "init"+ num + ".txt", 
+				GlobalValue.rootDirectory + "lc"+ num + ".txt");
 		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
+		System.out.println("LCInitialor NO." + num + " ends!");
 	}
 
 	public String getSplit()

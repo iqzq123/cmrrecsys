@@ -308,29 +308,26 @@ public class LCUpdator
 
 	public static void main(String[] args)
 	{
-
-		System.out.println("LCUpadator run！！！！！！！！！！！！！！！");
-
-		for (int num = 1; num <= 4; num++) {
-			LCUpdator lc = new LCUpdator();
-//			lc.test();
-			try
-			{
-				String lcFile = GlobalValue.rootDirectory + "lc" + num + ".txt";
-				String inputFile = GlobalValue.rootDirectory + "update" + num + ".txt";
-				String outputFile = GlobalValue.rootDirectory + "lc" + num + ".tmp";
-				lc.setLCTableFile(lcFile);
-				lc.setInputFile(inputFile);
-				lc.setOutputFile(outputFile);
-				lc.run();
-				if(new File(lcFile).exists())
-					new File(lcFile).delete();
-				new File(outputFile).renameTo(new File(lcFile));
-			} catch (Exception e)
-			{
-				e.printStackTrace();
-			}
+		int num = Integer.parseInt(args[0]);
+		System.out.println("LCUpadator NO." + num + " starts!");
+		LCUpdator lc = new LCUpdator();
+		try
+		{
+			String lcFile = GlobalValue.rootDirectory + "lc" + num + ".txt";
+			String inputFile = GlobalValue.rootDirectory + "update" + num + ".txt";
+			String outputFile = GlobalValue.rootDirectory + "lc" + num + ".tmp";
+			lc.setLCTableFile(lcFile);
+			lc.setInputFile(inputFile);
+			lc.setOutputFile(outputFile);
+			lc.run();
+			if(new File(lcFile).exists())
+				new File(lcFile).delete();
+			new File(outputFile).renameTo(new File(lcFile));
+		} catch (Exception e)
+		{
+			e.printStackTrace();
 		}
+		System.out.println("LCUpadator NO." + num + " ends!");
 	}
 
 	public String getLCTableFile()
