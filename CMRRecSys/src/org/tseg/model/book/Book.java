@@ -20,6 +20,7 @@ public class Book {
 	private int wordCnt;
 	private String format;
 	private HashMap<Integer, Chapter> chapterMap = new HashMap<Integer, Chapter>();
+	private HashMap<Integer, Chapter> chapterRankMap = new HashMap<Integer, Chapter>();
 
 	public Book(){
 		
@@ -48,6 +49,10 @@ public class Book {
 
 	public void addChapter(Chapter chapter) {
 		this.chapterMap.put(chapter.getId(), chapter);
+	}
+	
+	public void addChapterRank(Chapter chapter) {
+		this.chapterRankMap.put(chapter.getRank(), chapter);
 	}
 	
 	public boolean hasChapter(int chapterId) {
@@ -182,6 +187,10 @@ public class Book {
 
 	public void setChapterMap(HashMap<Integer, Chapter> chapterMap) {
 		this.chapterMap = chapterMap;
+	}
+	
+	public HashMap<Integer, Chapter> getChapterRank() {
+		return this.chapterRankMap;
 	}
 	
 }
