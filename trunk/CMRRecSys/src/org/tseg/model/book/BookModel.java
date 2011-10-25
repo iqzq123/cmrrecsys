@@ -146,6 +146,7 @@ public class BookModel {
 							try {
 								Book book = this.bookMap.get(chapter.getBookId());
 								book.addChapter(chapter);
+								book.addChapterRank(chapter);
 							} catch (Exception e) {
 								// TODO: handle exception
 							}
@@ -247,14 +248,14 @@ public class BookModel {
 					file.createNewFile();
 				}
 				BufferedWriter output = new BufferedWriter(new FileWriter(file));
-				Iterator<Integer> iterator = book.getChapterMap().keySet().iterator();
+				Iterator<Integer> iterator = book.getChapterRank().keySet().iterator();
 				ArrayList<Integer> keyArrayList = new ArrayList<Integer>();
 				while ( iterator.hasNext() ) {
 					keyArrayList.add(iterator.next());
 				}
 				Collections.sort(keyArrayList);
 				for ( int key : keyArrayList ) {
-					Chapter chapter = book.getChapterMap().get(key);
+					Chapter chapter = book.getChapterRank().get(key);
 					System.out.println(book.getId()+"---"+chapter.getId()+","+chapter.getUserNum()+","+chapter.getName()+","+book.getName());
 					str+=book.getName()+","+book.getSerialize()+","+chapter.getId()+","+chapter.getUserNum()+","+chapter.getName()+","+chapter.getFee()+"\n";
 					
