@@ -19,7 +19,7 @@ public class GlobalValue {
 		try
 		{
 			document = DocumentBuilderFactory.newInstance().newDocumentBuilder().
-				parse(GlobalValue.class.getResourceAsStream("/lifecircle.cfg.xml"));
+				parse(GlobalValue.class.getResourceAsStream("/lifecycle.cfg.xml"));
 		} catch (Exception e)
 		{
 			e.printStackTrace();
