@@ -16,7 +16,7 @@ public class CrazyStatus implements Status {
 			lc.setStatus(StatusType.HESITATE);
 			return Transfer.getStatusInstance(StatusType.HESITATE);
 		}
-		if(lc.getPaidChptIncre1()+lc.getPaidChptIncre2()+lc.getPaidChptIncre3()<0){
+		if(lc.getPaidChptIncre1()+lc.getPaidChptIncre2()+lc.getPaidChptIncre3()>0){
 			lc.setStatus(StatusType.STEADY);
 			return Transfer.getStatusInstance(StatusType.STEADY);
 		}

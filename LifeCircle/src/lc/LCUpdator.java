@@ -99,16 +99,14 @@ public class LCUpdator
 			lc.preStatus2 = lc.preStatus1;
 			lc.preStatus1 = lc.status;
 			lc.setStatus(curStatus);
-			if (lc.statusHis.length() < 200)
+			if (lc.statusHis.length() >= 200)
 			{
-				lc.statusHis = lc.status + GlobalValue.STATUSEP + lc.statusHis;
-			} else
-			{
-				lc.statusHis = lc.statusHis.substring(0, 197);
+				lc.statusHis = lc.statusHis.substring(0, 197);				
 			}
-
+			lc.statusHis = lc.status + GlobalValue.STATUSEP + lc.statusHis;
 		}
-		lc.setChange(false);
+		else
+			lc.setChange(false);
 		return lc;
 
 	}
