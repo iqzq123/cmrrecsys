@@ -99,14 +99,14 @@ public class LCUpdator
 			lc.preStatus2 = lc.preStatus1;
 			lc.preStatus1 = lc.status;
 			lc.setStatus(curStatus);
-			if (lc.statusHis.length() >= 200)
-			{
-				lc.statusHis = lc.statusHis.substring(0, 197);				
-			}
-			lc.statusHis = lc.status + GlobalValue.STATUSEP + lc.statusHis;
 		}
 		else
 			lc.setChange(false);
+		if (lc.statusHis.length() >= 200)
+		{
+			lc.statusHis = lc.statusHis.substring(0, 197);				
+		}
+		lc.statusHis = lc.status + GlobalValue.STATUSEP + lc.statusHis;
 		return lc;
 
 	}
@@ -120,6 +120,11 @@ public class LCUpdator
 		{
 			lc.setStatus(StatusType.LAPSED);
 		}
+		if (lc.statusHis.length() >= 200)
+		{
+			lc.statusHis = lc.statusHis.substring(0, 197);				
+		}
+		lc.statusHis = "" + GlobalValue.STATUSEP + lc.statusHis;
 	}
 
 	// test the whole life
