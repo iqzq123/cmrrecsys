@@ -1,11 +1,12 @@
 package status;
 
+import lc.GlobalValue;
 import lc.UserLC;
 
 public  class Transfer {
 	
 	static private Status []statusArray=null;
-	static private int pvThreshold=20;
+	static private int pvThreshold = GlobalValue.pvThreshold;
 	static public Status getStatusInstance(byte type){
 		return statusArray[type];
 	}

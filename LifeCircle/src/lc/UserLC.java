@@ -45,7 +45,7 @@ public class UserLC {
 		// TODO Auto-generated constructor stub
 		try{
 		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(
-				"yyyy-MM-dd hh:mm:ss", java.util.Locale.US);
+				"yyyyMMdd");
 		String []s=data.split(GlobalValue.DATASEP);
 		this.id=Long.parseLong(s[0]);
 		this.firstDate=sdf.parse(s[1]);
@@ -88,12 +88,14 @@ public class UserLC {
 	public String toString(){
 		String retStr=new String();
 		String s="|";
-		retStr=id+s+firstDate.toLocaleString()+s+preVisitDate.toLocaleString()+s+prePvCnt+s+prePaidChptCnt+s+preFreeChptCnt+s+
-		preFeeDate.toLocaleString()+s+preFee+s+preDLCnt+s+visitAmout+s+pvAmout+s+paidChptAmout+s+
+		java.text.SimpleDateFormat sdf4Ocl = new java.text.SimpleDateFormat(
+				"yyyyMMdd", java.util.Locale.US);
+		retStr=id+s+sdf4Ocl.format(firstDate)+s+sdf4Ocl.format(preVisitDate)+s+prePvCnt+s+prePaidChptCnt+s+preFreeChptCnt+s+
+		sdf4Ocl.format(preFeeDate)+s+preFee+s+preDLCnt+s+visitAmout+s+pvAmout+s+paidChptAmout+s+
 		freeChptAmout+s+feeAomut+s+maxInterval+s+interval1+s+interval2+s+interval3+s+pvIncre1+s+
 		pvIncre2+s+pvIncre3+s+paidChptIncre1+s+paidChptIncre2+s+paidChptIncre3+s+freeChptIncre1+s+
 		freeChptIncre2+s+freeChptIncre3+s+status+s+preStatus1+s+preStatus2+s+preStatus3+s+
-		isChange+s+statusHis;
+		(isChange ? "1" : "0")+s+statusHis;
 		return retStr;
 	}
 	
