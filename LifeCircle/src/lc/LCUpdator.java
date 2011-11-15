@@ -124,7 +124,7 @@ public class LCUpdator
 		{
 			lc.statusHis = lc.statusHis.substring(0, 197);				
 		}
-		lc.statusHis = "" + GlobalValue.STATUSEP + lc.statusHis;
+		lc.statusHis = "-1" + GlobalValue.STATUSEP + lc.statusHis;
 	}
 
 	// test the whole life
