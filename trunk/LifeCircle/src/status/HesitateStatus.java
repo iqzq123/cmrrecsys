@@ -21,7 +21,7 @@ public class HesitateStatus implements Status {
 			lc.setStatus(StatusType.STEADY);
 			return Transfer.getStatusInstance(StatusType.STEADY);
 		}
-		if(lc.getPre3AverPV()<GlobalValue.pvThreshold&&(lc.getInterval1()>lc.getInterval2()&&lc.getInterval2()>lc.getInterval3()) && lc.getFreeChptAmout() <= 0){
+		if(lc.getPre3AverPV()<GlobalValue.pvThreshold&&(lc.getInterval1()>lc.getInterval2()&&lc.getInterval2()>lc.getInterval3())){
 			lc.setStatus(StatusType.HATE);
 			return Transfer.getStatusInstance(StatusType.HATE);
 		}
