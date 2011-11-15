@@ -35,14 +35,8 @@ public  class Transfer {
 	static public byte getStatus(UserLC lc){
 		
 		Status curStatus=statusArray[lc.getStatus()];
-		Status nextStatus=null;
-		do{
-			curStatus=statusArray[lc.getStatus()];
-			nextStatus=curStatus.run(lc);
-			
-		}while(nextStatus.getStatus()!=curStatus.getStatus());
 		
-		return curStatus.getStatus();
+		return curStatus.run(lc).getStatus();
 	}
 	public static int getPvThreshold() {
 		return pvThreshold;
