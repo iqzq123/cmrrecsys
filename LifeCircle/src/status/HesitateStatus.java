@@ -28,10 +28,6 @@ public class HesitateStatus implements Status {
 				return Transfer.getStatusInstance(StatusType.STEADY);
 			}
 		}
-		if(lc.getPrePaidChptCnt()>0){
-			lc.setStatus(StatusType.STEADY);
-			return Transfer.getStatusInstance(StatusType.STEADY);
-		}
 		if(lc.getPre3AverPV()<GlobalValue.pvThreshold && lc.getPreFreeChptCnt() == 0 && lc.getPreDLCnt() == 0){
 			lc.setStatus(StatusType.HATE);
 			return Transfer.getStatusInstance(StatusType.HATE);
