@@ -222,10 +222,6 @@ public class LCUpdator
 		//
 		while ((line2 = reader2.readLine()) != null)
 		{
-			if(line2.startsWith("18200950055"))
-			{
-				System.out.println();
-			}
 			UserLC lc = new UserLC(line2);
 			UserDayInfo u = (UserDayInfo) this.UDITable.get(lc.getId());
 			if (u != null)
