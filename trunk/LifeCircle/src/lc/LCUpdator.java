@@ -106,7 +106,7 @@ public class LCUpdator
 		{
 			lc.statusHis = lc.statusHis.substring(0, 197);				
 		}
-		lc.statusHis = lc.status + GlobalValue.STATUSEP + lc.statusHis;
+		lc.statusHis = lc.statusHis + GlobalValue.STATUSEP + lc.status;
 		return lc;
 
 	}
@@ -124,7 +124,7 @@ public class LCUpdator
 		{
 			lc.statusHis = lc.statusHis.substring(0, 197);				
 		}
-		lc.statusHis = "-1" + GlobalValue.STATUSEP + lc.statusHis;
+		lc.statusHis = lc.statusHis + GlobalValue.STATUSEP +  "-1";
 	}
 
 	// test the whole life

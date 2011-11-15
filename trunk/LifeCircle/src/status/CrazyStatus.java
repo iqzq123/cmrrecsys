@@ -12,7 +12,7 @@ public class CrazyStatus implements Status {
 
 	public Status run(UserLC lc) {
 		// TODO Auto-generated method stub
-		if(lc.getPrePaidChptCnt()==0){
+		if(lc.getPrePaidChptCnt()==0 || lc.getPreFee()==0){
 			lc.setStatus(StatusType.HESITATE);
 			return Transfer.getStatusInstance(StatusType.HESITATE);
 		}

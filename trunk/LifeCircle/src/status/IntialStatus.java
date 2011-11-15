@@ -15,11 +15,11 @@ public class IntialStatus implements Status {
 	public Status run(UserLC lc) {
 		// TODO Auto-generated method stub
 		
-		if(lc.getFeeAomut()>0|lc.getPrePaidChptCnt()>0){
+		if(lc.getPreFee()>0|lc.getPrePaidChptCnt()>0){
 			lc.setStatus(StatusType.COMFIRM);
 			return Transfer.getStatusInstance(StatusType.COMFIRM);
 		}
-		if(lc.getPrePvCnt()>GlobalValue.pvThreshold|lc.getPreFreeChptCnt()+lc. getPrePaidChptCnt()>0|lc.getPreDLCnt()>0){
+		if(lc.getPrePvCnt()>GlobalValue.pvThreshold|lc.getPreFreeChptCnt()>0|lc.getPreDLCnt()>0){
 			lc.setStatus(StatusType.FAVOR);
 			return Transfer.getStatusInstance(StatusType.FAVOR);
 		}else{
