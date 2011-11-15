@@ -15,16 +15,15 @@ public class ComfirmStatus implements Status {
 	public Status run(UserLC lc) {
 		// TODO Auto-generated method stub
 		// only confirm once
-		if(lc.getPrePaidChptCnt()>0){
+		if(lc.getPrePaidChptCnt() > 0 || lc.getPreFee() > 0){
 			lc.setStatus(StatusType.STEADY);
 			return Transfer.getStatusInstance(StatusType.STEADY);
-		}else if(lc.getPre3AverPV() < GlobalValue.pvThreshold & lc.getInterval1()>lc.getInterval2() & lc.getInterval2() > lc.getInterval3())
+		}else if(lc.getPre3AverPV()<GlobalValue.pvThreshold && lc.getPreFreeChptCnt() == 0 && lc.getPreDLCnt() == 0)
 		{
 			lc.setStatus(StatusType.HATE);
 			return Transfer.getStatusInstance(StatusType.HATE);
 		}
 		else{
-		
 			lc.setStatus(StatusType.HESITATE);
 			return Transfer.getStatusInstance(StatusType.HESITATE);
 		}

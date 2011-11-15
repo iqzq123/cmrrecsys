@@ -12,7 +12,7 @@ public class LapsedStatus implements Status {
 
 	public Status run(UserLC lc) {
 		// TODO Auto-generated method stub
-		return Transfer.getStatusInstance(StatusType.HESITATE);
+		return Transfer.getStatusInstance(StatusType.INITIAl);
 	}
 
 }
