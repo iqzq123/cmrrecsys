@@ -31,7 +31,7 @@ public class LCInitialor
 			lc.pvAmout = Integer.parseInt(strArray[1]);
 			lc.visitAmout = Integer.parseInt(strArray[2]);
 			java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(
-					"yyyy-MM-dd hh:mm:ss", java.util.Locale.US);
+					"yyyyMMdd", java.util.Locale.US);
 			sdf.setTimeZone(TimeZone.getTimeZone("GMT-4"));
 			lc.firstDate = sdf.parse(strArray[3]);
 			lc.feeAomut = Integer.parseInt(strArray[4]);

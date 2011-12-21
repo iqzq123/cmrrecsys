@@ -4,12 +4,12 @@ import status.*;
 
 public class UserLC {
 	long id=0;
-	Date firstDate=new Date();
-	Date preVisitDate=new Date();
+	Date firstDate = GlobalValue.initDate;
+	Date preVisitDate = GlobalValue.initDate;
 	int prePvCnt=0;
 	int prePaidChptCnt=0;
 	int preFreeChptCnt=0;
-	Date preFeeDate=new Date();
+	Date preFeeDate = GlobalValue.initDate;
 	int preFee=0;
 	int preDLCnt=0;
 	int visitAmout=0;

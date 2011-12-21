@@ -102,11 +102,11 @@ public class LCUpdator
 		}
 		else
 			lc.setChange(false);
-		if (lc.statusHis.length() >= 200)
+		if ((lc.status + GlobalValue.STATUSEP).length()  + lc.statusHis.length() > 200)
 		{
-			lc.statusHis = lc.statusHis.substring(0, 197);				
+			lc.statusHis = lc.statusHis.substring(0, lc.statusHis.lastIndexOf(','));				
 		}
-		lc.statusHis = lc.statusHis + GlobalValue.STATUSEP + lc.status;
+		lc.statusHis = lc.status + GlobalValue.STATUSEP + lc.statusHis;
 		return lc;
 
 	}
@@ -116,80 +116,25 @@ public class LCUpdator
 		long interval = (this.updateDate.getTime() - lc.getPreVisitDate()
 				.getTime())
 				/ (24 * 3600000);
-		if (interval > GlobalValue.lapsedInterval)
-		{
-			lc.setStatus(StatusType.LAPSED);
-		}
 		if (lc.statusHis.length() >= 200)
 		{
 			lc.statusHis = lc.statusHis.substring(0, 197);				
 		}
-		lc.statusHis = lc.statusHis + GlobalValue.STATUSEP +  "-1";
+		if (interval >= GlobalValue.lapsedInterval)
+		{
+			lc.setStatus(StatusType.LAPSED);
+			lc.statusHis = StatusType.LAPSED + GlobalValue.STATUSEP + lc.statusHis;
+		}
+		else
+		{
+			int threhold = GlobalValue.warnThreshold[lc.getStatus()];
+			if(interval >= threhold)
+				lc.statusHis = GlobalValue.WARN + lc.getStatus() + GlobalValue.STATUSEP + lc.getStatusHis();
+			else
+				lc.statusHis = GlobalValue.ABSENCE + lc.getStatus() + GlobalValue.STATUSEP + lc.getStatusHis();
+		}
 	}
 
-	// test the whole life
-	public void test()
-	{
-
-		Transfer.initial();
-		String lcStr = "15988723544|2011-10-9 10:20:32|2011-10-17 14:50:14|0|0|0|2011-10-17 14:50:14|0|0|1|4|2|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|false|0";
-		UserLC lc = new UserLC(lcStr);
-
-		UserDayInfo info = new UserDayInfo("15988723544|20111019|F|20|0|0|5|0");
-		update(lc, info);
-		System.out.println(lc.getStatusHis());
-
-		UserDayInfo info1 = new UserDayInfo(
-				"15988723544|20111023|F|100|10|5|0|0");
-		update(lc, info1);
-		System.out.println(lc.getStatusHis());
-
-		UserDayInfo info2 = new UserDayInfo("15988723544|20111026|F|20|0|0|0|0");
-		update(lc, info2);
-		System.out.println(lc.getStatusHis());
-
-		UserDayInfo info3 = new UserDayInfo(
-				"15988723544|20111026|F|20|10|3|0|0");
-		update(lc, info3);
-		System.out.println(lc.getStatusHis());
-
-		UserDayInfo info4 = new UserDayInfo(
-				"15988723544|20111026|F|20|10|6|0|0");
-		update(lc, info4);
-		System.out.println(lc.getStatusHis());
-
-		UserDayInfo info5 = new UserDayInfo(
-				"15988723544|20111026|F|20|10|9|0|0");
-		update(lc, info5);
-		System.out.println(lc.getStatusHis());
-
-		UserDayInfo info6 = new UserDayInfo(
-				"15988723544|20111026|F|20|10|6|0|0");
-		update(lc, info6);
-		System.out.println(lc.getStatusHis());
-
-		UserDayInfo info7 = new UserDayInfo(
-				"15988723544|20111026|F|20|10|3|0|0");
-		update(lc, info7);
-		System.out.println(lc.getStatusHis());
-
-		UserDayInfo info8 = new UserDayInfo("15988723544|20111029|F|6|0|0|0|0");
-		update(lc, info8);
-		System.out.println(lc.getStatusHis());
-
-		UserDayInfo info9 = new UserDayInfo("15988723544|20111105|F|3|0|0|0|0");
-		update(lc, info9);
-		System.out.println(lc.getStatusHis());
-
-		UserDayInfo info10 = new UserDayInfo("15988723544|20111115|F|1|0|0|0|0");
-		update(lc, info10);
-		System.out.println(lc.getStatusHis());
-
-		UserDayInfo info11 = new UserDayInfo(
-				"15988723544|20111115|F|100|0|0|0|0");
-		update(lc, info11);
-		System.out.println(lc.getStatusHis());
-	}
 
 	public void run() throws Exception
 	{
@@ -206,8 +151,15 @@ public class LCUpdator
 				processNewUser(line);
 			else
 			{
-				this.UDITable.put(Long.parseLong(line
-						.split(GlobalValue.DATASEP)[0]), u);
+				Long id = null;
+				try{
+					id = Long.parseLong(line.split(GlobalValue.DATASEP)[0]);
+				} catch(Exception e)
+				{
+					id = -1l;
+				}
+				if(id != -1l)
+					this.UDITable.put(id, u);
 			}
 		}
 		//None of the old users has visit record  in one day is too rare to happen.Thus we 
@@ -263,7 +215,8 @@ public class LCUpdator
 			java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(
 					"yyyyMMdd", java.util.Locale.US);
 			String[] s = line.split(GlobalValue.DATASEP);
-			long msisdn = Long.parseLong(s[0]);
+			long msisdn = 0;
+			msisdn = Long.parseLong(s[0]);
 			Date record_day = sdf.parse(s[1]);
 			int pv = Integer.parseInt(s[3]);
 			int real_fee = Integer.parseInt(s[4]);
@@ -303,9 +256,10 @@ public class LCUpdator
 			
 		} catch (Exception e)
 		{
-			e.printStackTrace();
 			newUser.setId(-1);
 		}
+		if(newUser.getId() != -1)
+			newUserList.add(newUser);
 		newUserList.add(newUser);
 	}
 

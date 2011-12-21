@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-	<property name="lapsedInterval">20</property>
-	<property name="pvThreshold">50</property>
-	<property name="rootDirectory">D:\杭州项目\10月25日\life-cycle\13712030006\</property>
+	<property name="lapsedInterval">30</property>
+	<property name="pvThreshold">30</property>
+	<property name="rootDirectory">D:\杭州项目\10月25日\life-cycle\test\</property>
+	<property name="initDate">20110830</property>
+	<!-- 认识,有好感,无好感,徘徊,确定关系,稳定发展,迷恋 -->
+	<property name="warnThreshold">10,9,15,6,5,3,3</property>
 </configuration>
