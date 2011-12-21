@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="life-cycle" default="jar" basedir=".">
+	<property name="dist.dir" value="D:\杭州项目\10月25日\life-cycle" />
+	<target name="jar">
+		<echo>waiting jar</echo>
+		<jar destfile="${dist.dir}/life-cycle-1.0.0.jar" basedir="${basedir}/bin"
+		includes="lc/*.class,status/*.class">
+			<manifest>
+				<attribute name="Main-class" value="lc.LCRunner" />
+				<attribute name="Class-Path" value=". lifecycle.cfg.xml" />
+			</manifest>
+		</jar>
+	</target>
+</project>
