@@ -1,0 +1,389 @@
+% THIS IS SIGPROC-SP.TEX - VERSION 3.1
+% WORKS WITH V3.2SP OF ACM_PROC_ARTICLE-SP.CLS
+% APRIL 2009
+%
+% It is an example file showing how to use the 'acm_proc_article-sp.cls' V3.2SP
+% LaTeX2e document class file for Conference Proceedings submissions.
+% ----------------------------------------------------------------------------------------------------------------
+% This .tex file (and associated .cls V3.2SP) *DOES NOT* produce:
+%       1) The Permission Statement
+%       2) The Conference (location) Info information
+%       3) The Copyright Line with ACM data
+%       4) Page numbering
+% ---------------------------------------------------------------------------------------------------------------
+% It is an example which *does* use the .bib file (from which the .bbl file
+% is produced).
+% REMEMBER HOWEVER: After having produced the .bbl file,
+% and prior to final submission,
+% you need to 'insert'  your .bbl file into your source .tex file so as to provide
+% ONE 'self-contained' source file.
+%
+% Questions regarding SIGS should be sent to
+% Adrienne Griscti ---> griscti@acm.org
+%
+% Questions/suggestions regarding the guidelines, .tex and .cls files, etc. to
+% Gerald Murray ---> murray@hq.acm.org
+%
+% For tracking purposes - this is V3.1SP - APRIL 2009
+
+\documentclass{acm_proc_article-sp}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{graphics}
+\usepackage{subfigure}
+\usepackage{multirow}
+\usepackage{balance}
+
+
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+\begin{document}
+
+\title{A parallel graph partitioning algorithm to speed up the large-scale distributed graph mining}
+
+% You need the command \numberofauthors to handle the 'placement
+% and alignment' of the authors beneath the title.
+%
+% For aesthetic reasons, we recommend 'three authors at a time'
+% i.e. three 'name/affiliation blocks' be placed beneath the title.
+%
+% NOTE: You are NOT restricted in how many 'rows' of
+% "name/affiliations" may appear. We just ask that you restrict
+% the number of 'columns' to three.
+%
+% Because of the available 'opening page real-estate'
+% we ask you to refrain from putting more than six authors
+% (two rows with three columns) beneath the article title.
+% More than six makes the first-page appear very cluttered indeed.
+%
+% Use the \alignauthor commands to handle the names
+% and affiliations for an 'aesthetic maximum' of six authors.
+% Add names, affiliations, addresses for
+% the seventh etc. author(s) as the argument for the
+% \additionalauthors command.
+% These 'additional authors' will be output/set for you
+% without further effort on your part as the last section in
+% the body of your article BEFORE References or any Appendices.
+
+\numberofauthors{2} %  in this sample file, there are a *total*
+% of EIGHT authors. SIX appear on the 'first-page' (for formatting
+% reasons) and the remaining two appear in the \additionalauthors section.
+%
+\author{
+% You can go ahead and credit any number of authors here,
+% e.g. one 'row of three' or two rows (consisting of one row of three
+% and a second row of one, two or three).
+%
+% The command \alignauthor (no curly braces needed) should
+% precede each author name, affiliation/snail-mail address and
+% e-mail address. Additionally, tag each line of
+% affiliation/address with \affaddr, and tag the
+% e-mail address with \email.
+%
+% 1st. author
+\alignauthor ZengFeng Zeng\\
+       \affaddr{School of Computer Science}\\
+       \affaddr{Beijing University of Posts and Telecommunications}\\
+       \affaddr{Beijing 100876, China}\\
+       \email{zzfeng1987@gmail.com}
+% 2nd. author
+\alignauthor
+Bin Wu\\
+       \affaddr{School of Computer Science}\\
+       \affaddr{Beijing University of Posts and Telecommunications}\\
+       \affaddr{Beijing 100876, China}\\
+       \email{zzfeng1987@gmail.com}
+}
+% There's nothing stopping you putting the seventh, eighth, etc.
+% author on the opening page (as the 'third row') but we ask,
+% for aesthetic reasons that you place these 'additional authors'
+% in the \additional authors block, viz.
+\additionalauthors{Additional authors: John Smith (The Th{\o}rv{\"a}ld Group,
+email: {\texttt{jsmith@affiliation.org}}) and Julius P.~Kumquat
+(The Kumquat Consortium, email: {\texttt{jpkumquat@consortium.net}}).}
+\date{30 July 1999}
+% Just remember to make sure that the TOTAL number of authors
+% is the number that will appear on the first page PLUS the
+% number that will appear in the \additionalauthors section.
+
+\maketitle
+\begin{abstract}
+This paper provides a sample of a \LaTeX\ document which conforms to
+the formatting guidelines for ACM SIG Proceedings.
+It complements the document \textit{Author's Guide to Preparing
+ACM SIG Proceedings Using \LaTeX$2_\epsilon$\ and Bib\TeX}. This
+source file has been written with the intention of being
+compiled under \LaTeX$2_\epsilon$\ and BibTeX.
+
+The developers have tried to include every imaginable sort
+of ``bells and whistles", such as a subtitle, footnotes on
+title, subtitle and authors, as well as in the text, and
+every optional component (e.g. Acknowledgments, Additional
+Authors, Appendices), not to mention examples of
+equations, theorems, tables and figures.
+
+To make best use of this sample document, run it through \LaTeX\
+and BibTeX, and compare this source code with the printed
+output produced by the dvi file.
+\end{abstract}
+
+% A category with the (minimum) three required fields
+\category{H.4}{Information Systems Applications}{Miscellaneous}
+%A category including the fourth, optional field follows...
+\category{D.2.8}{Software Engineering}{Metrics}[complexity measures, performance measures]
+
+\terms{Theory}
+
+\keywords{ACM proceedings, \LaTeX, text tagging} % NOT required for Proceedings
+
+\section{Introduction}
+\subsection{large-scale graph mining}
+The graph dataset we face today are become much larger than before. The modern large search engines crawls more than one trillion links in the internet and the social networking web site contains more than 800 million active users \cite{url:facebook}. Besides the large graph on Internet and social networks, the biological networks which represent protein interactions are of the same size \cite{bailly-bechet:finding}. Large graph processing has become more and more important in various research and we're rapidly moving to a world where the ability to analyses very-large-scale dynamic graphs (billions of nodes, trillions of edges) is becoming critical.
+The above graphs are far too large for a single commodity computer to handle with. The common way to process the large graph is using the parallel computing systems to perform algorithms in which the graph data is distributed across a cluster of commodity machines. The various parallel computing models play an important role in handling these extremely large graphs. Some parallel graph processing systems based on different computational model have been proposed: google's Pregel based on the Bulk Synchronous Parallel model, Pegasus based on Hadoop's MapReduce, CGMGRAPH /CGMLIB based on MPI \cite{kang:pegasus,malewicz:pregel,chan:cgmlib} . Unfortunately, none of these systems consider minimizing communication complexity by partitioning the graph data properly and saturating the network becomes a significant barrier to scaling the system up. Some complex graph algorithms, in which every vertex need access the its neighbor frequently, such as triangle listing, clique percolation and Newman fastGN, could not be solve efficiently on these systems, because the graph is randomly distributed among the machines which will lead to a heavy traffic of the system's communication when every vertex try to access its neighbors \cite{karypis:multi1}.
+\subsection{graph partitioning}
+ Good partition on large graph is critical for the graph mining for the following reasons. First, graph partitioning is key preprocessing step to divide-and-conquer algorithms, where it is often a good idea to break graph into roughly equal-sized dense subgraphs. The graph algorithm can respectively perform on these dense subgraphs and combine the intermediate results in the final phase. Second a good partition that minimizes the number of cross partition edges can reduce the communications among the different machines at a large scale. As we know that inter-machine communication, even on the same local network, is much more expensive than inter-processor communication. Network latency is measured in microseconds while inter-process communication is measured in nanoseconds. The bad partition of graph will lead to much more data to be moved among the machines when performing graph algorithms on these distributed graph data, which will largely increase the process time and cause network links to become saturated.
+
+
+ The graph partition problem is NP-hard and has been researched many years. A number of high-quality and computationally efficient algorithms have been proposed, even if these solutions are not necessarily optimal, such as Kernighan-Lin algorithm, spectral bisection method and multilevel graph partitioning \cite{kl:partition,barnard:mrsb,karypis:multi1}. However these methods do not scale to large scale graph data, in part because of the running time, and in part because these algorithms require full information about the graph or large portions of the graph, which is impossible in distributed computing environment or will lead to large scale data to move among the machines. Recently, a steaming graph partitioning for large distributed graphs is proposed to read graph data serially from a disk onto a cluster based on simple heuristics \cite{url:streaming}. Unfortunately, it is somewhat unrealistic for the distributed system where the graph data is loaded in a parallel way.
+
+\subsection{ overview of our approach}
+In this paper, we propose a parallel multi-level graph partitioning algorithm to make a k-way balance partitioning on large graph. The algorithm divide into two phases: aggregate phase and partition phase. In aggregate phase, the algorithm uses a multi-level weighted label propagation to aggregate the large original graph into a small weighted graph. In partition phase, a k-way balance partitioning performs on the weighted graph based on a stepwise minimizing RatioCut method. In our algorithm topological information of vertexes is no need to exchange which makes little data to move among the different machines. Thus it can efficiently partition large-scale graphs on distributed system, where accessing vertex's topological information located on different machines is expensive. The algorithm takes $o(|E|)$ time and well scales with the size of graph and partition number. In addition, compared to the traditional partitioning algorithms, in which partition number $k$ must meet $k=2^m$ as partitions into more than two clusters are usually attained by iterative bi-sectioning, the partition number of our algorithm can be arbitrary.
+\subsection{ contributions}
+This paper makes the following contributions:
+\begin{itemize}
+\item The parallel multi-level weighted label propagation algorithm: the algorithm efficiently aggregates the large graph into a small weighted graph without exchange of vertex's topological information. And we implement the algorithm on MapReduce framework.
+\item The stepwise minimizing RatioCut Algorithm: the algorithm minimizes the RatioCut step by step. In every step, a set of vertexes is extracted by minimizing part of RatioCut and remove these vertexes from the small weighted graph. A k-way balance partitioning is obtained by this algorithm.
+\item The parallel multi-level graph partitioning: the partitioning on large-scale graph is achieved by combining above two algorithms simply.
+\item Experimental study: We compare our partitioning algorithm to many other partitioning algorithms on various graph dataset. And the results show that our algorithm generally outperforms others. Our algorithm also be evaluated on large-scale graph of different scale and the experiment shows the efficiency and scalability of the algorithm. We finally demonstrate the value of graph partitioning in graph mining by using our algorithm to partition graph for PageRank computation using the Spark cluster system.
+\end{itemize}
+\par
+The rest of the paper is structured as follows. Section 2 reviews related works. Section 3 gives some notations and definitions used in this paper. In Section4, we give the detail description of the parallel multi-level graph partitioning. Section 5 presents the parallel multi-level weighted label propagation algorithm and its implementation on MapReduce. In section 6, the stepwise minimizing RatioCut Algorithm is proposed to partition the weighted graph.  Section 7provides a detailed experimental evaluation of out algorithm compared with existing state-of-the-art algorithms and tests the improvement of some graph algorithms by only changing the data layout with our partitioning algorithm. And Finally in Section8, we draw the conclusions and discuss future work.
+
+
+\section{Related work}
+Graph partitioning is a fundamental issue in many research areas, such as parallel computing, circuit layout and the design of many serial algorithms, including techniques to solve partial differential equations and sparse linear systems of equations. The graph partitioning problem is NP-hard. The Kernighan-Lin algorithm (Kernighan and Lin,1970) is one of the earliest heuristics methods which motivated by the problem of partitioning electronic circuits onto boards \cite{kl:partition}. The algorithm starts with an initial partition of the graph in two clusters of the predefined size. The initial partition can be obtained by random partition or suggested by some information on the graph structure. At each iteration the algorithm swaps subsets consisting of equal numbers of vertices between the two sets to reduce the number of edges joining the two sets. The algorithm terminates when it is no longer possible to reduce the number of edges by swapping subsets.The Kernighan-Lin algorithm's time complexity is O(n2 log n) (n being the number of vertices).The Kernighan-Lin algorithm subsequently improved in terms of running time by Fiduccia and Mattheyses \cite{1585498}.
+\par
+The spectral bisection method is another popular method, which is based on the spectrum of the graph 's Laplacian matrix \cite{barnard:mrsb}. A good approximation of the minimum cut size of partition can be attained by choosing the index vector s parallel to the second lowest eigenvector. The first k eigenvectors of the Laplacian can be computed by using the Lanczos method , which is quiet fast if the eigenvalues $\lambda_{k+1}$ and $\lambda_{k}$ are well separated.
+\par
+Other popular methods for graph partitioning include level-structure partitioning, the geometric algorithm, and multilevel algorithms. A level-structure was provided in SPARSPAK \cite{tech:sparspak}, a library of routines for solving sparse systems of equations by direct methods. The algorithm first finds a pseudo-peripheral vertex v in the graph. A breadth-first search from v is used to partition the vertices into levels: the vertex $v$ belongs to the zeroth level, and all neighbors of vertices in the $ith$ level belong to the $(i + 1)th$ level, for $i = 0, 1,..$ the algorithm in SPARSPAK chooses the vertices in the median level as the vertex separator. The geometric partitioning algorithm is designed by Miller, Teng, Thurston, and Vavasis \cite{Gary:amp}. This algorithm partitions a graph by using a circle rather than a straight-line to cut the mesh. The basic structure of a multilevel partitioning algorithm is very simple. The graph $G =(V, E)$ is first coarsened down to a small number of vertices, a k-way partitioning of this much smaller graph is computed, and then this partitioning is projected back toward the original graph (finer graph) by successively refining the partitioning at each intermediate level. This three-stage process is coarsening, initial partitioning, and refinement \cite{karypis:multi1}.
+\par	
+A parallel graph partition algorithm was proposed in JOSTLE. However, to do it in parallel JOSTLE must ?rst distribute the graph sensibly amongst the processors and to distribute the graph sensibly it must first find a reasonable partition. Then The JOSTLE optimizes the initial crude distribution of graph. Another parallel multilevel graph partitioning is implemented on shared-memory multicore architectures which is not suitable for the distributed computing environment for the frequent topological information exchange among vertexes \cite{sui:parallel}.
+\section{Preliminaries}
+In this section,we briefly describe some notations and definitions used in this paper.
+\par
+\subsection{Graph notation}
+$G=(V,E)$ is an graph where the $V$ is a set of vertex and $E \subseteq V \times V$ is a set of edges.The adjacent matrix of graph is the matrix $W=(\omega_{i,j})_{i,j=1,2,..n}$. $\omega_{i,j}>0$ indicates that the vertex $v_{i}$ and $v_{j}$ are connect by an edge and the weight is $\omega_{i,j}$. As $G$ is unweighted, if the vertex $v_{i}$ is adjacent to $v_{j}$, the $\omega_{i,j}=1$, otherwise $\omega_{i,j}=0$.$N(S)$ is the neighbors of vertex set $S$ if $N(S)={\omega\in V\backslash S:\exists v\in S s.t. (v,\omega)\in E}$
+\subsection{Graph partitioning}
+For any subset of vertices $V_{i} \subseteq V$,its complement $V \setminus V_{i}$ is denoted by $\overline{V_{i}}$. For two For two not necessarily disjoint sets we define
+\begin{displaymath}
+W(A,B)=\sum_{i\in A,j\in B}\omega_{ij}
+\end{displaymath}
+The cut set induced by $V_{i}$ is $C_{i}={(u,v)\in V_{i},\overline{V_{i}}}$,so the edge cut of cut set $C_{i}$ is $W(V_{i},\overline{V_{i}}$. The subsets of $P=V_{1},V_{2},..,V_{k}$ are k-way partitioning of graph $G$ iff (1) $\cup_{i}V_{i}=V$ and (2) $\forall i,j:i\neq j\rightarrow V_{i}\bigcap V_{j}=\emptyset$. The most directed way to construct a partition of graph is solving the mincut problem which chooses a partition  $P=V_{1},V_{2},..,V_{k}$ that minimizes
+\begin{displaymath}
+cut(V_{1},V_{2},...,V_{k})=\sum_{i=0}^{k}W(V_{i},\overline{V_{i}})
+\end{displaymath}
+However the solution of mincut which simply separates one individual vertex from the rest of the graph in many cases does not lead to satisfactory partition. The one of most common objective functions to make "balance partition" of graph is RatioCut \cite{w.hagen:new}. The definition is:
+\begin{displaymath}
+RatioCut(V_{1},V_{2},...,V_{k})=\frac{\sum_{i=1}^{k}W(V_{i},\overline{V_{i}})}{|V_{i}|}
+\end{displaymath}
+The balancing conditions makes the previously mincut problem which is simple to solve become NP hard \cite{wagner:mincut}.
+
+\section{Multi-level partitioning algorithm}
+\subsection{Overview of the Multilevel Paradigm}
+Graphs that we meet in practice are not random. The distribution of edges is not only globally, but also locally inhomogeneous, with high concentrations of edges within special subgraph of vertices, and low concentrations between these subgraphs. This feature of graphs is called community structure or clustering \cite{gn:community}. It may be due to the vertices being geographically close in social networks, or being related to topic or domain on the web. Our graph partition algorithm takes advantage of this locality to make a good partition. The main idea behind our graph partition algorithm is the dense subgraph should not be divided among partitions. So the dense subgraph is treated as an indivisible atom, and the graph partition towards vertexes are transformed into the graph partition towards the dense subgraph. The dense subgraph means that there must be more edges "inside" the subgraph than edges linking vertices of the subgraph with the rest of the graph. The above dense subgraph is known as community.
+\par
+The basic structure of our graph partitioning algorithm is similar to the multilevel k-way partitioning algorithm. Our graph partitioning algorithm is also a multilevel algorithm and uses the bottom-up method. The algorithm is divided into two phase: aggregate phase and partition phase. In the aggregate phase, we continue to aggregate the original graph to a smaller graph on higher level. In each level, we use a label propagation algorithm to detect dense subgraphs and these dense subgraphs will be a vertex of upper level. Then the label propagation algorithm continues on the upper level graph until the vertex size of upper level graph smaller than the threshold we set. In the partition phase, a balance graph partition performs on the top-level graph which vertex size is much smaller than the original graph. As the top-level graph is a vertex-weighted and edge-weight graph, where the edge-weight reflects the number of edges connecting two different super vertexes and the vertex-weight reflects vertex number in the super vertex, the traditional partition algorithms such as Kernighan-Lin (KL) or spectral method are not suitable to this graph\cite{kl:partition, barnard:mrsb}. We propose a novel stepwise partition algorithm using a greedy method to get a small RatioCut step by step. At every step, we extract a connected subgraph with vertex size approximates $\frac{|V|}{k}$ which has minimal edge cuts with the remaining graph, and then remove the subgraph from the original graph. In this way, $k$ subgraphs are iteratively extracted from the graph. A partition example on synthetic graph is shown in Figure \ref{fig:partition example}.
+\begin{figure}
+\centering
+\scalebox{0.6}{\includegraphics[0,0][300,331]{partition}}
+\caption{A partition example on synthetic graph}
+\label{fig:partition example}
+\end{figure}
+\subsection{Weighted label propagation}
+The reasons we use the label propagation to detect the dense subgraph are: the label need not access other vertex's topological information, what it need is sending the label to its neighbor \cite{Raghavan2007Near}. For this property, it very suitable to parallel computing environment where access the vertex's topological information is expensive. And the time complexity of label propagation algorithm is linear. However the original label propagation algorithm that performs on unweighted graph is not adapt to the weighted graph on upper level we face in the aggregate phase. In this paper, we propose a weighted label propagation algorithm to handle with the above weighted graph.
+\par
+Our label propagation algorithm is based on the ideal that which community the vertex $v$ belongs to is determined by its close neighbors. We assume that each vertex in the graph chooses to join the community that most of its close neighbors belong to. Suppose that a vertex $v$ has neighbors $N(v)=\{u_{1},u_{2},...,u_{k}\}$ and each neighbor owns a label $L_{u}$ denoting which community they belong to. The neighbor who is more close to the vertex $v$ has more influence on vertex $v$. Hence we define the $u$'s affinity to $v$
+\begin{displaymath}
+aff(u,v)=\frac{W(u,v)}{\sum_{i\in N(v)}W(u,i)}
+\end{displaymath}
+The degree of membership indicates how much the vertex belongs to a community $C$ is defined as
+\begin{displaymath}
+d(v,C)=\frac{\sum_{u\in N(v),L_{u}=C}aff(u,v)}{\sum_{u\in N(v)}aff(u,v)}
+\end{displaymath}
+The vertex v belongs to the community C which has the maximal degree $d(v,C)$.
+\par
+The algorithm is preformed iteratively, where at iteration $t$, each vertex updates its label by computing the degree $d(v,C)$ based on labels of its neighbor vertexes at iteration $t-1$. Hence,$L_{v}(t)=f(L_{u_{1}}(t-1),...,L_{u_{i}}(t-1))$, where the function returns he label with the maximal degree of membership. As the labels propagate, closely and densely connected subgraphs of vertexes quickly reach a consensus on a unique label. At the end of propagation process, vertexes with the same labels are aggregated as one community.
+\par
+Ideally, the algorithm should be end when all vertexes' label unchanged after iterations. But in terms of the ambiguous vertexes with the same membership degree of several communities, their label may change after each iteration. So the algorithm should be ended, when most of nodes' labels are stable. Here, we will set the maximal number of iteration of the algorithm in the practice. The algorithm will be intermitted when iteration times equals the maximal number. We can describe our weighted label propagation algorithm in the following steps.
+    \begin{enumerate}
+\renewcommand{\labelenumi}{(\theenumi)}
+\item Initial the label of vertex in graph. For a given vertex $v$, $L_v (0)=v$;
+\item Set $t=1$;
+\item For each vertex v computes its affinity to its adjacent vertexes $aff (v,u)$, new a Label with weight equals $ \frac{aff (v,u)}{|v|}$, where the divisor $|v|$ is used to avoid excessively rapid growth of large-size vertex in upper level,and then send the label to the adjacent vertex.
+\item For each vertex v, $L_{v}(t)=f(L_{u_{1}}(t-1),...,L_{u_{i}}(t-1))$, where the function f returns the label with the maximal degree of membership.
+\item For most of vertex, the label is unchanged, then stop the algorithm. Else, set t=t+1 and go to (3).
+\end{enumerate}
+
+\subsection{Implementation on MapReduce}
+MapReduce is a parallel computing framework which is simple and easy to use \cite{dean:mapreduce:}. The application, based on the Map-Reduce framework, can run on large-scale commercial clusters, process data in a parallel and fault-tolerant way. MapReduce framework relies on the operation of <key, value> pair, both the input and output is a <key, value> pair. Users specify a map function that processes a <key, value> pair to generate a set of intermediate <key, value> pairs, and a reduce function that merges all intermediate values associated with the same intermediate key. Programs written in this functional style are automatically parallelized and executed on a large cluster of commodity machines. The overall execution can be simply described as the following streaming:
+\par
+\begin{center}
+Input | Mappers | Sort | Reducers | Output
+\end{center}
+\par
+The weighted propagation algorithm is very easy to be implemented in a MapReduce way. The pseudo code in Map and Reduce is presented in Figure \ref{fig:wlp}. In the mapper, the vertex computes the affinity to its neighbors and sends the weighted label to its neighbors. In the reducer, the vertex collects the labels that it receives, then compute the membership degree of different labels and update its label with the label that has the maximal membership degree.
+\begin{figure}
+\centering
+\scalebox{0.8}{\includegraphics[0,0][300,331]{lp1}}
+\caption{Weighted label propagation on MapReduce}
+\label{fig:wlp}
+\end{figure}
+\par
+After the label propagation, the vertexes labeled with the same label will be grouped together as super vertex of upper level. The edge weight of these super vertexes must be computed for the further aggregation. A series of MapReduce operations will be designed to finish the construction of upper graph (see Figure \ref{fig:upper}). The Mapper1 and Redecer1 aggregate the vertexes with the same label to a super vertex. Edges between two different super vertexes are achieved in Mapper2 and Reducer2. Finally, the Mapper3 and Reducer3 transform the above edges to adjacent list format.
+\begin{figure}
+\centering
+\scalebox{0.8}{\includegraphics[0,0][250,450]{lp2}}
+\caption{Construct the upper level graph}
+\label{fig:upper}
+\end{figure}
+\subsection{Stepwise minimizing RatioCut Algorithm}
+The top-level graph $G_{m}(V_{m},E_{m})$ produced by Multi-level weighted label propagation is a vertex-weighted and edge-weighted graph, where the edge-weight reflects the number of edges connecting two different super vertexes and the vertex-weight reflects vertex number of the super vertex. It is very important to note that the partitioning algorithm must be able to handle the edges and vertex weights. In this section, a partitioning algorithm based on stepwise minimizing RatioCut is proposed to compute a k-way partitioning of graph $G_{m}$ such that each partition contains roughly$\frac{|V|}{k}$ vertexes of the original graph. Instead of minimizing $RatioCut(V_{1},...,V_{k} )$ all together, we try to find a vertex set $V_{i}$ that minimizes$\frac{W(V_{i},\overline{V_{i}})}{|V_{i}|}$ , which is a part of $RatioCut(V_{1},...,V_{k})$ , as our first partition, and then remove the vertex set $V_{i}$ from $G_{m}$ and try to find the next partition in the same way. The partial-RatioCut of vertex set $V$ is defined as
+\begin{displaymath}
+PRC(V_{i})=\frac{W(V_{i},\overline{V_{i}})}{|V_{i}|}
+\end{displaymath}
+It is obvious that the problem of minimizing $PRC(V)$ is also NP-hard. Because the problem is a 2-way graph partition problem. And we approximate the $PRC(V_{i})$ using a simple greedy algorithm. At each iteration, we greedily select the vertex that minimizing $PRC$ of the currently constructed vertex set. Before the algorithm is proposed formally, we first give a proposition and proof it.
+\newtheorem{proposition}{Proposition}
+\begin{proposition}
+\label{pro:mono}
+There exist weighted graph $G_{m}$ for which the $PRC(V_{i})$ is non-monotonic as the vertex size $|V_{i}|$ grows.
+\end{proposition}
+\begin{proof}
+ Consider a current vertex set $V_{i}$. Assume that the next vertex selected for inclusion in the set is $v$. Then, the new set is $V_{i}\bigcup{v}$. By the partial-RatioCut definition, the $PRC(V_{i}\bigcup{v})$ is $\frac{W(V_{i}\bigcup{v},\overline{V_{i}\cup{v}})}{|V_{i}|+|v|}$ ( note that the vertex of upper level is vertex-weighted super vertex). The $PRC(V_{i}\cup{v})$ will decrease when:
+ \begin{displaymath}
+\frac{W(V_{i}\cup{v},\overline{V_{i}\cup {v}})}{|V_{i}|+|v|}< \frac{W(V_{i},\overline{V_{i}})}{|V_{i}|}
+\end{displaymath}
+ \begin{displaymath}
+\frac{W(V_{i},\overline{V_{i}})-k_{v,V_{i}}+d_{v}-k_{v,V_{i}}}{|V|+|v|}< \frac{W(V_{i},\overline{V_{i}})}{|V_{i}|}
+\end{displaymath}
+Because $W(V_{i}\cup{v},\overline{V_{i}\cup{v}})=W(V_{i},\overline {V_{i}})-k_{v,V_{i}}+d_{v}-k_{v,V_{i}}$ where $k_{v,V_{i}}=\sum_{i=v,j\in V_{i}}W(i,j)$ and the degree of vertex $v$ $d_{v}=\sum_{i=v}W(i,j)$.
+ \begin{displaymath}
+W(V_{i},\overline {V_{i}})-k_{v,V_{i}}+d_{v}-k_{v,V_{i}}<\frac{W(V_{i},\overline{V_{i}})(|V_{i}|+|v|)}{|V_{i}|}
+\end{displaymath}
+ \begin{displaymath}
+W(V_{i},\overline {V_{i}})-k_{v,V_{i}}+d_{v}-k_{v,V_{i}}<W(V_{i},\overline{V_{i}})+\frac{W(V_{i},\overline{V_{i}})|v|}{|V_{i}|}
+\end{displaymath}
+ \begin{displaymath}
+d_{v}-2k_{v,V_{i}}<\frac{W(V_{i},\overline{V_{i}})}{|V_{i}|}
+\end{displaymath}
+Conversely, The $PRC(V_{i}\cup{v})$ will increase when:
+ \begin{displaymath}
+d_{v}-2k_{v,V_{i}}>\frac{W(V_{i},\overline{V_{i}})}{|V_{i}|}
+\end{displaymath}
+\end{proof}
+
+From the proof of proposition 1, we can know that in the order to minimize the $PRC(V_{i})$, in every step the next vertex which minimize $\frac {d_{v}-2k_{v,V}}{|v|}$  is selected to add to $V_{i}$, as shown in Algorithm.
+\begin{algorithm}[htb]
+\caption{Greedy Algorithm for minimizing $PRC$.}
+\label{algo:greedy}
+\begin{algorithmic}[1]
+\REQUIRE ~~\\
+Graph $G_{m}=(V_{m},E_{m})$;\\
+the vertex set size $\frac{|V|}{k}$.\\
+the start vertex $v_{0}$.\\
+\ENSURE ~~\\
+constructed vertex set $V_{i}$.
+\STATE $V_{i}=\emptyset$;
+\STATE $V_{i}=V_{i}\cup v_{0}$;
+\WHILE {$|V_{i}|<\frac{V}{k}$}
+    \STATE $v=\mathop{\argmin}_{v \in V_{m}-V_{i}}{\frac{d_{v}-2k_{v,V}}{|v|}}$;
+    \IF{$|V_{i}+|v|<\frac{(1+\alpha)|V|}{k}$}
+    \STATE $V_{i}=V_{i}\cup{v}$;
+    \ELSE
+    \IF{$|V_{i}+|v|>\frac{(1-\alpha)|V|}{k}$}
+    \STATE Break;
+    \ENDIF
+    \ENDIF
+\ENDWHILE
+\RETURN $V_{i}$;
+\end{algorithmic}
+\end{algorithm}
+The parameter $\alpha$ is used to avoid the case that an exceptional larger vertex add to the vertex set whose size approximate $\frac{|V|}{k}$ , making the set size much larger than  $\frac{|V|}{k}$.
+\par
+In the following, we will present the k-way balance partitioning algorithm based on above stepwise minimizing $PRC$ algorithm. The algorithm runs with $k$ steps. In every step, each remaining vertex is selected as a start vertex and gets a vertex subset $S$ by stepwise minimizing $PRC$ algorithm. And get the best subset $S^{*}$ with minimal $PRC$ from these subsets. Finally, remove the vertexes of $S^{*}$ from graph and start next step.
+\begin{algorithm}[htb]
+\caption{Stepwise partitioning Algorithm .}
+\label{algo:par}
+\begin{algorithmic}[1]
+\REQUIRE ~~\\
+Graph $G_{m}=(V_{m},E_{m})$;\\
+the partition number k.
+\ENSURE ~~\\
+the vertex set List $setList$.
+\STATE $setList=\emptyset$;
+\STATE $bestSet=null$;
+   \FOR{$i=1$; $i<k$; $i++$ }
+     \FOR{$v$ in $V_{m}$}
+            \STATE $S=minimizePRC(v,G_{m},\frac{|V|}{k})$;
+              \IF{$PRC(S)<PRC(bestSet)$}
+                \STATE $bestSet=S$;
+              \ENDIF
+     \ENDFOR
+       \STATE $setList=setList\cup bestSet$
+       \STATE $V_{m}=V_{m}\setminus bestSet$
+   \ENDFOR 
+       
+%\FOR($v:V_{m}$)
+%\STATE xx;
+%\IF(PRC($S$)<PRC($bestSet$))
+%\STATE $bestSet=S$;
+%\ENDIF
+%\ENDFOR
+%\STATE $V_{m}=V_{m}\setminus bestSet$
+%\STATE $setList=setList\cup bestSet$;
+%\RETURN $V_{i}$;
+
+\end{algorithmic}
+\end{algorithm}
+
+\section{Conclusions}
+This paragraph will end the body of this sample document.
+Remember that you might still have Acknowledgments or
+Appendices; brief samples of these
+follow.  There is still the Bibliography to deal with; and
+we will make a disclaimer about that here: with the exception
+of the reference to the \LaTeX\ book, the citations in
+this paper are to articles which have nothing to
+do with the present subject and are used as
+examples only.
+%\end{document}  % This is where a 'short' article might terminate
+
+%ACKNOWLEDGMENTS are optional
+\section{Acknowledgments}
+This section is optional; it is a location for you
+to acknowledge grants, funding, editing assistance and
+what have you.  In the present case, for example, the
+authors would like to thank Gerald Murray of ACM for
+his help in codifying this \textit{Author's Guide}
+and the \textbf{.cls} and \textbf{.tex} files that it describes.
+
+%
+% The following two commands are all you need in the
+% initial runs of your .tex file to
+% produce the bibliography for the citations in your paper.
+\bibliographystyle{abbrv}
+\bibliography{sigproc}  % sigproc.bib is the name of the Bibliography in this case
+% You must have a proper ".bib" file
+%  and remember to run:
+% latex bibtex latex latex
+% to resolve all references
+%
+% ACM needs 'a single self-contained file'!
+%
+
+\balancecolumns
+% That's all folks!
+\end{document}
