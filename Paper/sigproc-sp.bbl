@@ -1,0 +1,107 @@
+\begin{thebibliography}{10}
+
+\bibitem{bailly-bechet:finding}
+M.~Bailly-Bechet, C.~Borgs, A.~Braunstein, J.~T. Chayes, A.~Dagkessamanskaia,
+  J.-M. Franfois, and R.~Zecchina.
+\newblock Finding undetected protein associations in cell signaling by belief
+  propagation.
+\newblock {\em CoRR}, pages --1--1, 2011.
+
+\bibitem{barnard:mrsb}
+S.~Barnard.
+\newblock Pmrsb: Parallel multilevel recursive spectral bisection.
+\newblock In {\em Supercomputing, 1995. Proceedings of the IEEE/ACM SC95
+  Conference}, page~27, 1995.
+
+\bibitem{tech:sparspak}
+J.~C.Chu, J.A.George and E.G.Ng.
+\newblock User'sguide for sparspak-a: Waterloo sparse linear equations package.
+\newblock Technical report, Computer Science, University of Waterlo o,Ontario.,
+  1984.
+
+\bibitem{chan:cgmlib}
+A.~Chan, F.~K. H.~A. Dehne, and R.~Taylor.
+\newblock Cgmgraph/cgmlib: Implementing and testing cgm graph algorithms on pc
+  clusters and shared memory machines.
+\newblock {\em IJHPCA}, 19(1):81--97, 2005.
+
+\bibitem{wagner:mincut}
+W.~D. and W.~F.
+\newblock Between mincut and graph bisection.
+\newblock In {\em In Proceedings of the 18th International Symposium on
+  Mathematical Foundations of Computer science (MFCS)}, pages 744 -- 750, 1993.
+
+\bibitem{dean:mapreduce:}
+J.~Dean and S.~Ghemawat.
+\newblock Mapreduce: simplified data processing on large clusters.
+\newblock {\em Commun. ACM}, pages 107--113, 2008.
+
+\bibitem{url:facebook}
+Facebook, 2011.
+\newblock { http://facebook.com/press/info.php?statistics}.
+
+\bibitem{1585498}
+C.~Fiduccia and R.~Mattheyses.
+\newblock A linear-time heuristic for improving network partitions.
+\newblock In {\em Design Automation, 1982. 19th Conference on}, pages 175 --
+  181, june 1982.
+
+\bibitem{gn:community}
+M.~Girvan and M.~E. Newman.
+\newblock Community structure in social and biological networks.
+\newblock {\em Proc Natl Acad Sci U S A}, 99:7821--7826, June 2002.
+
+\bibitem{w.hagen:new}
+L.~W. Hagen and A.~B. Kahng.
+\newblock New spectral methods for ratio cut partitioning and clustering.
+\newblock {\em IEEE Trans. on CAD of Integrated Circuits and Systems}, pages
+  1074--1085, 1992.
+
+\bibitem{kang:pegasus}
+U.~Kang, C.~Tsourakakis, and C.~Faloutsos.
+\newblock Pegasus: A peta-scale graph mining system implementation and
+  observations.
+\newblock In {\em Data Mining, 2009. ICDM '09. Ninth IEEE International
+  Conference on}, pages 229 --238, dec. 2009.
+
+\bibitem{karypis:multi1}
+G.~Karypis and V.~Kumar.
+\newblock Parallel multilevel k-way partitioning scheme for irregular graphs.
+\newblock In {\em Supercomputing, 1996. Proceedings of the 1996 ACM/IEEE
+  Conference on}, page~35. TeX Users Group, March 1996.
+
+\bibitem{kl:partition}
+B.~W. Kernighan and S.~Lin.
+\newblock An effcient heuristic procedure for partitioning graphs.
+\newblock {\em The Bell System Technical Journal}, 49(2):291--307, 1970.
+
+\bibitem{malewicz:pregel}
+G.~Malewicz, M.~H. Austern, A.~J.~C. Bik, J.~C. Dehnert, I.~Horn, N.~Leiser,
+  and G.~Czajkowski.
+\newblock Pregel: a system for large-scale graph processing.
+\newblock In {\em SIGMOD Conference'10}, pages 135--146, 2010.
+
+\bibitem{Gary:amp}
+G.~L. Miller, S.-H. Teng, W.~Thurston, and S.~A. Vavasis.
+\newblock Automatic mesh partitioning.
+\newblock In A.~George, J.~Gilbert, and J.~Liu, editors, {\em Graphs Theory and
+  Sparse Matrix Computation}, The IMA Volumes in Mathematics and its
+  Application, pages 57--84. Springer-Verlag, 1993.
+\newblock Vol 56.
+
+\bibitem{Raghavan2007Near}
+U.~N. Raghavan, R.~Albert, and S.~Kumara.
+\newblock Near linear time algorithm to detect community structures in
+  large-scale networks, Sept. 2007.
+
+\bibitem{url:streaming}
+I.~Stanton and G.~Kliot.
+\newblock Streaming graph partitioning for large distributed graphs, 2011.
+\newblock { http://research.microsoft.com/apps/pubs/default.aspx?id=155926}.
+
+\bibitem{sui:parallel}
+X.~Sui, D.~Nguyen, M.~Burtscher, and K.~Pingali.
+\newblock Parallel graph partitioning on multicore architectures.
+\newblock In {\em LCPC'10}, pages 246--260, 2010.
+
+\end{thebibliography}
