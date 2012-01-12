@@ -140,7 +140,7 @@ This paper makes the following contributions:
 \item Experimental study: We compare our partitioning algorithm to many other partitioning algorithms on various graph dataset. And the results show that our algorithm generally outperforms others. Our algorithm also be evaluated on large-scale graph of different scale and the experiment shows the efficiency and scalability of the algorithm. We finally demonstrate the value of graph partitioning in graph mining by using our algorithm to partition graph for PageRank computation using the Spark cluster system.
 \end{itemize}
 \par
-The rest of the paper is structured as follows. Section 2 reviews related works. Section 3 gives some notations and definitions used in this paper. In Section 4, we first give the detail description of the parallel multi-level graph partitioning, and then presents the parallel multi-level weighted label propagation algorithm and its implementation on MapReduce, finally, the stepwise minimizing RatioCut Algorithm is proposed to partition the weighted graph.  Section 5 provides a detailed experimental evaluation of out algorithm compared with existing state-of-the-art algorithms and tests the improvement of some graph algorithms by only changing the data layout with our partitioning algorithm. And Finally in Section 6, we draw the conclusions and discuss future work.
+The rest of the paper is structured as follows. Section 2 reviews related works. Section 3 gives some notations and definitions used in this paper. In Section 4, we first give the detail description of the parallel multi-level graph partitioning, and then present the parallel multi-level weighted label propagation algorithm and its implementation on MapReduce, finally, the stepwise minimizing RatioCut Algorithm is proposed to partition the weighted graph.  Section 5 provides a detailed experimental evaluation of out algorithm compared with existing state-of-the-art algorithms and tests the improvement of some graph algorithms by only changing the data layout with our partitioning algorithm. And Finally in Section 6, we draw the conclusions and discuss future work.
 
 
 \section{Related work}
@@ -155,7 +155,7 @@ A parallel graph partition algorithm was proposed in JOSTLE. However, to do it i
 In this section,we briefly describe some notations and definitions used in this paper.
 \par
 \subsection{Graph notation}
-$G=(V,E)$ is an graph where the $V$ is a set of vertex and $E \subseteq V \times V$ is a set of edges.The adjacent matrix of graph is the matrix $W=(\omega_{i,j})_{i,j=1,2,..n}$. $\omega_{i,j}>0$ indicates that the vertex $v_{i}$ and $v_{j}$ are connect by an edge and the weight is $\omega_{i,j}$. As $G$ is unweighted, if the vertex $v_{i}$ is adjacent to $v_{j}$, the $\omega_{i,j}=1$, otherwise $\omega_{i,j}=0$.$N(S)$ is the neighbors of vertex set $S$ if $N(S)={\omega\in V\backslash S:\exists v\in S s.t. (v,\omega)\in E}$
+$G=(V,E)$ is an graph where the $V$ is a set of vertex and $E \subseteq V \times V$ is a set of edges.The adjacent matrix of graph is the matrix $W=(\omega_{i,j})_{i,j=1,2,..n}$. $\omega_{i,j}>0$ indicates that the vertex $v_{i}$ and $v_{j}$ are connect by an edge and the weight is $\omega_{i,j}$. As $G$ is unweighted, if the vertex $v_{i}$ is adjacent to $v_{j}$, the $\omega_{i,j}=1$, otherwise $\omega_{i,j}=0$. $N(S)$ is the neighbors of vertex set $S$ if $N(S)={\omega\in V\backslash S:\exists v\in S s.t. (v,\omega)\in E}$
 \subsection{Graph partitioning}
 For any subset of vertices $V_{i} \subseteq V$,its complement $V \setminus V_{i}$ is denoted by $\overline{V_{i}}$. For two For two not necessarily disjoint sets we define
 \begin{displaymath}
@@ -175,7 +175,7 @@ The balancing conditions makes the previously mincut problem which is simple to 
 \subsection{Overview of the Multilevel Paradigm}
 Graphs that we meet in practice are not random. The distribution of edges is not only globally, but also locally inhomogeneous, with high concentrations of edges within special subgraph of vertices, and low concentrations between these subgraphs. This feature of graphs is called community structure or clustering \cite{gn:community}. It may be due to the vertices being geographically close in social networks, or being related to topic or domain on the web. Our graph partition algorithm takes advantage of this locality to make a good partition. The main idea behind our graph partition algorithm is the dense subgraph should not be divided among partitions. So the dense subgraph is treated as an indivisible atom, and the graph partition towards vertexes are transformed into the graph partition towards the dense subgraph. The dense subgraph means that there must be more edges "inside" the subgraph than edges linking vertices of the subgraph with the rest of the graph. The above dense subgraph is known as community.
 \par
-The basic structure of our graph partitioning algorithm is similar to the multilevel k-way partitioning algorithm. Our graph partitioning algorithm is also a multilevel algorithm and uses the bottom-up method. The algorithm is divided into two phase: aggregate phase and partition phase. In the aggregate phase, we continue to aggregate the original graph to a smaller graph on higher level. In each level, we use a label propagation algorithm to detect dense subgraphs and these dense subgraphs will be a vertex of upper level. Then the label propagation algorithm continues on the upper level graph until the vertex size of upper level graph smaller than the threshold we set. In the partition phase, a balance graph partition performs on the top-level graph which vertex size is much smaller than the original graph. As the top-level graph is a vertex-weighted and edge-weight graph, where the edge-weight reflects the number of edges connecting two different super vertexes and the vertex-weight reflects vertex number in the super vertex, the traditional partition algorithms such as Kernighan-Lin (KL) or spectral method are not suitable to this graph\cite{kl:partition, barnard:mrsb}. We propose a novel stepwise partition algorithm using a greedy method to get a small RatioCut step by step. At every step, we extract a connected subgraph with vertex size approximates $\frac{|V|}{k}$ which has minimal edge cuts with the remaining graph, and then remove the subgraph from the original graph. In this way, $k$ subgraphs are iteratively extracted from the graph. A partition example on synthetic graph is shown in Figure \ref{fig:partition example}.
+The basic structure of our graph partitioning algorithm is similar to the multilevel k-way partitioning algorithm. Our graph partitioning algorithm is also a multilevel algorithm and uses the bottom-up method. The algorithm is divided into two phase: aggregate phase and partition phase. In the aggregate phase, we continue to aggregate the original graph to a smaller graph on higher level. In each level, we use a label propagation algorithm to detect dense subgraphs and these dense subgraphs will be a super vertex of upper level. Then the label propagation algorithm continues on the upper level graph until the vertex size of upper level graph smaller than the threshold we set. In the partition phase, a balance graph partition performs on the top-level graph which vertex size is much smaller than the original graph. As the top-level graph is a vertex-weighted and edge-weight graph, where the edge-weight reflects the number of edges connecting two different super vertexes and the vertex-weight reflects vertex number in the super vertex, the traditional partition algorithms such as Kernighan-Lin (KL) or spectral method are not suitable to this graph\cite{kl:partition, barnard:mrsb}. We propose a novel stepwise partition algorithm using a greedy method to get a small RatioCut step by step. At every step, we extract a connected subgraph with vertex size approximates $\frac{|V|}{k}$ which has minimal edge cuts with the remaining graph, and then remove the subgraph from the original graph. In this way, $k$ subgraphs are iteratively extracted from the graph. A partition example on synthetic graph is shown in Figure \ref{fig:partition example}.
 \begin{figure}
 \centering
 \scalebox{0.6}{\includegraphics[0,0][300,331]{partition}}
@@ -334,7 +334,7 @@ In this section, we begin to evaluate the performance of our partitioning algori
 The cluster environment used to test our algorithm composed of one master node and 32 computing nodes (Intel Xeon $3.20GHz\times2$, 2GB RAM, Linux RH4 OS) with 2TB total storage capacity, and deployed a Hadoop platform(a wildly accepted open source implementation of MapReduce).As a contrast, the running environment of stand-alone graph partitioning algorithm is: Intel Core2 Duo2.66GHz processor, with 2GB memory, using WindowsXP operating system.
 
 \subsection{Dataset Description}
-We evaluated the performance of our multi-level stepwise graph partition algorithm(MSGP) on  different graphs obtained from various sources. There are a total of 21 different networks: 9 systhetic graph datasets and 12 real-world graph datasets. The synthetic graph datasets are produced by popular generative models, preferential attachment (BA) \cite{barabasi:emergence}, Watts-Strogatz \cite{small-world-watts-strogatz} and a power-law graph generator with clustering \cite{Holme2002}.The synthetic datasets based on BA, WS, and PL were created with the NetworkX python package \cite{url:networkx}.For graphs BA1, BA2, and BA3, generated by barabasi-albert model, we choose parameters $(n=10000, m=3)$, $(n=100000, m=5)$ and $(n=500000, m=5)$ respectively. And graphs PL1, PL2 and PL3, are generated by powerlaw-cluster model with the same parameters as barabasi-albert model. For graphs WS1, WS2, and WS3, generated by Watts-Strogatz model, we choose parameters $(n=10000, m=10, p=0.1)$, $(n=100000, m=10, p=0.1)$ and $(n=500000, m=10, p=0.1)$ respectively.The real-world graph datasets  are mainly come from SNAP\cite{url:snap} and Graph Partitioning Archive \cite{url:gpa}. The SNAP graphs used are: email-EuAll,email-Enron, amazon0312, amazon0302, web-NotreDame, web-Stanford, ca-CondMat and ca-help. The Partitioning Archive graphs used are:  4elt, and cs4. The characteristics of these graphs are shown in Table .
+We evaluated the performance of our multi-level stepwise graph partition algorithm(\textbf{MSP}) on  different graphs obtained from various sources. There are a total of 21 different networks: 9 systhetic graph datasets and 12 real-world graph datasets. The synthetic graph datasets are produced by popular generative models, preferential attachment (BA) \cite{barabasi:emergence}, Watts-Strogatz \cite{small-world-watts-strogatz} and a power-law graph generator with clustering \cite{Holme2002}.The synthetic datasets based on BA, WS, and PL were created with the NetworkX python package \cite{url:networkx}.For graphs BA1, BA2, and BA3, generated by barabasi-albert model, we choose parameters $(n=10000, m=3)$, $(n=100000, m=5)$ and $(n=500000, m=5)$ respectively. And graphs PL1, PL2 and PL3, are generated by powerlaw-cluster model with the same parameters as barabasi-albert model. For graphs WS1, WS2, and WS3, generated by Watts-Strogatz model, we choose parameters $(n=10000, m=10, p=0.1)$, $(n=100000, m=10, p=0.1)$ and $(n=500000, m=10, p=0.1)$ respectively.The real-world graph datasets  are mainly come from SNAP\cite{url:snap} and Graph Partitioning Archive \cite{url:gpa}. The SNAP graphs used are: email-EuAll,email-Enron, amazon0312, amazon0302, web-NotreDame, web-Stanford, ca-CondMat and ca-help. The Partitioning Archive graphs used are:  4elt, and cs4. The characteristics of these graphs are shown in Table .
 \begin{table}
 \centering
 \caption{Networks Basic Structural Properties}
@@ -392,46 +392,69 @@ Twitter        & $41.7*10^{6}$	 & $1.468*10^{9}$ & 0.1060 & Social  \\
 \subsection{Experimental Results}
 \subsubsection{Performance of partitioning algorithm}
 we compared our partition algorithm with two existing partitioning algorithms: multi-level graph partitioning algorithm and spectral method.
-The multi-level graph partitioning algorithm(MP) is currently considered to be the state-of-the-art and are used extensively.The multi-level graph partitioning algorithm the spectral partitioning algorithm are provided by Chaco [16]. Note that the bisections produced by spectral were further refined by using a KL refinement algorithm.Due to space constraints and serial execution of Chaco, the comparison between our partition algorithm and algorithms provided by Chaco are made on small graph datasets. However, the relative performance of our algorithm performed parallelly on a cluster of commodity machines remains the same for larger graph datasets.We ran each experiment on 4 partitions and fixed the imbalance such that no partition held more than $1\%$ more vertices than its share by setting the parameter $\alpha=0.01$.The fraction of edges cut obtained by the different partition algorithm across the different datasets  are shown in Figure \ref{fig:per}.
+The multi-level graph partitioning algorithm(\textbf{MP}) is currently considered to be the state-of-the-art and are used extensively.The multi-level graph partitioning algorithm the spectral partitioning algorithm are provided by Chaco [16]. Note that the bisections produced by spectral were further refined by using a KL refinement algorithm.Due to space constraints and serial execution of Chaco, the comparison between our partition algorithm and algorithms provided by Chaco are made on small graph datasets. However, the relative performance of our algorithm performed parallelly on a cluster of commodity machines remains the same for larger graph datasets. We ran each experiment on 4 partitions and fixed the imbalance such that no partition held more than $1\%$ more vertices than its share by setting the parameter $\alpha=0.01$.The fraction of edges cut obtained by the different partition algorithm across the different datasets  are shown in Figure \ref{fig:per}.
 \begin{figure}
 \centering
-\scalebox{0.7}{\includegraphics[0,0][300,250]{per}}
+\scalebox{0.7}{\includegraphics[0,0][300,270]{per}}
 \caption{The fraction of edges cut of the different partition algorithm}
 \label{fig:per}
 \end{figure}
 \par
-From the figure \ref{fig:per}, we can see that all the partition algorithm obtain a larger fraction of edges cut on the graphs: BA1,BA2,BA3,PL1,PL2 and PL3 than other graphs.These graphs have a low average clustering coefficient and more than $35\%$ of edges being cut. And our partition algorithm has little larger fraction of edges cut than the MP and spectral method. However in graphs with a high average clustering coefficient, such as WS1,email-EuAll and web-Stanford, our partition algorithm obtain a smaller fraction of edges cut in most cases. It can be explained by the following reasons: a high average clustering coefficient means the nodes in a graph tend to cluster together in which the partition algorithms are more likely to make a good partition. And the weighted label propagation of our algorithm has a good performance in aggregating the dense subgraph on these graphs, which leads to better partition.
+From the figure \ref{fig:per}, we can see that all the partition algorithm obtain a larger fraction of edges cut on the graphs: BA1,BA2,BA3,PL1,PL2 and PL3 than other graphs.These graphs have a low average clustering coefficient and more than $35\%$ of edges being cut. And our partition algorithm has little larger fraction of edges cut than the \textbf{MP} and spectral method. However in graphs with a high average clustering coefficient, such as WS1,email-EuAll and web-Stanford, our partition algorithm obtain a smaller fraction of edges cut in most cases. It can be explained by the following reasons: a high average clustering coefficient means the nodes in a graph tend to cluster together in which the partition algorithms are more likely to make a good partition. And the weighted label propagation of our algorithm has a good performance in aggregating the dense subgraph on these graphs, which leads to better partition.
 \par
 In addition, we make a random partition over all the graphs,of which the average fraction of edges cut is $74.9\%$, much higher than above partitioning algorithms.
-\subsubsection {Scalability of partitioning algorithm}
+\subsubsection{Scalability of partitioning algorithm}
 The graph datasets used in above performance comparison are tiny when compared with some of the graphs used in practice. While the above results are promising, it is important to understand whether our partitioning algorithm well scales with the size of the graph. As synthetic graphs produced by same generative model with similar parameter settings have similar graph statistics, we used the synthetic datasets in experiment in order to control for the variance in different graphs. We will present only the results for the Watts-Strogatz graphs, but all other graphs have similar results.We created 10 Watts-Strogatz graphs with a scale of 1 to 10 million vertices. For the Watts-Strogatz model, the probability of rewiring each edge is 0.1 and each node is connected to 10 nearest neighbors in ring topology. We will consider the following questions in the experiment: (1) whether our algorithm's partition performance on large graph is stable with increasing graph size. (2) how the partitioning quality scales with the number of partitions. (3) how the partition on MapReduce framework scales with graph size and computing nodes.
 \par
 Firstly, the partition performance of 10 Watts-Strogatz graphs is presented on the Figure \ref{fig:datasize}.The Figure shows that the fraction of edges cut well scale with the size of the graph holds - it is approximately $7\%$ for each graph.
 \begin{figure}
 \centering
-\scalebox{0.6}{\includegraphics[0,0][300,250]{datasize}}
+\scalebox{0.6}{\includegraphics[0,0][350,250]{datasize}}
 \caption{The fraction of edges cut of 10 Watts-Strogatz graphs using different algorithms}
 \label{fig:datasize}
 \end{figure}
 
-The next question is how the partitioning quality scales with the number of partitions. We only present the partition result of one graph in Figure XX, the 5 million  vertex Watts-Strogatz graph, but all graphs have similar characteristics. The performance of our partitioning algorithm closely tracks that of METIS.
-
+The next question is how the partitioning quality scales with the number of partitions. We only present the partition result of one graph in Figure \ref{fig:parNum}, the 5 million  vertex Watts-Strogatz graph, but all graphs have similar characteristics. As the figure show, the fraction
+of edges cut must necessarily increase as we increase the number of partitions. Our partitioning algorithm performs better than other partitioning algorithms when the partition number is small and obtains a approximate performance when the partition number is large.
+\begin{figure}
+\centering
+\scalebox{0.6}{\includegraphics[0,0][350,210]{parNum}}
+\caption{The fraction of edges cut of the Watts-Strogatz graph with different partition number}
+\label{fig:parNum}
+\end{figure}
 
 To show how our partitioning algorithm scales with graph size in MapReduce, Figure \ref{fig:runtime} presents runtimes of our partitioning algorithm for above 10 Watts-Strogatz graphs on the MapReduce framework, using a fixed reducer number 32.
 \begin{figure}
 \centering
-\scalebox{0.6}{\includegraphics[0,0][300,250]{runtime}}
+\scalebox{0.6}{\includegraphics[0,0][350,250]{runtime}}
 \caption{Runtime of 10 Watts-Strogatz graphs with 32 reducers }
 \label{fig:runtime}
 \end{figure}
 As an indication of how our algorithm scales with computing nodes,Figure \ref{fig:reducerNum} shows runtimes for a Watts-Strogatz graph with 5 million vertices when the number of reducer varies from 2 to 64.
 \begin{figure}
 \centering
-\scalebox{0.6}{\includegraphics[0,0][300,250]{reducerNum}}
+\scalebox{0.6}{\includegraphics[0,0][350,210]{reducerNum}}
 \caption{Runtime of algorithm with different reducer number}
 \label{fig:reducerNum}
 \end{figure}
 \subsubsection {Results on a real system}
+In this section,  we show whether a better graph partitioning will improve the performance of graph mining in real computation systems. To evaluate our partitioning algorithm in a real cluster application, we employed an implementation of PageRank in Spark, a cluster computing framework developed by UC Berkeley. Spark can create distributed datasets from any file stored in the Hadoop distributed file system (HDFS), so the Spark easily obtains the partition results of our partitioning algorithm using Hadoop's MapReduce framwork. Besides, Spark keep the working set of the application in memory across iterations, so that the algorithm is primarily limited by the cost of communication between nodes. Other distributed graph processing frameworks, such as Pregel [26] and GraphLab [25], also keep data in memory and have similar performance characteristics.
+\par
+We used two datasets previously mentioned in our experiment, one is LiveJournal with 4.6 million vertexes and 77.4 million edges, and the other is the Twitter graph [22] with 41.7 million vertexes and 1.468 billion edges. The two datasets were partitioned into 100 pieces with imbalance of at most 2\% by our partitioning algorithm and Hashing approach, a popular method currently used by many real systems [x26]. For LiveJournal, our partitioning algorithm reduced the number of edges cut to 27,401,144 edges compared with 76,224,763 for the Hashing partitioning. For twitter, our partitioning algorithm cut 0.581 billion edges, while the Hashing partitioning cut 1.501 billion. We ran 10 iterations of PageRank of above two datasets, and repeated this experiment 5 times. The average runtime of a iteration of PageRank on two datassets with two different partitioning approach are shown on the following table. The result show that using our graph partitioning algorithm as a preprocessing step can yield a large improvement in the running time.
+\begin{table}
+\centering
+\caption{Networks Basic Structural Properties}
+\label{table:par}
+\begin{tabular}{|c|c|c|c|}
+\hline
+ Time (seconds)  &   Hashing   &   MSP     \\
+\hline
+LiveJournal          & 59.1   & 26.3    \\
+\hline
+Twitter         	& 503.5 	 & 294.6   \\
+\hline
+\end{tabular}
+\end{table}
 
 \section{Conclusions}
 In this paper,we proposed a multi-level stepwise partition algorithm to drastically improve the number of edges cut in distributed graph data. The algorithm first use a weighted label propagation aggregate the large original graph to a small upper level graph iteratively. And then the k-way balance partition was obtained by a novel method based on stepwise minimizing RatioCut.
