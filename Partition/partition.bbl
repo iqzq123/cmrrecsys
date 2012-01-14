@@ -90,6 +90,12 @@ J.~Leskovec.
 \newblock Snap, 2011.
 \newblock { http://snap.stanford.edu/snap}.
 
+\bibitem{yucheng:graphlab}
+Y.~Low, J.~Gonzalez, A.~Kyrola, D.~Bickson, C.~Guestrin, and J.~M. Hellerstein.
+\newblock Graphlab: A new framework for parallel machine learning.
+\newblock In P.~Gr¨¹nwald and P.~Spirtes, editors, {\em UAI}, pages 340--349.
+  AUAI Press, 2010.
+
 \bibitem{malewicz:pregel}
 G.~Malewicz, M.~H. Austern, A.~J.~C. Bik, J.~C. Dehnert, I.~Horn, N.~Leiser,
   and G.~Czajkowski.
@@ -133,5 +139,11 @@ C.~Walshaw.
 D.~J. Watts and S.~H. Strogatz.
 \newblock Collective dynamics of small-world networks.
 \newblock {\em Nature}, 393(6684):440--442, June 1998.
+
+\bibitem{Berkeley:spark}
+M.~Zaharia, M.~Chowdhury, M.~J. Franklin, S.~Shenker, and I.~Stoica.
+\newblock {Spark: cluster computing with working sets}.
+\newblock In {\em Proceedings of the 2nd USENIX conference on Hot topics in
+  cloud computing}, HotCloud'10, page~10, Berkeley, CA, USA, 2010.
 
 \end{thebibliography}

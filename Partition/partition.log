@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.11 (MiKTeX 2.9) (preloaded format=latex 2012.1.7)  12 JAN 2012 17:20
+This is pdfTeX, Version 3.1415926-1.40.11 (MiKTeX 2.9) (preloaded format=latex 2012.1.7)  13 JAN 2012 11:25
 entering extended mode
 **partition.tex
 (E:\论文\partition\partition.tex
@@ -259,47 +259,10 @@ Overfull \hbox (22.49811pt too wide) in paragraph at lines 115--118
 /aer/m/n/9 ; D.1.3 [\T1/aer/bx/n/9 Programming
  []
 
-
-LaTeX Warning: Citation `url:facebook' on page \thepage  undefined on input lin
-e 125.
-
-
-LaTeX Warning: Citation `bailly-bechet:finding' on page \thepage  undefined on 
-input line 125.
-
-
-LaTeX Warning: Citation `kang:pegasus' on page \thepage  undefined on input lin
-e 127.
-
-
-LaTeX Warning: Citation `malewicz:pregel' on page \thepage  undefined on input 
-line 127.
-
-
-LaTeX Warning: Citation `chan:cgmlib' on page \thepage  undefined on input line
- 127.
-
 [1
 
 
 ]
-
-LaTeX Warning: Citation `kl:partition' on page \thepage  undefined on input lin
-e 131.
-
-
-LaTeX Warning: Citation `barnard:mrsb' on page \thepage  undefined on input lin
-e 131.
-
-
-LaTeX Warning: Citation `karypis:multi1' on page \thepage  undefined on input l
-ine 131.
-
-
-LaTeX Warning: Citation `url:streaming' on page \thepage  undefined on input li
-ne 131.
-
-
 Overfull \hbox (5.95401pt too wide) in paragraph at lines 131--132
 \T1/aer/m/n/9 these so-lu-tion-s are not nec-es-sar-i-ly op-ti-mal, such as Ker
 nighan-
@@ -312,122 +275,24 @@ raph
  []
 
 
-LaTeX Warning: Citation `kl:partition' on page \thepage  undefined on input lin
-e 147.
-
-
-LaTeX Warning: Citation `1585498' on page \thepage  undefined on input line 147
-.
-
-
-LaTeX Warning: Citation `barnard:mrsb' on page \thepage  undefined on input lin
-e 149.
-
-
-LaTeX Warning: Citation `tech:sparspak' on page \thepage  undefined on input li
-ne 151.
-
-
-LaTeX Warning: Citation `Gary:amp' on page \thepage  undefined on input line 15
-1.
-
-
-LaTeX Warning: Citation `karypis:multi1' on page \thepage  undefined on input l
-ine 151.
-
-
 Overfull \hbox (10.29333pt too wide) in paragraph at lines 151--152
 \T1/aer/m/n/9 level al-go-rithm-s. A level-structure was pro-vid-ed in S-PARSPA
 K
  []
 
 [2]
-
-LaTeX Warning: Citation `sui:parallel' on page \thepage  undefined on input lin
-e 153.
-
-
-LaTeX Warning: Citation `w.hagen:new' on page \thepage  undefined on input line
- 168.
-
-
-LaTeX Warning: Citation `wagner:mincut' on page \thepage  undefined on input li
-ne 172.
-
-
 Overfull \hbox (1.7846pt too wide) in paragraph at lines 174--174
 []\secfnt MULTI-LEVEL STEP-WISE PAR-TI-TION-
  []
 
-
-LaTeX Warning: Citation `gn:community' on page \thepage  undefined on input lin
-e 176.
-
-
-LaTeX Warning: Citation `kl:partition' on page \thepage  undefined on input lin
-e 178.
-
-
-LaTeX Warning: Citation `barnard:mrsb' on page \thepage  undefined on input lin
-e 178.
-
-
-LaTeX Warning: Reference `fig:partition example' on page \thepage  undefined on
- input line 178.
-
 File: partition.eps Graphic file (type eps)
 <partition.eps> [3]
-
-LaTeX Warning: Citation `Raghavan2007Near' on page \thepage  undefined on input
- line 186.
-
-
-LaTeX Warning: Citation `dean:mapreduce:' on page \thepage  undefined on input 
-line 211.
-
-
-LaTeX Warning: Reference `fig:wlp' on page \thepage  undefined on input line 21
-7.
-
 File: lp1.eps Graphic file (type eps)
-<lp1.eps>
-Overfull \hbox (0.90091pt too wide) in paragraph at lines 220--221
- [][][] 
- []
-
-
-LaTeX Warning: Reference `fig:upper' on page \thepage  undefined on input line 
-225.
-
+ <lp1.eps>
 File: lp2.eps Graphic file (type eps)
-<lp2.eps> [4]
+ <lp2.eps> [4]
 \c@proposition=\count118
  [5]
-
-LaTeX Warning: Citation `barabasi:emergence' on page \thepage  undefined on inp
-ut line 337.
-
-
-LaTeX Warning: Citation `small-world-watts-strogatz' on page \thepage  undefine
-d on input line 337.
-
-
-LaTeX Warning: Citation `Holme2002' on page \thepage  undefined on input line 3
-37.
-
-
-LaTeX Warning: Citation `url:networkx' on page \thepage  undefined on input lin
-e 337.
-
-
-LaTeX Warning: Citation `url:snap' on page \thepage  undefined on input line 33
-7.
-
-
-LaTeX Warning: Citation `url:gpa' on page \thepage  undefined on input line 337
-.
-
-
 Overfull \hbox (19.93578pt too wide) in paragraph at lines 342--389
  [][][] 
  []
@@ -444,63 +309,29 @@ Overfull \hbox (16.13014pt too wide) in paragraph at lines 337--390
  []
 
 [6]
-
-LaTeX Warning: Reference `fig:per' on page \thepage  undefined on input line 39
-5.
-
 File: per.eps Graphic file (type eps)
-<per.eps>
-
-LaTeX Warning: Reference `fig:per' on page \thepage  undefined on input line 40
-3.
-
-[7]
-
-LaTeX Warning: Reference `fig:datasize' on page \thepage  undefined on input li
-ne 409.
-
+ <per.eps> [7]
 File: datasize.eps Graphic file (type eps)
-<datasize.eps>
+ <datasize.eps>
 Overfull \hbox (5.36928pt too wide) in paragraph at lines 409--416
 [][]\T1/aer/m/n/9 Firstly, the par-ti-tion per-for-mance of 10 Watts-Strogatz g
 raph-
  []
 
-
-LaTeX Warning: Reference `fig:parNum' on page \thepage  undefined on input line
- 417.
-
 File: parNum.eps Graphic file (type eps)
 <parNum.eps>
-
-LaTeX Warning: Reference `fig:runtime' on page \thepage  undefined on input lin
-e 426.
-
 File: runtime.eps Graphic file (type eps)
-<runtime.eps>
-
-LaTeX Warning: Reference `fig:reducerNum' on page \thepage  undefined on input 
-line 433.
-
+ <runtime.eps>
 File: reducerNum.eps Graphic file (type eps)
-<reducerNum.eps>
-Underfull \vbox (badness 1789) has occurred while \output is active []
+ <reducerNum.eps>
+
+LaTeX Warning: Citation `Berkeley:spark' on page \thepage  undefined on input l
+ine 441.
 
 
-Overfull \hbox (4.91232pt too wide) in paragraph at lines 443--458
-\T1/aer/m/n/9 41.7 mil-lion ver-tex-es and 1.468 bil-lion edges. The t-wo datas
-et-
- []
-
-
-Overfull \hbox (3.22745pt too wide) in paragraph at lines 443--458
-\T1/aer/m/n/9 For Live-Jour-nal, our par-ti-tion-ing al-go-rith-m re-duced the 
-num-
- []
-
-
-Overfull \hbox (4.41747pt too wide) in paragraph at lines 443--458
-\T1/aer/m/n/9 ber of edges cut to 27,401,144 edges com-pared with 76,224,763
+Overfull \hbox (3.83925pt too wide) in paragraph at lines 443--458
+\T1/aer/m/n/9 par-ti-tion-ing al-go-rith-m cut 0.581 bil-lion edges, while the 
+Hash-
  []
 
 [8]
@@ -509,26 +340,29 @@ Overfull \hbox (13.82805pt too wide) in paragraph at lines 465--466
  []
 
 (E:\论文\partition\partition.bbl
-Overfull \hbox (48.87631pt too wide) in paragraph at lines 118--121
+Overfull \hbox (48.87631pt too wide) in paragraph at lines 124--127
 \T1/aer/m/n/9 http://research.microsoft.com/apps/pubs/default.aspx?id=155926.  
 
  []
 
-) [9] (E:\论文\partition\partition.aux)
 
-LaTeX Warning: There were undefined references.
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
+ [9])
+[10
+
+] (E:\论文\partition\partition.aux)
 
 LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
  ) 
 Here is how much of TeX's memory you used:
- 2348 strings out of 495363
- 26322 string characters out of 3184047
- 98085 words of memory out of 3000000
- 5470 multiletter control sequences out of 15000+200000
+ 2350 strings out of 495363
+ 26356 string characters out of 3184047
+ 97085 words of memory out of 3000000
+ 5472 multiletter control sequences out of 15000+200000
  41475 words of font info for 52 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
  39i,10n,26p,1702b,575s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on partition.dvi (9 pages, 75364 bytes).
+Output written on partition.dvi (10 pages, 76800 bytes).
