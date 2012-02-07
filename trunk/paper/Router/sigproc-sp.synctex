@@ -1,6 +1,6 @@
 SyncTeX Version:1
-Input:1:E:/论文/Router/sigproc-sp.tex
-Input:2:E:/论文/Router/acm_proc_article-sp.cls
+Input:1:E:/寒假/Router/sigproc-sp.tex
+Input:2:E:/寒假/Router/acm_proc_article-sp.cls
 Input:3:C:/CTEX/MiKTeX/tex/latex/graphics/epsfig.sty
 Input:4:C:/CTEX/MiKTeX/tex/latex/graphics/graphicx.sty
 Input:5:C:/CTEX/MiKTeX/tex/latex/graphics/keyval.sty
@@ -27,7 +27,7 @@ Input:25:C:/CTEX/UserData/tex/latex/subfigure/subfigure.sty
 Input:26:C:/CTEX/UserData/tex/latex/subfigure/subfigure.cfg
 Input:27:C:/CTEX/MiKTeX/tex/latex/multirow/multirow.sty
 Input:28:C:/CTEX/UserData/tex/latex/preprint/balance.sty
-Input:29:E:/论文/Router/sigproc-sp.aux
+Input:29:E:/寒假/Router/sigproc-sp.aux
 Input:30:C:/CTEX/MiKTeX/tex/latex/amsfonts/umsa.fd
 Input:31:C:/CTEX/MiKTeX/tex/latex/amsfonts/umsb.fd
 Input:32:C:/CTEX/MiKTeX/tex/latex/base/ulasy.fd
@@ -18177,7 +18177,7 @@ k1,328:31832802,44415714:16515072
 ]
 !49580
 }7
-Input:33:E:/论文/Router/sigproc-sp.bbl
+Input:33:E:/寒假/Router/sigproc-sp.bbl
 !49
 {8
 [1,400:0,44415714:31832802,44415714,0
@@ -20959,7 +20959,7 @@ k1,400:31832802,44415714:16515072
 ]
 !69566
 }8
-Input:34:E:/论文/Router/sigproc-sp.aux
+Input:34:E:/寒假/Router/sigproc-sp.aux
 !49
 Postamble:
 Count:9303
