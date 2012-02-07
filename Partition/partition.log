@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.1415926-1.40.11 (MiKTeX 2.9) (preloaded format=latex 2012.1.7)  13 JAN 2012 11:25
+This is pdfTeX, Version 3.1415926-1.40.11 (MiKTeX 2.9) (preloaded format=latex 2012.1.15)  6 FEB 2012 22:00
 entering extended mode
 **partition.tex
-(E:\论文\partition\partition.tex
+(E:\寒假\Partition\partition.tex
 LaTeX2e <2009/09/24>
 Babel <v3.8l> and hyphenation patterns for loaded.
-(E:\论文\partition\acm_proc_article-sp.cls
+(E:\寒假\Partition\acm_proc_article-sp.cls
 (C:\CTEX\MiKTeX\tex\latex\graphics\epsfig.sty
 Package: epsfig 1999/02/16 v1.7a (e)psfig emulation (SPQR)
 
@@ -227,7 +227,7 @@ Package: subfigure 2002/07/30 v2.1.4 subfigure package
 Package: balance 1999/02/23 4.3 (PWD)
 \oldvsize=\dimen126
 )
-(E:\论文\partition\partition.aux)
+(E:\寒假\Partition\partition.aux)
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 44.
 LaTeX Font Info:    ... okay on input line 44.
 LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 44.
@@ -297,17 +297,6 @@ Overfull \hbox (19.93578pt too wide) in paragraph at lines 342--389
  [][][] 
  []
 
-
-Overfull \hbox (6.74423pt too wide) in paragraph at lines 337--390
-\T1/aer/m/n/9 Watts-Strogatz mod-el, we choose pa-ram-e-ter-s $\OT1/cmr/m/n/9 (
-\OML/cmm/m/it/9 n \OT1/cmr/m/n/9 = 10000\OML/cmm/m/it/9 ; m \OT1/cmr/m/n/9 =
- []
-
-
-Overfull \hbox (16.13014pt too wide) in paragraph at lines 337--390
-\T1/aer/m/n/9 EuAll,email-Enron, a-ma-zon0312, a-ma-zon0302, web-NotreDame,
- []
-
 [6]
 File: per.eps Graphic file (type eps)
  <per.eps> [7]
@@ -324,11 +313,6 @@ File: runtime.eps Graphic file (type eps)
  <runtime.eps>
 File: reducerNum.eps Graphic file (type eps)
  <reducerNum.eps>
-
-LaTeX Warning: Citation `Berkeley:spark' on page \thepage  undefined on input l
-ine 441.
-
-
 Overfull \hbox (3.83925pt too wide) in paragraph at lines 443--458
 \T1/aer/m/n/9 par-ti-tion-ing al-go-rith-m cut 0.581 bil-lion edges, while the 
 Hash-
@@ -339,8 +323,8 @@ Overfull \hbox (13.82805pt too wide) in paragraph at lines 465--466
 \T1/aer/m/n/9 Foun-da-tion of Chi-na (Grant No.60905025, 90924029, 61074128). 
  []
 
-(E:\论文\partition\partition.bbl
-Overfull \hbox (48.87631pt too wide) in paragraph at lines 124--127
+(E:\寒假\Partition\partition.bbl
+Overfull \hbox (48.87631pt too wide) in paragraph at lines 129--132
 \T1/aer/m/n/9 http://research.microsoft.com/apps/pubs/default.aspx?id=155926.  
 
  []
@@ -351,18 +335,14 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
  [9])
 [10
 
-] (E:\论文\partition\partition.aux)
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- ) 
+] (E:\寒假\Partition\partition.aux) ) 
 Here is how much of TeX's memory you used:
- 2350 strings out of 495363
- 26356 string characters out of 3184047
+ 2351 strings out of 495363
+ 26381 string characters out of 3184046
  97085 words of memory out of 3000000
- 5472 multiletter control sequences out of 15000+200000
+ 5473 multiletter control sequences out of 15000+200000
  41475 words of font info for 52 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
  39i,10n,26p,1702b,575s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on partition.dvi (10 pages, 76800 bytes).
+Output written on partition.dvi (10 pages, 77496 bytes).
