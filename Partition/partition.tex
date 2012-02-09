@@ -106,7 +106,7 @@ Bin Wu\\
 
 \maketitle
 \begin{abstract}
-For the large-scale distributed graph mining, the graph is distributed over a cluster of nodes, thus performing computations the distributed graph is expensive when large amount of data have to be moved. A good partitioning of the distributed graph is needed to reduce the communication and scale the system up. Existing graph partitioning algorithm incur high computation and communication cost when applied on large distributed graphs. A efficient and scalable partitioning algorithm is crucial for large-scale distributed graph mining.
+For the large-scale distributed graph mining, the graph is distributed over a cluster of nodes, thus performing computations the distributed graph is expensive when large amount of data have to be moved. A good partitioning of the distributed graph is needed to reduce the communication and scale the system up. Existing graph partitioning algorithms incur high computation and communication cost when applied on large distributed graphs. A efficient and scalable partitioning algorithm is crucial for large-scale distributed graph mining.
 \par
 In this paper, we propose a novel parallel multi-level stepwise partitioning algorithm. The algorithm first efficiently aggregates the large graph into a small weighted graph without exchange of vertex's topological information, and then makes a balance partitioning on the weighted graph based on a stepwise minimizing RatioCut Algorithm. The experiment results show that our algorithm generally outperforms the existing algorithms and has a high efficiency and scalability for large-scale graph partitioning. Using our partitioning methods, we are able to greatly speed up PageRank computations on Spark, a distributed computation system, for large social networks.
 \end{abstract}
@@ -208,6 +208,12 @@ Ideally, the algorithm should be end when all vertexes' label unchanged after it
 \end{enumerate}
 
 \subsection{Implementation on MapReduce}
+\begin{figure}
+\centering
+\scalebox{0.7}{\includegraphics[0,0][250,285]{lp1}}
+\caption{Weighted label propagation on MapReduce.}
+\label{fig:wlp}
+\end{figure}
 MapReduce is a parallel computing framework which is simple and easy to use \cite{dean:mapreduce:}. The application, based on the Map-Reduce framework, can run on large-scale commercial clusters, process data in a parallel and fault-tolerant way. MapReduce framework relies on the operation of <key, value> pair, both the input and output is a <key, value> pair. Users specify a map function that processes a <key, value> pair to generate a set of intermediate <key, value> pairs, and a reduce function that merges all intermediate values associated with the same intermediate key. Programs written in this functional style are automatically parallelized and executed on a large cluster of commodity machines. The overall execution can be simply described as the following streaming:
 \par
 \begin{center}
@@ -217,18 +223,15 @@ Input | Mappers | Sort | Reducers | Output
 The weighted propagation algorithm is very easy to be implemented in a MapReduce way. The pseudo code in Map and Reduce is presented in Figure \ref{fig:wlp}. In the mapper, the vertex computes the affinity to its neighbors and sends the weighted label to its neighbors. In the reducer, the vertex collects the labels that it receives, then compute the membership degree of different labels and update its label with the label that has the maximal membership degree.
 \begin{figure}
 \centering
-\scalebox{0.7}{\includegraphics[0,0][250,331]{lp1}}
-\caption{Weighted label propagation on MapReduce.}
-\label{fig:wlp}
-\end{figure}
-\par
-After the label propagation, the vertexes labeled with the same label will be grouped together as super vertex of upper level. The edge weight of these super vertexes must be computed for the further aggregation. A series of MapReduce operations will be designed to finish the construction of upper graph (see Figure \ref{fig:upper}). The Mapper1 and Redecer1 aggregate the vertexes with the same label to a super vertex. Edges between two different super vertexes are achieved in Mapper2 and Reducer2. Finally, the Mapper3 and Reducer3 transform the above edges to adjacent list format.
-\begin{figure}
-\centering
-\scalebox{0.7}{\includegraphics[0,0][250,447]{lp2}}
+\scalebox{0.7}{\includegraphics[0,0][250,610]{lp2}}
 \caption{Construct the upper level graph.}
 \label{fig:upper}
 \end{figure}
+
+
+\par
+After the label propagation, the vertexes labeled with the same label will be grouped together as super vertex of upper level. The edge weight of these super vertexes must be computed for the further aggregation. A series of MapReduce operations will be designed to finish the construction of upper graph (see Figure \ref{fig:upper}). The Mapper1 and Redecer1 aggregate the vertexes with the same label to a super vertex. Edges between two different super vertexes are achieved in Mapper2 and Reducer2. Finally, the Mapper3 and Reducer3 transform the above edges to adjacent list format.
+
 \subsection{Stepwise minimizing RatioCut Algorithm}
 The top-level graph $G_{m}(V_{m},E_{m})$ produced by multi-level weighted label propagation is a vertex-weighted and edge-weighted graph, where the edge-weight reflects the number of edges connecting two different super vertexes and the vertex-weight reflects vertex number of the super vertex. It is very important to note that the partitioning algorithm must be able to handle the edges and vertex weights. In this section, a partitioning algorithm based on stepwise minimizing RatioCut is proposed to compute a k-way partitioning of graph $G_{m}$ such that each partition contains roughly$\frac{|V|}{k}$ vertexes of the original graph. Instead of minimizing $RatioCut(V_{1},...,V_{k} )$ all together, we try to find a vertex set $V_{i}$ that minimizes $\frac{W(V_{i},\overline{V_{i}})}{|V_{i}|}$ , which is a part of $RatioCut(V_{1},...,V_{k})$ , as our first partition, and then remove the vertex set $V_{i}$ from $G_{m}$ and try to find the next partition in the same way. The partial-RatioCut of vertex set $V$ is defined as
 \begin{displaymath}
@@ -440,7 +443,7 @@ As an indication of how our algorithm scales with computing nodes, Figure \ref{f
 \subsubsection {Results on a real system}
 In this section, we show whether a better graph partitioning will improve the performance of graph mining in real computation systems. To evaluate our partitioning algorithm in a real cluster application, we employed an implementation of PageRank in Spark, a cluster computing framework developed by UC Berkeley \cite{Berkeley:spark}. Spark can create distributed datasets from any file stored in the Hadoop distributed file system (HDFS), so the Spark easily obtains the partition results of our partitioning algorithm using Hadoop's MapReduce framwork. Besides, Spark keep the working set of the application in memory across iterations, so that the algorithm is primarily limited by the cost of communication between nodes. Other distributed graph processing frameworks, such as Pregel \cite{malewicz:pregel} and GraphLab \cite{yucheng:graphlab}, also keep data in memory and have similar performance characteristics.
 \par
-We used two datasets previously mentioned in our experiment, one is LiveJournal with 4.6 million vertexes and 77.4 million edges, and the other is the Twitter graph with 41.7 million vertexes and 1.468 billion edges. The two datasets were partitioned into 100 pieces with imbalance of at most 2\% by our partitioning algorithm and Hashing approach, a popular method currently used by many real systems \cite{malewicz:pregel}. In most cases, Hashing equivalents to a random partitioning. For LiveJournal, our partitioning algorithm reduced the number of edges cut to 27,401,144 edges compared with 76,224,763 for the Hashing partitioning. For twitter, our partitioning algorithm cut 0.581 billion edges, while the Hashing partitioning cut 1.501 billion. We ran 10 iterations of PageRank of above two datasets, and repeated this experiment 5 times. The average runtime of a iteration of PageRank on two datassets with two different partitioning approach are shown on the table \ref{table:par}. The result show that using our graph partitioning algorithm as a preprocessing step can yield a large improvement in the running time.
+We used two datasets previously mentioned in our experiment, one is LiveJournal with 4.6 million vertexes and 77.4 million edges, and the other is the Twitter graph with 41.7 million vertexes and 1.468 billion edges. The two datasets were partitioned into 100 pieces with imbalance of at most 2\% by our partitioning algorithm and Hashing approach, a popular method currently used by many real systems \cite{malewicz:pregel}. In most cases, Hashing equivalents to a random partitioning. For LiveJournal, our partitioning algorithm reduced the number of edges cut to 27,401,144 edges compared with 76,224,763 for the Hashing partitioning. For twitter, our partitioning algorithm cut 0.581 billion edges, while the Hashing partitioning cut 1.501 billion. We ran 10 iterations of PageRank of above two datasets, and repeated this experiment 5 times. The average runtime of a iteration of PageRank on two datassets with two different partitioning approach are shown on the table \ref{table:par}. The result shows that using our graph partitioning algorithm as a preprocessing step for the large-scale distributed graph mining can yield a large improvement in the running time.
 \begin{table}
 \centering
 \caption{The averaged runtime of a PageRank iteration with different partitioning approach.}

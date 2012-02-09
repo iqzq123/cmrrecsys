@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.1415926-1.40.11 (MiKTeX 2.9) (preloaded format=latex 2012.1.15)  8 FEB 2012 22:06
+This is pdfTeX, Version 3.1415926-1.40.11 (MiKTeX 2.9) (preloaded format=latex 2012.1.15)  9 FEB 2012 20:55
 entering extended mode
 **partition.tex
-(E:\º®¼Ù\Partition\partition.tex
+(C:\Users\Administrator\Desktop\Partition\partition.tex
 LaTeX2e <2009/09/24>
 Babel <v3.8l> and hyphenation patterns for loaded.
-(E:\º®¼Ù\Partition\acm_proc_article-sp.cls
+(C:\Users\Administrator\Desktop\Partition\acm_proc_article-sp.cls
 (C:\CTEX\MiKTeX\tex\latex\graphics\epsfig.sty
 Package: epsfig 1999/02/16 v1.7a (e)psfig emulation (SPQR)
 
@@ -104,12 +104,15 @@ LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
 LaTeX Info: Redefining \[ on input line 2666.
 LaTeX Info: Redefining \] on input line 2667.
 )
-Document Class 'acm_proc_article-sp' <22nd. April '09>. Modified by G.K.M. Tobi
-n
+Document Class 'sig-alternate' <22nd. April '09>. Modified by G.K.M. Tobin/Gerr
+y Murray
 Based in part upon document Style `acmconf' <22 May 89>. Hacked 4/91 by
 shivers@cs.cmu.edu, 4/93 by theobald@cs.mcgill.ca
 Excerpts were taken from (Journal Style) 'esub2acm.cls'.
-****** Bugs/comments/suggestions to Gerry Murray -- murray@hq.acm.org ******
+****** Bugs/comments/suggestions/technicalities to Gerry Murray -- murray@hq.ac
+m.org ******
+Questions on the style, SIGS policies, etc. to Adrienne Griscti griscti@acm.org
+
 \footheight=\dimen115
 \@maxsep=\dimen116
 \@dblmaxsep=\dimen117
@@ -129,8 +132,12 @@ Excerpts were taken from (Journal Style) 'esub2acm.cls'.
 \c@table=\count98
 \titleboxnotes=\toks23
 \titleboxnoteflag=\count99
-Document Class: acm_proc_article-sp 2009/04/22 - V3.2SP - based on esub2acm.sty
- <23 April 96>
+
+LaTeX Warning: You have requested document class `acm_proc_article-sp',
+               but the document class provides `sig-alternate'.
+
+Document Class: sig-alternate 2009/04/22 - V2.4 - based on acmproc.cls V1.3 <No
+v. 30 '99>
 (C:\CTEX\MiKTeX\tex\latex\base\latexsym.sty
 Package: latexsym 1998/08/17 v2.2e Standard LaTeX package (lasy symbols)
 \symlasy=\mathgroup6
@@ -155,7 +162,7 @@ LaTeX Font Info:    Overwriting symbol font `lasy' in version `bold'
 \c@paragraph=\count106
 
 Using 'Abbrev' bibliography style
-LaTeX Info: Redefining \cite on input line 1236.
+LaTeX Info: Redefining \cite on input line 1211.
 \bibindent=\dimen122
 \colcntr=\count107
 \saveb@x=\box29
@@ -227,7 +234,7 @@ Package: subfigure 2002/07/30 v2.1.4 subfigure package
 Package: balance 1999/02/23 4.3 (PWD)
 \oldvsize=\dimen126
 )
-(E:\º®¼Ù\Partition\partition.aux)
+(C:\Users\Administrator\Desktop\Partition\partition.aux)
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 44.
 LaTeX Font Info:    ... okay on input line 44.
 LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 44.
@@ -241,7 +248,8 @@ LaTeX Font Info:    ... okay on input line 44.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 44.
 LaTeX Font Info:    ... okay on input line 44.
 LaTeX Font Info:    Try loading font information for U+msa on input line 107.
- (C:\CTEX\MiKTeX\tex\latex\amsfonts\umsa.fd
+
+(C:\CTEX\MiKTeX\tex\latex\amsfonts\umsa.fd
 File: umsa.fd 2009/06/22 v3.00 AMS symbols A
 )
 LaTeX Font Info:    Try loading font information for U+msb on input line 107.
@@ -275,6 +283,12 @@ raph
  []
 
 
+Overfull \hbox (3.94894pt too wide) in paragraph at lines 151--152
+[][]\T1/aer/m/n/9 Other pop-u-lar meth-od-s for graph par-ti-tion-ing in-clude 
+level-
+ []
+
+
 Overfull \hbox (10.29333pt too wide) in paragraph at lines 151--152
 \T1/aer/m/n/9 level al-go-rithm-s. A level-structure was pro-vid-ed in S-PARSPA
 K
@@ -288,61 +302,50 @@ Overfull \hbox (1.7846pt too wide) in paragraph at lines 174--174
 File: partition.eps Graphic file (type eps)
 <partition.eps> [3]
 File: lp1.eps Graphic file (type eps)
- <lp1.eps>
+ <lp1.eps> [4]
 File: lp2.eps Graphic file (type eps)
- <lp2.eps> [4]
+ <lp2.eps>
 \c@proposition=\count118
  [5]
-Overfull \hbox (19.93578pt too wide) in paragraph at lines 342--389
+Overfull \hbox (19.93578pt too wide) in paragraph at lines 345--392
  [][][] 
  []
 
-[6]
 File: per.eps Graphic file (type eps)
- <per.eps> [7]
+<per.eps> [6]
 File: datasize.eps Graphic file (type eps)
  <datasize.eps>
-Overfull \hbox (5.36928pt too wide) in paragraph at lines 409--416
-[][]\T1/aer/m/n/9 Firstly, the par-ti-tion per-for-mance of 10 Watts-Strogatz g
-raph-
- []
-
 File: parNum.eps Graphic file (type eps)
-<parNum.eps>
+ <parNum.eps>
 File: runtime.eps Graphic file (type eps)
  <runtime.eps>
 File: reducerNum.eps Graphic file (type eps)
  <reducerNum.eps>
-Overfull \hbox (3.83925pt too wide) in paragraph at lines 443--458
+[7]
+Overfull \hbox (3.83925pt too wide) in paragraph at lines 446--461
 \T1/aer/m/n/9 par-ti-tion-ing al-go-rith-m cut 0.581 bil-lion edges, while the 
 Hash-
  []
 
-[8]
-Overfull \hbox (13.82805pt too wide) in paragraph at lines 465--466
+
+Overfull \hbox (13.82805pt too wide) in paragraph at lines 468--469
 \T1/aer/m/n/9 Foun-da-tion of Chi-na (Grant No.60905025, 90924029, 61074128). 
  []
 
-(E:\º®¼Ù\Partition\partition.bbl
+(C:\Users\Administrator\Desktop\Partition\partition.bbl [8]
 Overfull \hbox (48.87631pt too wide) in paragraph at lines 129--132
 \T1/aer/m/n/9 http://research.microsoft.com/apps/pubs/default.aspx?id=155926.  
 
  []
 
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [9])
-[10
-
-] (E:\º®¼Ù\Partition\partition.aux) ) 
+) [9] (C:\Users\Administrator\Desktop\Partition\partition.aux) ) 
 Here is how much of TeX's memory you used:
  2351 strings out of 495363
- 26381 string characters out of 3184046
- 97085 words of memory out of 3000000
+ 26634 string characters out of 3184046
+ 96546 words of memory out of 3000000
  5473 multiletter control sequences out of 15000+200000
  41475 words of font info for 52 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
  39i,10n,26p,1702b,575s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on partition.dvi (10 pages, 77504 bytes).
+Output written on partition.dvi (9 pages, 83168 bytes).
