@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.1415926-1.40.11 (MiKTeX 2.9) (preloaded format=latex 2012.1.14)  14 JAN 2012 21:54
+This is pdfTeX, Version 3.1415926-1.40.11 (MiKTeX 2.9) (preloaded format=latex 2012.2.8)  9 FEB 2012 16:24
 entering extended mode
 **sigproc-sp.tex
-(E:\寒假\Router\sigproc-sp.tex
+(E:\论文\Router\sigproc-sp.tex
 LaTeX2e <2009/09/24>
 Babel <v3.8l> and hyphenation patterns for loaded.
-(E:\寒假\Router\acm_proc_article-sp.cls
+(E:\论文\Router\acm_proc_article-sp.cls
 (C:\CTEX\MiKTeX\tex\latex\graphics\epsfig.sty
 Package: epsfig 1999/02/16 v1.7a (e)psfig emulation (SPQR)
 
@@ -227,13 +227,7 @@ Package: subfigure 2002/07/30 v2.1.4 subfigure package
 Package: balance 1999/02/23 4.3 (PWD)
 \oldvsize=\dimen126
 )
-(E:\寒假\Router\sigproc-sp.aux
-
-LaTeX Warning: Label `fig:partition example' multiply defined.
-
-
-LaTeX Warning: Label `fig:partition example' multiply defined.
-
+(E:\论文\Router\sigproc-sp.aux
 
 LaTeX Warning: Label `fig:partition example' multiply defined.
 
@@ -304,31 +298,32 @@ File: msp.eps Graphic file (type eps)
  <msp.eps>
 File: divide.eps Graphic file (type eps)
  <divide.eps> [4]
-File: partition.eps Graphic file (type eps)
- <partition.eps> [5]
-File: lp1.eps Graphic file (type eps)
-
-<lp1.eps>
-Overfull \hbox (0.90091pt too wide) in paragraph at lines 254--255
+File: mainAPI.eps Graphic file (type eps)
+ <mainAPI.eps>
+Overfull \hbox (161.50153pt too wide) in paragraph at lines 213--214
  [][][] 
  []
 
-File: lp2.eps Graphic file (type eps)
-<lp2.eps> [6]
-\c@proposition=\count118
- [7] (E:\寒假\Router\sigproc-sp.bbl) [8]
-(E:\寒假\Router\sigproc-sp.aux)
+File: mspcode.eps Graphic file (type eps)
+<mspcode.eps>
+File: clique.eps Graphic file (type eps)
+ <clique.eps>
+Overfull \hbox (3.75348pt too wide) in paragraph at lines 235--235
+[]\secfnt Build up the fic-ti-tious com-mu-ni-ca-tion-s net-
+ []
+
+[5] (E:\论文\Router\sigproc-sp.bbl) [6] (E:\论文\Router\sigproc-sp.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 2325 strings out of 495363
- 25969 string characters out of 3184046
- 86085 words of memory out of 3000000
- 5447 multiletter control sequences out of 15000+200000
- 42978 words of font info for 53 fonts, out of 3000000 for 9000
+ 2283 strings out of 495363
+ 25608 string characters out of 3184047
+ 84085 words of memory out of 3000000
+ 5406 multiletter control sequences out of 15000+200000
+ 41318 words of font info for 52 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
- 39i,10n,26p,2305b,575s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 39i,10n,26p,2307b,248s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on sigproc-sp.dvi (8 pages, 62660 bytes).
+Output written on sigproc-sp.dvi (6 pages, 42060 bytes).
