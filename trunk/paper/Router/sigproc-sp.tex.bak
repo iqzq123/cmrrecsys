@@ -226,14 +226,14 @@ When using the dive-and-conquer model to process graph, the user need to impleme
 
 \begin{figure}
 \centering
-\scalebox{0.8}{\includegraphics[0,0][250,370]{clique}}
+\scalebox{0.8}{\includegraphics[0,0][250,300]{clique}}
 \caption{ maximal clique enumeration algorithm implemented in Router Framework.}
 \label{fig:clique}
 \end{figure}
 \par
 \section{Implementation}
-\subsection{Build up the fictitious communications network}
-
+\subsection{Build up the fictitious communication network}
+The fictitious communication network is curial for the Router framework, which well organizes the input graph data to reduce the communication cost. We first make a good balance partition of graph data that minimizes the number of cross partition edges, and then load the each partition of graph into the router and build up the router's routingTable. The routingTable records where the nodes that adjacent to the node of router locate.
 \subsection{Implement message passing}
 \section{Experiment}
 \section{Conclusions}

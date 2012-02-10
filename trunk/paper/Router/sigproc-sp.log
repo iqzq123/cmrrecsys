@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.11 (MiKTeX 2.9) (preloaded format=latex 2012.2.8)  9 FEB 2012 16:24
+This is pdfTeX, Version 3.1415926-1.40.11 (MiKTeX 2.9) (preloaded format=latex 2012.2.8)  10 FEB 2012 11:26
 entering extended mode
 **sigproc-sp.tex
 (E:\论文\Router\sigproc-sp.tex
@@ -308,9 +308,22 @@ File: mspcode.eps Graphic file (type eps)
 <mspcode.eps>
 File: clique.eps Graphic file (type eps)
  <clique.eps>
-Overfull \hbox (3.75348pt too wide) in paragraph at lines 235--235
-[]\secfnt Build up the fic-ti-tious com-mu-ni-ca-tion-s net-
+Overfull \hbox (1.29451pt too wide) in paragraph at lines 236--237
+[]\T1/aer/m/n/9 The fic-ti-tious com-mu-ni-ca-tion net-work is cu-ri-al for the
+ Router
  []
+
+
+LaTeX Warning: Citation `Raghavan2007Near' on page \thepage  undefined on input
+ line 238.
+
+
+LaTeX Warning: Citation `HeLe95' on page \thepage  undefined on input line 238.
+
+
+
+LaTeX Warning: Citation `Hendrickson:mp' on page \thepage  undefined on input l
+ine 238.
 
 [5] (E:\论文\Router\sigproc-sp.bbl) [6] (E:\论文\Router\sigproc-sp.aux)
 
@@ -318,12 +331,12 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 2283 strings out of 495363
- 25608 string characters out of 3184047
+ 2281 strings out of 495363
+ 25573 string characters out of 3184047
  84085 words of memory out of 3000000
- 5406 multiletter control sequences out of 15000+200000
+ 5404 multiletter control sequences out of 15000+200000
  41318 words of font info for 52 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
  39i,10n,26p,2307b,248s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on sigproc-sp.dvi (6 pages, 42060 bytes).
+Output written on sigproc-sp.dvi (6 pages, 43312 bytes).
