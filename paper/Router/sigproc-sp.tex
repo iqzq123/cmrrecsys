@@ -221,7 +221,7 @@ Writing a program using message passing model involves subclassing the predefine
 \caption{ The multi-source shortest paths algorithm implemented in Router Framework.}
 \label{fig:mspcode}
 \end{figure}
-\par 
+\par
 When using the dive-and-conquer model to process graph, the user need to implement the \textbf{compute()} method and the \textbf{merge()} method of Operator. In the following, we will employ the maximal clique enumeration algorithm as a example to illustrate how to use interface of Operator to process graph. In the \textbf{compute()} method, maximal cliques are enumerated based on \textbf{nodeList} of Router. In the \textbf{merge()} method, all the border nodes are gathered and maximal cliques of border node are enumerated. The code of maximal cliques enumeration algorithm are shown in the Figure \ref{fig:clique}.
 
 \begin{figure}
@@ -232,8 +232,10 @@ When using the dive-and-conquer model to process graph, the user need to impleme
 \end{figure}
 \par
 \section{Implementation}
-\subsection{Build up the fictitious communications network}
-
+\subsection{Build up the fictitious communication network}
+The fictitious communication network is curial for the Router framework, which well organizes the input graph data to reduce the communication cost. We first make a good balance partition of graph data that minimizes the number of cross partition edges, and then load the each partition of graph into the router and build up the router's routingTable. The routingTable records where the nodes that adjacent to the node of router locate.
+\par
+Our graph partitioning algorithm is a multilevel algorithm and uses the bottom-up method. The algorithm is divided into two phase: aggregate phase and partition phase. In the aggregate phase, we continue to aggregate the original graph to a smaller graph on upper level. In each level, we use a label propagation algorithm to detect dense subgraphs and these dense subgraphs will be a super vertex of upper level. Then the label propagation algorithm continues on the upper level graph until the vertex size of upper level graph smaller than the threshold we set. The the label propagation algorithm we use is proposed by Raghavan \cite{Raghavan2007Near}. As the upper-level graph is a vertex-weighted and edge-weight graph, where the edge-weight reflects the number of edges connecting two different super vertexes and the vertex-weight reflects vertex number in the super vertex, we revised the algorithm by weighting the label using the edge-weight. In the partition phase, we use a spectral partitioner for the upper graph which requires one, two or three eigenvectors of Laplacian matrix of a graph to partition into two, four or eight sets respectively \cite{HeLe95}. This partitioning will be furtherly refined by the Kernighan-Lin refinement algorithm described in paper \cite{Hendrickson:mp}.
 \subsection{Implement message passing}
 \section{Experiment}
 \section{Conclusions}

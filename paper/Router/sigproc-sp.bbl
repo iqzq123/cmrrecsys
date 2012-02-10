@@ -1,4 +1,4 @@
-\begin{thebibliography}{10}
+\begin{thebibliography}{1}
 
 \bibitem{bailly-bechet:finding}
 M.~Bailly-Bechet, C.~Borgs, A.~Braunstein, J.~T. Chayes, A.~Dagkessamanskaia,
@@ -7,31 +7,15 @@ M.~Bailly-Bechet, C.~Borgs, A.~Braunstein, J.~T. Chayes, A.~Dagkessamanskaia,
   propagation.
 \newblock {\em CoRR}, pages --1--1, 2011.
 
-\bibitem{barnard:mrsb}
-S.~Barnard.
-\newblock Pmrsb: Parallel multilevel recursive spectral bisection.
-\newblock In {\em Supercomputing, 1995. Proceedings of the IEEE/ACM SC95
-  Conference}, page~27, 1995.
-
 \bibitem{chan:cgmlib}
 A.~Chan, F.~K. H.~A. Dehne, and R.~Taylor.
 \newblock Cgmgraph/cgmlib: Implementing and testing cgm graph algorithms on pc
   clusters and shared memory machines.
 \newblock {\em IJHPCA}, 19(1):81--97, 2005.
 
-\bibitem{dean:mapreduce:}
-J.~Dean and S.~Ghemawat.
-\newblock Mapreduce: simplified data processing on large clusters.
-\newblock {\em Commun. ACM}, pages 107--113, 2008.
-
 \bibitem{url:facebook}
 Facebook, 2011.
 \newblock { http://facebook.com/press/info.php?statistics}.
-
-\bibitem{gn:community}
-M.~Girvan and M.~E. Newman.
-\newblock Community structure in social and biological networks.
-\newblock {\em Proc Natl Acad Sci U S A}, 99:7821--7826, June 2002.
 
 \bibitem{kang:pegasus}
 U.~Kang, C.~Tsourakakis, and C.~Faloutsos.
@@ -40,20 +24,10 @@ U.~Kang, C.~Tsourakakis, and C.~Faloutsos.
 \newblock In {\em Data Mining, 2009. ICDM '09. Ninth IEEE International
   Conference on}, pages 229 --238, dec. 2009.
 
-\bibitem{kl:partition}
-B.~W. Kernighan and S.~Lin.
-\newblock An effcient heuristic procedure for partitioning graphs.
-\newblock {\em The Bell System Technical Journal}, 49(2):291--307, 1970.
-
 \bibitem{malewicz:pregel}
 G.~Malewicz, M.~H. Austern, A.~J.~C. Bik, J.~C. Dehnert, I.~Horn, N.~Leiser,
   and G.~Czajkowski.
 \newblock Pregel: a system for large-scale graph processing.
 \newblock In {\em SIGMOD Conference'10}, pages 135--146, 2010.
-
-\bibitem{Raghavan2007Near}
-U.~N. Raghavan, R.~Albert, and S.~Kumara.
-\newblock Near linear time algorithm to detect community structures in
-  large-scale networks, Sept. 2007.
 
 \end{thebibliography}
