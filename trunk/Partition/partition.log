@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.1415926-1.40.11 (MiKTeX 2.9) (preloaded format=latex 2012.1.15)  9 FEB 2012 20:55
+This is pdfTeX, Version 3.1415926-1.40.11 (MiKTeX 2.9) (preloaded format=latex 2012.2.8)  10 FEB 2012 16:06
 entering extended mode
 **partition.tex
-(C:\Users\Administrator\Desktop\Partition\partition.tex
+(E:\Partition\partition.tex
 LaTeX2e <2009/09/24>
 Babel <v3.8l> and hyphenation patterns for loaded.
-(C:\Users\Administrator\Desktop\Partition\acm_proc_article-sp.cls
+(E:\Partition\acm_proc_article-sp.cls
 (C:\CTEX\MiKTeX\tex\latex\graphics\epsfig.sty
 Package: epsfig 1999/02/16 v1.7a (e)psfig emulation (SPQR)
 
@@ -233,8 +233,7 @@ Package: subfigure 2002/07/30 v2.1.4 subfigure package
 (C:\CTEX\UserData\tex\latex\preprint\balance.sty
 Package: balance 1999/02/23 4.3 (PWD)
 \oldvsize=\dimen126
-)
-(C:\Users\Administrator\Desktop\Partition\partition.aux)
+) (E:\Partition\partition.aux)
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 44.
 LaTeX Font Info:    ... okay on input line 44.
 LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 44.
@@ -332,20 +331,20 @@ Overfull \hbox (13.82805pt too wide) in paragraph at lines 468--469
 \T1/aer/m/n/9 Foun-da-tion of Chi-na (Grant No.60905025, 90924029, 61074128). 
  []
 
-(C:\Users\Administrator\Desktop\Partition\partition.bbl [8]
+(E:\Partition\partition.bbl [8]
 Overfull \hbox (48.87631pt too wide) in paragraph at lines 129--132
 \T1/aer/m/n/9 http://research.microsoft.com/apps/pubs/default.aspx?id=155926.  
 
  []
 
-) [9] (C:\Users\Administrator\Desktop\Partition\partition.aux) ) 
+) [9] (E:\Partition\partition.aux) ) 
 Here is how much of TeX's memory you used:
  2351 strings out of 495363
- 26634 string characters out of 3184046
+ 26326 string characters out of 3184047
  96546 words of memory out of 3000000
  5473 multiletter control sequences out of 15000+200000
  41475 words of font info for 52 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
  39i,10n,26p,1702b,575s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on partition.dvi (9 pages, 83168 bytes).
+Output written on partition.dvi (9 pages, 78524 bytes).
